@@ -18,6 +18,7 @@
 		CFD9A58C29E7B8C500C0817E /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD9A58B29E7B8C500C0817E /* ListViewModel.swift */; };
 		CFD9A58F29E7BF4700C0817E /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = CFD9A58E29E7BF4700C0817E /* Nuke */; };
 		CFD9A59229E7BF5E00C0817E /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = CFD9A59129E7BF5E00C0817E /* SnapKit */; };
+		CFD9A59529E7C05100C0817E /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD9A59429E7C05100C0817E /* APIClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		CFD9A57B29E7A90300C0817E /* AnotherPokemonAssignmentUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnotherPokemonAssignmentUITests.swift; sourceTree = "<group>"; };
 		CFD9A57D29E7A90300C0817E /* AnotherPokemonAssignmentUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnotherPokemonAssignmentUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		CFD9A58B29E7B8C500C0817E /* ListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewModel.swift; sourceTree = "<group>"; };
+		CFD9A59429E7C05100C0817E /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 		CFD9A55929E7A90200C0817E /* AnotherPokemonAssignment */ = {
 			isa = PBXGroup;
 			children = (
+				CFD9A59329E7C03900C0817E /* Networking */,
 				CFD9A58A29E7B55F00C0817E /* List */,
 				CFD9A55A29E7A90200C0817E /* AppDelegate.swift */,
 				CFD9A55C29E7A90200C0817E /* SceneDelegate.swift */,
@@ -137,6 +140,14 @@
 				CFD9A58B29E7B8C500C0817E /* ListViewModel.swift */,
 			);
 			path = List;
+			sourceTree = "<group>";
+		};
+		CFD9A59329E7C03900C0817E /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				CFD9A59429E7C05100C0817E /* APIClient.swift */,
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -280,6 +291,7 @@
 				CFD9A55F29E7A90200C0817E /* ListViewController.swift in Sources */,
 				CFD9A55B29E7A90200C0817E /* AppDelegate.swift in Sources */,
 				CFD9A58C29E7B8C500C0817E /* ListViewModel.swift in Sources */,
+				CFD9A59529E7C05100C0817E /* APIClient.swift in Sources */,
 				CFD9A55D29E7A90200C0817E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
