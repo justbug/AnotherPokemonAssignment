@@ -16,6 +16,8 @@
 		CFD9A57C29E7A90300C0817E /* AnotherPokemonAssignmentUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD9A57B29E7A90300C0817E /* AnotherPokemonAssignmentUITests.swift */; };
 		CFD9A57E29E7A90300C0817E /* AnotherPokemonAssignmentUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD9A57D29E7A90300C0817E /* AnotherPokemonAssignmentUITestsLaunchTests.swift */; };
 		CFD9A58C29E7B8C500C0817E /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD9A58B29E7B8C500C0817E /* ListViewModel.swift */; };
+		CFD9A58F29E7BF4700C0817E /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = CFD9A58E29E7BF4700C0817E /* Nuke */; };
+		CFD9A59229E7BF5E00C0817E /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = CFD9A59129E7BF5E00C0817E /* SnapKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFD9A58F29E7BF4700C0817E /* Nuke in Frameworks */,
+				CFD9A59229E7BF5E00C0817E /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,6 +155,10 @@
 			dependencies = (
 			);
 			name = AnotherPokemonAssignment;
+			packageProductDependencies = (
+				CFD9A58E29E7BF4700C0817E /* Nuke */,
+				CFD9A59129E7BF5E00C0817E /* SnapKit */,
+			);
 			productName = AnotherPokemonAssignment;
 			productReference = CFD9A55729E7A90200C0817E /* AnotherPokemonAssignment.app */;
 			productType = "com.apple.product-type.application";
@@ -223,6 +231,10 @@
 				Base,
 			);
 			mainGroup = CFD9A54E29E7A90200C0817E;
+			packageReferences = (
+				CFD9A58D29E7BF4700C0817E /* XCRemoteSwiftPackageReference "Nuke" */,
+				CFD9A59029E7BF5E00C0817E /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = CFD9A55829E7A90200C0817E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -602,6 +614,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CFD9A58D29E7BF4700C0817E /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
+		CFD9A59029E7BF5E00C0817E /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CFD9A58E29E7BF4700C0817E /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CFD9A58D29E7BF4700C0817E /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
+		};
+		CFD9A59129E7BF5E00C0817E /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CFD9A59029E7BF5E00C0817E /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CFD9A54F29E7A90200C0817E /* Project object */;
 }
