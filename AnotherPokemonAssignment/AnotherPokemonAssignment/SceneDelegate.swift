@@ -18,8 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        let nav = UINavigationController(rootViewController: ViewController())
-        window?.rootViewController = nav
+        window?.rootViewController = getRootViewController()
         window?.makeKeyAndVisible()
     }
 
@@ -54,3 +53,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 }
 
+private extension SceneDelegate {
+    func getRootViewController() -> UIViewController {
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [getListViewControllerWithNav()]
+        return tabBarController
+    }
+
+    func getListViewControllerWithNav() -> UINavigationController {
+        let vc = ListViewController(viewModel: ListViewModel())
+        vc.tabBarItem = makeTabBarItem(
+            image: UIImage(systemName: "list.bullet.rectangle.portrait"),
+            selectedImage: UIImage(systemName: "list.bullet.rectangle.portrait.fill")
+        )
+        return UINavigationController(rootViewController: vc)
+    }
+
+    func makeTabBarItem(image: UIImage?, selectedImage: UIImage?) -> UITabBarItem {
+        let tabBarItem = UITabBarItem()
+        tabBarItem.image = image
+        tabBarItem.selectedImage = selectedImage
+        return tabBarItem
+    }
+}
