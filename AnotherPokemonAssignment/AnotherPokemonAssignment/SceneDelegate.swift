@@ -61,7 +61,7 @@ private extension SceneDelegate {
     }
 
     func getListViewControllerWithNav() -> UINavigationController {
-        let vc = ListViewController(viewModel: ListViewModel())
+        let vc = ListViewController(viewModel: ListViewModel(listService: ListService()))
         vc.tabBarItem = makeTabBarItem(
             image: UIImage(systemName: "list.bullet.rectangle.portrait"),
             selectedImage: UIImage(systemName: "list.bullet.rectangle.portrait.fill")
