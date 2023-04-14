@@ -10,7 +10,15 @@ import Foundation
 final class APIClient {
     private let session = URLSession.shared
 
-    func data(urlRequest: URLRequest) async throws -> (Data, URLResponse) {
+    func fetch(request: Request) async throws -> Response {
+        let request = try request.makeToURLRequest()
+        let (data, urlResponse) = try await data(urlRequest: request)
+        return Response(response: urlResponse, data: data)
+    }
+}
+
+extension APIClient {
+    private func data(urlRequest: URLRequest) async throws -> (Data, URLResponse) {
         try await session.data(for: urlRequest)
     }
 }
