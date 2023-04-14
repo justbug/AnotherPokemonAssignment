@@ -7,7 +7,11 @@
 
 import Foundation
 
-struct ListService {
+protocol ListServiceSpec {
+    func fetchList(limit: Int?, offset: Int?) async throws -> ListEntity
+}
+
+struct ListService: ListServiceSpec {
     private let path = "pokemon"
 
     func fetchList(limit: Int?, offset: Int?) async throws -> ListEntity {
