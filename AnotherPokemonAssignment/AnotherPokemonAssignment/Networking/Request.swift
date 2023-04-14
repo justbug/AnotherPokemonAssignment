@@ -12,18 +12,20 @@ enum RequestError: Error {
     case urlIsNil
 }
 
+typealias QueryItems = [(String, String?)]?
+
 struct Request {
     private let baseURL: URL
     private let method: HTTPMethod
     private let path: String
-    private let query: [(String, String?)]?
+    private let query: QueryItems
     private var fullURL: URL {
         var url = baseURL
         url.appendPathComponent(path)
         return url
     }
     
-    init(baseURL: URL, method: HTTPMethod, path: String, query: [(String, String?)]?) {
+    init(baseURL: URL, method: HTTPMethod, path: String, query: QueryItems) {
         self.baseURL = baseURL
         self.method = method
         self.path = path

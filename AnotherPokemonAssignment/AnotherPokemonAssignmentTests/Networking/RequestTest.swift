@@ -29,7 +29,7 @@ private extension RequestTest {
     func makeSUT(
         method: HTTPMethod = .get,
         path: String,
-        query: [(String, String?)]? = nil
+        query: QueryItems = nil
     ) -> Request {
         Request(baseURL: dummyBaseURL, method: method, path: path, query: query)
     }

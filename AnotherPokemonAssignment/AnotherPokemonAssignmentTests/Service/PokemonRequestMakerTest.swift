@@ -17,7 +17,7 @@ final class PokemonRequestMakerTest: XCTestCase {
 }
 
 private extension PokemonRequestMakerTest {
-    func makeSUT(path: String, query: [(String, String?)]?) -> Request {
+    func makeSUT(path: String, query: QueryItems) -> Request {
         let maker = PokemonRequestMaker()
         return maker.makeRequest(path: path, query: query)
     }

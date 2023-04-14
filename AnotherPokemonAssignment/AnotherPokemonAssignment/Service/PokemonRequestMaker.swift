@@ -11,7 +11,7 @@ struct PokemonRequestMaker {
     private let baseURL = URL(string: "https://pokeapi.co")!
     private let apiVersion: String = "v2"
 
-    func makeRequest(path: String, query: [(String, String?)]?) -> Request {
+    func makeRequest(path: String, query: QueryItems) -> Request {
         Request(
             baseURL: baseURL,
             method: .get,

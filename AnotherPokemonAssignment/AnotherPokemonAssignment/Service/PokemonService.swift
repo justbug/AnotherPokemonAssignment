@@ -22,7 +22,7 @@ final class PokemonService {
         self.apiClient = apiClient
     }
 
-    func fetch<T: Decodable>(path: String, query: [(String, String?)]?) async throws -> T {
+    func fetch<T: Decodable>(path: String, query: QueryItems) async throws -> T {
         let request = requestMaker.makeRequest(path: path, query: query)
         let response = try await apiClient
             .fetch(request: request)
