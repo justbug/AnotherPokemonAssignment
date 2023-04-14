@@ -18,7 +18,9 @@ struct Request<Response> {
     private let path: String
     private let query: [(String, String?)]?
     private var fullURL: URL {
-        baseURL.appendingPathExtension(path)
+        var url = baseURL
+        url.appendPathComponent(path)
+        return url
     }
     
     init(method: HTTPMethod, path: String, query: [(String, String?)]?) {
