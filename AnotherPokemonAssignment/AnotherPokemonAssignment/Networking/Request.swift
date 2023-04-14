@@ -39,7 +39,14 @@ struct Request<Response> {
 private extension Request {
     func setQueryItems(to components: inout URLComponents) {
         guard let query = query, !query.isEmpty else { return }
-        components.queryItems = query.map(URLQueryItem.init)
+        components.queryItems = query
+            .filter({ tuple in
+                if tuple.1 == nil {
+                    return false
+                }
+                return true
+            })
+            .map(URLQueryItem.init)
     }
 
     func getURLRequest(url: URL?) throws -> URLRequest {
