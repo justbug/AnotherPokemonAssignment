@@ -25,6 +25,7 @@ final class ListViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         binding()
+        fetchList()
     }
 }
 
@@ -40,5 +41,23 @@ private extension ListViewController {
                 self?.title = title
             }
             .store(in: &cancelBag)
+
+        viewModel.$pokemons
+            .filter { !$0.isEmpty }
+            .receive(on: DispatchQueue.main)
+            .sink { pokemons in
+                print(pokemons)
+            }
+            .store(in: &cancelBag)
+    }
+
+    func fetchList() {
+        Task {
+            do {
+                try await viewModel.fetchList()
+            } catch {
+                print(error)
+            }
+        }
     }
 }
