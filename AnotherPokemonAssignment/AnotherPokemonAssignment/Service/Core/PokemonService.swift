@@ -9,6 +9,8 @@ import Foundation
 
 private let client = APIClient()
 
+let service = PokemonService()
+
 final class PokemonService {
     private let apiClient: APIClientSpec
     private let decoder = JSONDecoder()

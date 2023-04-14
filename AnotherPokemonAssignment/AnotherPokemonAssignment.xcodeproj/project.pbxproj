@@ -16,6 +16,8 @@
 		CFCBFB2C29E9139200602AF1 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB2B29E9139200602AF1 /* Helper.swift */; };
 		CFCBFB2E29E9279100602AF1 /* PokemonRequestMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB2D29E9279100602AF1 /* PokemonRequestMaker.swift */; };
 		CFCBFB3029E928BB00602AF1 /* PokemonRequestMakerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB2F29E928BB00602AF1 /* PokemonRequestMakerTest.swift */; };
+		CFCBFB3429E9346D00602AF1 /* ListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB3329E9346D00602AF1 /* ListService.swift */; };
+		CFCBFB3729E935FC00602AF1 /* IntExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB3629E935FC00602AF1 /* IntExtension.swift */; };
 		CFD9A55B29E7A90200C0817E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD9A55A29E7A90200C0817E /* AppDelegate.swift */; };
 		CFD9A55D29E7A90200C0817E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD9A55C29E7A90200C0817E /* SceneDelegate.swift */; };
 		CFD9A55F29E7A90200C0817E /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD9A55E29E7A90200C0817E /* ListViewController.swift */; };
@@ -47,6 +49,8 @@
 		CFCBFB2B29E9139200602AF1 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		CFCBFB2D29E9279100602AF1 /* PokemonRequestMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonRequestMaker.swift; sourceTree = "<group>"; };
 		CFCBFB2F29E928BB00602AF1 /* PokemonRequestMakerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonRequestMakerTest.swift; sourceTree = "<group>"; };
+		CFCBFB3329E9346D00602AF1 /* ListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListService.swift; sourceTree = "<group>"; };
+		CFCBFB3629E935FC00602AF1 /* IntExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtension.swift; sourceTree = "<group>"; };
 		CFD9A55729E7A90200C0817E /* AnotherPokemonAssignment.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnotherPokemonAssignment.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFD9A55A29E7A90200C0817E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CFD9A55C29E7A90200C0817E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -93,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				CFCBFB3229E9344500602AF1 /* Core */,
+				CFCBFB3329E9346D00602AF1 /* ListService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -113,6 +118,14 @@
 				CFCBFB2D29E9279100602AF1 /* PokemonRequestMaker.swift */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		CFCBFB3529E935EB00602AF1 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				CFCBFB3629E935FC00602AF1 /* IntExtension.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		CFD9A54E29E7A90200C0817E = {
@@ -136,6 +149,7 @@
 		CFD9A55929E7A90200C0817E /* AnotherPokemonAssignment */ = {
 			isa = PBXGroup;
 			children = (
+				CFCBFB3529E935EB00602AF1 /* Extension */,
 				CFCBFB2629E903E600602AF1 /* Service */,
 				CFD9A59329E7C03900C0817E /* Networking */,
 				CFD9A58A29E7B55F00C0817E /* List */,
@@ -290,6 +304,8 @@
 				CFA2024C29E7F0C30052AFBD /* Request.swift in Sources */,
 				CFD9A55B29E7A90200C0817E /* AppDelegate.swift in Sources */,
 				CFA2025429E8EB390052AFBD /* Reponsse.swift in Sources */,
+				CFCBFB3729E935FC00602AF1 /* IntExtension.swift in Sources */,
+				CFCBFB3429E9346D00602AF1 /* ListService.swift in Sources */,
 				CFCBFB2829E9100900602AF1 /* Helper.swift in Sources */,
 				CFCBFB2E29E9279100602AF1 /* PokemonRequestMaker.swift in Sources */,
 				CFD9A58C29E7B8C500C0817E /* ListViewModel.swift in Sources */,
