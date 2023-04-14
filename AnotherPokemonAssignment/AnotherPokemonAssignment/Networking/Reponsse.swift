@@ -7,8 +7,7 @@
 
 import Foundation
 
-struct Response<T> {
-    let entity: T
+struct Response {
     let response: URLResponse
     var statusCode: Int? { (response as? HTTPURLResponse)?.statusCode }
     let data: Data

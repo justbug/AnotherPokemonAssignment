@@ -12,7 +12,7 @@ enum RequestError: Error {
     case urlIsNil
 }
 
-struct Request<Response> {
+struct Request {
     private let baseURL: URL = URL(string: "https://pokeapi.co")!
     private let method: HTTPMethod
     private let path: String

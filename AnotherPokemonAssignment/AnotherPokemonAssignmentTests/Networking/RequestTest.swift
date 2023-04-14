@@ -30,7 +30,7 @@ extension RequestTest {
         method: HTTPMethod = .get,
         path: String,
         query: [(String, String?)]? = nil
-    ) -> Request<Data> {
+    ) -> Request {
         Request(method: method, path: path, query: query)
     }
 
