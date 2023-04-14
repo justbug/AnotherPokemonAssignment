@@ -10,28 +10,20 @@ import Foundation
 private let client = APIClient()
 
 final class PokemonService {
-    struct Argument {
-        let path: String
-        let query: [(String, String?)]?
-    }
     private let apiClient: APIClientSpec
-    private let argument: Argument
-
-    private let baseURL: URL = URL(string: "https://pokeapi.co")!
     private let decoder = JSONDecoder()
-    private let apiVersion: String = "v2"
+    private let requestMaker = PokemonRequestMaker()
 
-    convenience init(argument: Argument) {
-        self.init(apiClient: client, argument: argument)
+    convenience init() {
+        self.init(apiClient: client)
     }
 
-    init(apiClient: APIClientSpec, argument: Argument) {
+    init(apiClient: APIClientSpec) {
         self.apiClient = apiClient
-        self.argument = argument
     }
 
-    func fetch<T: Decodable>() async throws -> T {
-        let request = makeRequest()
+    func fetch<T: Decodable>(path: String, query: [(String, String?)]?) async throws -> T {
+        let request = requestMaker.makeRequest(path: path, query: query)
         let response = try await apiClient
             .fetch(request: request)
             .validStatusCode()
@@ -40,15 +32,6 @@ final class PokemonService {
 }
 
 private extension PokemonService {
-    func makeRequest() -> Request {
-        Request(
-            baseURL: baseURL,
-            method: .get,
-            path: "/api/\(apiVersion)/\(argument.path)",
-            query: argument.query
-        )
-    }
-
     func decode<T: Decodable>(data: Data) throws -> T {
         try decoder.decode(T.self, from: data)
     }
