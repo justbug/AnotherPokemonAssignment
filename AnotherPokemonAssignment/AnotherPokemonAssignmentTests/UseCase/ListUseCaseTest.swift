@@ -22,6 +22,12 @@ final class ListUseCaseTest: XCTestCase {
         XCTAssertEqual(model.first?.name, nil)
         XCTAssertEqual(model.first?.id, nil)
     }
+
+    func test_empty_result() async throws {
+        let sut = makeSUT(entity: .init(next: nil, results: []))
+        let model = try await sut.fetchList(offset: 0)
+        XCTAssertEqual(model.isEmpty, true)
+    }
 }
 
 private extension ListUseCaseTest {
