@@ -20,6 +20,12 @@ struct Request<Response> {
     private var fullURL: URL {
         baseURL.appendingPathExtension(path)
     }
+    
+    init(method: HTTPMethod, path: String, query: [(String, String?)]?) {
+        self.method = method
+        self.path = path
+        self.query = query
+    }
 
     func makeToURLRequest() throws -> URLRequest {
         guard var components = URLComponents(url: fullURL, resolvingAgainstBaseURL: false) else {
