@@ -17,8 +17,8 @@ final class APIClient {
     }
 }
 
-extension APIClient {
-    private func data(urlRequest: URLRequest) async throws -> (Data, URLResponse) {
+private extension APIClient {
+     func data(urlRequest: URLRequest) async throws -> (Data, URLResponse) {
         try await session.data(for: urlRequest)
     }
 }
