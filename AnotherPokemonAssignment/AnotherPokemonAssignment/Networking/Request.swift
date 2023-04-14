@@ -7,11 +7,43 @@
 
 import Foundation
 
+enum RequestError: Error {
+    case initURLComponentsFailed
+    case urlIsNil
+}
+
 struct Request<Response> {
-    let baseURL: URL = URL(string: "https://pokeapi.co")!
-    let method: HTTPMethod
-    let path: String
-    let query: [(String, String?)]?
+    private let baseURL: URL = URL(string: "https://pokeapi.co")!
+    private let method: HTTPMethod
+    private let path: String
+    private let query: [(String, String?)]?
+    private var fullURL: URL {
+        baseURL.appendingPathExtension(path)
+    }
+
+    func makeToURLRequest() throws -> URLRequest {
+        guard var components = URLComponents(url: fullURL, resolvingAgainstBaseURL: false) else {
+            throw RequestError.initURLComponentsFailed
+        }
+        setQueryItems(to: &components)
+        return try getURLRequest(url: components.url)
+    }
+}
+
+private extension Request {
+    func setQueryItems(to components: inout URLComponents) {
+        guard let query = query, !query.isEmpty else { return }
+        components.queryItems = query.map(URLQueryItem.init)
+    }
+
+    func getURLRequest(url: URL?) throws -> URLRequest {
+        guard let url = url else {
+            throw RequestError.urlIsNil
+        }
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = method.rawValue
+        return urlRequest
+    }
 }
 
 struct HTTPMethod: RawRepresentable, ExpressibleByStringLiteral {
