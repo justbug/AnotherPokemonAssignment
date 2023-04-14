@@ -31,10 +31,14 @@ extension RequestTest {
         path: String,
         query: [(String, String?)]? = nil
     ) -> Request {
-        Request(method: method, path: path, query: query)
+        Request(baseURL: dummyBaseURL, method: method, path: path, query: query)
     }
 
     var dummyPath: String {
         "/dummyPath"
+    }
+
+    var dummyBaseURL: URL {
+        URL(string: "https://pokeapi.co")!
     }
 }

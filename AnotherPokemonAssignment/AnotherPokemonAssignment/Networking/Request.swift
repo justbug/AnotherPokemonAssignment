@@ -13,7 +13,7 @@ enum RequestError: Error {
 }
 
 struct Request {
-    private let baseURL: URL = URL(string: "https://pokeapi.co")!
+    private let baseURL: URL
     private let method: HTTPMethod
     private let path: String
     private let query: [(String, String?)]?
@@ -23,7 +23,8 @@ struct Request {
         return url
     }
     
-    init(method: HTTPMethod, path: String, query: [(String, String?)]?) {
+    init(baseURL: URL, method: HTTPMethod, path: String, query: [(String, String?)]?) {
+        self.baseURL = baseURL
         self.method = method
         self.path = path
         self.query = query
