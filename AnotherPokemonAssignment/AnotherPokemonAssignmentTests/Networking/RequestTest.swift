@@ -9,10 +9,19 @@ import XCTest
 @testable import AnotherPokemonAssignment
 
 final class RequestTest: XCTestCase {
-    func test_init() {
+    func test_init() throws {
         let sut = makeSUT(path: dummyPath)
-        XCTAssertEqual(sut.baseURL.absoluteString, "https://pokeapi.co")
-        XCTAssertEqual(sut.method.rawValue, "GET")
+        let request = try sut.makeToURLRequest()
+
+        XCTAssertEqual(request.url?.absoluteString, "https://pokeapi.co\(dummyPath)")
+        XCTAssertEqual(request.httpMethod, "GET")
+    }
+
+
+    func test_urlWithQuery() throws {
+        let sut = makeSUT(path: dummyPath, query: [("q1", "v1"), ("q2", nil), ("q3", "v3")])
+        let request = try sut.makeToURLRequest()
+        XCTAssertEqual(request.url?.query(), "q1=v1&q3=v3")
     }
 }
 
@@ -21,7 +30,7 @@ extension RequestTest {
         method: HTTPMethod = .get,
         path: String,
         query: [(String, String?)]? = nil
-    ) -> Request {
+    ) -> Request<Data> {
         Request(method: method, path: path, query: query)
     }
 
