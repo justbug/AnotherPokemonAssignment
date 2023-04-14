@@ -92,9 +92,7 @@
 		CFCBFB2629E903E600602AF1 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				CFA2025729E8FF840052AFBD /* PokemonService.swift */,
-				CFCBFB2729E9100900602AF1 /* Helper.swift */,
-				CFCBFB2D29E9279100602AF1 /* PokemonRequestMaker.swift */,
+				CFCBFB3229E9344500602AF1 /* Core */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -105,6 +103,16 @@
 				CFCBFB2F29E928BB00602AF1 /* PokemonRequestMakerTest.swift */,
 			);
 			path = Service;
+			sourceTree = "<group>";
+		};
+		CFCBFB3229E9344500602AF1 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				CFA2025729E8FF840052AFBD /* PokemonService.swift */,
+				CFCBFB2729E9100900602AF1 /* Helper.swift */,
+				CFCBFB2D29E9279100602AF1 /* PokemonRequestMaker.swift */,
+			);
+			path = Core;
 			sourceTree = "<group>";
 		};
 		CFD9A54E29E7A90200C0817E = {
