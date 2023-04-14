@@ -20,8 +20,12 @@ final class RequestTest: XCTestCase {
 
     func test_urlWithQuery() throws {
         let sut = makeSUT(path: dummyPath, query: [("q1", "v1"), ("q2", nil), ("q3", "v3")])
-        let request = try sut.makeToURLRequest()
-        XCTAssertEqual(request.url?.query(), "q1=v1&q3=v3")
+        let url = try sut.makeToURLRequest().url!
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+        let query = components.queryItems!
+            .map { "\($0.name)=\($0.value!)" }
+            .joined(separator: "&")
+        XCTAssertEqual(query, "q1=v1&q3=v3")
     }
 }
 
