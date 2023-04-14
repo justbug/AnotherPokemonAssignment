@@ -25,7 +25,7 @@ final class RequestTest: XCTestCase {
     }
 }
 
-extension RequestTest {
+private extension RequestTest {
     func makeSUT(
         method: HTTPMethod = .get,
         path: String,
@@ -35,10 +35,10 @@ extension RequestTest {
     }
 
     var dummyPath: String {
-        "/dummyPath"
+        Helper.dummyPath
     }
 
     var dummyBaseURL: URL {
-        URL(string: "https://pokeapi.co")!
+        Helper.dummyBaseURL
     }
 }
