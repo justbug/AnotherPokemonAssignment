@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Request {
+struct Request<Response> {
     let baseURL: URL = URL(string: "https://pokeapi.co")!
     let method: HTTPMethod
     let path: String
