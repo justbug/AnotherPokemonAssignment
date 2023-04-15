@@ -8,23 +8,31 @@
 import UIKit
 
 final class FavoriteView: UIView {
+    private let viewModel: FavoriteViewModel
     private lazy var favoriteButton = makeFavoriteButton()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(viewModel: FavoriteViewModel) {
+        self.viewModel = viewModel
+        super.init(frame: .zero)
         setupUI()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    func reload(id: String) {
+        viewModel.setID(id)
+        favoriteButton.isSelected = viewModel.getIsFavorite(id: id)
+    }
 }
 
 // MARK: - Helper
 
 private extension FavoriteView {
-    @objc func favoriteButtonPressed() {
-
+    @objc func favoriteButtonPressed(_ button: UIButton) {
+        button.isSelected.toggle()
+        viewModel.setIsFavorite(button.isSelected, id: viewModel.id)
     }
 }
 
