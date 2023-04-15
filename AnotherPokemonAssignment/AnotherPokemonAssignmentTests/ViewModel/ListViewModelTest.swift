@@ -28,9 +28,7 @@ final class ListViewModelTest: XCTestCase {
             }
             .store(in: &cancelBag)
 
-        Task {
-            try await sut.fetchList()
-        }
+        sut.fetchList()
     }
 
     func test_pagination() {
@@ -51,13 +49,8 @@ final class ListViewModelTest: XCTestCase {
             }
             .store(in: &cancelBag)
 
-        Task {
-            try await sut.fetchList()
-        }
-
-        Task {
-            try await sut.fetchList()
-        }
+        sut.fetchList()
+        sut.fetchList()
     }
 }
 

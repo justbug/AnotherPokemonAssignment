@@ -18,9 +18,15 @@ final class ListViewModel {
         self.listUseCase = ListUseCase(listService: listService)
     }
 
-    func fetchList() async throws {
-        let model = try await listUseCase.fetchList(offset: offset)
-        offset = model.count
-        pokemons.append(contentsOf: model)
+    func fetchList() {
+        Task {
+            do {
+                let model = try await listUseCase.fetchList(offset: offset)
+                offset = model.count
+                pokemons.append(contentsOf: model)
+            } catch {
+                print(error)
+            }
+        }
     }
 }

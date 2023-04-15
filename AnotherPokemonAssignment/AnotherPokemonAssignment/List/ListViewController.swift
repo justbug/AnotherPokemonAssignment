@@ -52,12 +52,6 @@ private extension ListViewController {
     }
 
     func fetchList() {
-        Task {
-            do {
-                try await viewModel.fetchList()
-            } catch {
-                print(error)
-            }
-        }
+        viewModel.fetchList()
     }
 }
