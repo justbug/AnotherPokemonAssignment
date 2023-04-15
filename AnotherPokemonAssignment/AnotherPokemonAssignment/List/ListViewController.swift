@@ -29,11 +29,9 @@ final class ListViewController: UIViewController {
     }
 }
 
-private extension ListViewController {
-    func setupUI() {
-        view.backgroundColor = .white
-    }
+// MARK: - Helper
 
+private extension ListViewController {
     func binding() {
         viewModel.$title
             .receive(on: DispatchQueue.main)
@@ -53,5 +51,13 @@ private extension ListViewController {
 
     func fetchList() {
         viewModel.fetchList()
+    }
+}
+
+// MARK: - Layout
+
+private extension ListViewController {
+    func setupUI() {
+        view.backgroundColor = .white
     }
 }
