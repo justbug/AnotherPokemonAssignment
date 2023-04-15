@@ -21,8 +21,9 @@ final class ListCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(title: String) {
+    func configure(title: String, id: String) {
         titleLabel.text = title
+        favoriteView.reload(id: id)
     }
 }
 
@@ -61,7 +62,7 @@ private extension ListCell {
     }
 
     func makeFavoriteView() -> FavoriteView {
-        let view = FavoriteView()
+        let view = FavoriteView(viewModel: .init(store: UserDefaults.standard))
         return view
     }
 }

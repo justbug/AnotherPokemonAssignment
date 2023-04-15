@@ -94,7 +94,7 @@ private extension ListViewController {
     func makeDataSource() -> DataSource {
         DataSource(collectionView: collectionView) { collectionView, indexPath, pokemon in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ListCell", for: indexPath)
-            (cell as? ListCell)?.configure(title: pokemon.name)
+            (cell as? ListCell)?.configure(title: pokemon.name, id: pokemon.id)
             return cell
         }
     }

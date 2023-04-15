@@ -33,17 +33,17 @@ private extension ListUseCase {
         })
     }
 
-    func getID(urlString: String) -> Int? {
-        guard let url = URL(string: urlString) else {
+    func getID(urlString: String) -> String? {
+        guard let url = URL(string: urlString), let intValue = Int(url.lastPathComponent) else {
             return nil
         }
-        return Int(url.lastPathComponent)
+        return String(intValue)
     }
 }
 
 struct Pokemon {
     let name: String
-    let id: Int
+    let id: String
 }
 
 extension Pokemon: Hashable {
