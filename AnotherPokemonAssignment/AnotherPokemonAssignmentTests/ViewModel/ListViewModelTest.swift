@@ -13,6 +13,11 @@ import XCTest
 final class ListViewModelTest: XCTestCase {
     private var cancelBag = Set<AnyCancellable>()
 
+    override func tearDown() {
+        super.tearDown()
+        cancelBag = []
+    }
+
     func test_fetchList_withEntity() {
         let results: [ListEntity.ResultEntity] = [
             .init(name: "butterfree", url: "https://pokeapi.co/api/v2/pokemon/12/")
@@ -22,6 +27,7 @@ final class ListViewModelTest: XCTestCase {
 
         sut.$pokemons
             .filter { !$0.isEmpty }
+            .receive(on: DispatchQueue.main)
             .sink { pokemons in
                 XCTAssertEqual(pokemons.count, 1)
                 XCTAssertEqual(stub.offset, 1)
