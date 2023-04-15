@@ -43,8 +43,8 @@ private extension ListUseCaseTest {
         "https://pokeapi.co/api/v2/pokemon/\(dummyID)/"
     }
 
-    var dummyID: Int {
-        6
+    var dummyID: String {
+        "6"
     }
 }
 
