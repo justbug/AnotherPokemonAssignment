@@ -23,7 +23,7 @@ final class ListCell: UICollectionViewCell {
 
     func configure(title: String, id: String) {
         titleLabel.text = title
-        favoriteView.reload(id: id)
+        favoriteView.reload(id: id, name: title)
     }
 }
 

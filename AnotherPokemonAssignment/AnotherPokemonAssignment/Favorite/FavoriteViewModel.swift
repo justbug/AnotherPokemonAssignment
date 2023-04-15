@@ -8,22 +8,24 @@
 import Foundation
 
 final class FavoriteViewModel {
-    private let useCase: FavoriteUseCase
+    private let useCase: PokemonStoreUseCase
     private(set) var id: String = ""
+    private(set) var name: String = ""
 
-    init(store: FavoriteStore) {
-        self.useCase = FavoriteUseCase(store: store)
+    init(store: PokemonStore) {
+        self.useCase = PokemonStoreUseCase(store: store)
     }
 
-    func setIsFavorite(_ value: Bool, id: String) {
-        useCase.setIsFavorite(value, id: id)
+    func setIsFavorite(_ value: Bool) {
+        useCase.savePokemon(name: name, id: id, isFavorite: value)
     }
 
     func getIsFavorite(id: String) -> Bool {
-        useCase.getIsFavorite(id: id)
+        useCase.getPokemon(id: id)?.isFavorite ?? false
     }
 
-    func setID(_ value: String) {
-        id = value
+    func setID(_ id: String, name: String) {
+        self.id = id
+        self.name = name
     }
 }

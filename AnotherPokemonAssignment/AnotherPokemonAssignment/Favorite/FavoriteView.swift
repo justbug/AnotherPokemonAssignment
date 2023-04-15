@@ -21,8 +21,8 @@ final class FavoriteView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func reload(id: String) {
-        viewModel.setID(id)
+    func reload(id: String, name: String) {
+        viewModel.setID(id, name: name)
         favoriteButton.isSelected = viewModel.getIsFavorite(id: id)
     }
 }
@@ -32,7 +32,7 @@ final class FavoriteView: UIView {
 private extension FavoriteView {
     @objc func favoriteButtonPressed(_ button: UIButton) {
         button.isSelected.toggle()
-        viewModel.setIsFavorite(button.isSelected, id: viewModel.id)
+        viewModel.setIsFavorite(button.isSelected)
     }
 }
 
