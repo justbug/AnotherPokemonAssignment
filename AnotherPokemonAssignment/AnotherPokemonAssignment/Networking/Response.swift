@@ -1,5 +1,5 @@
 //
-//  Reponsse.swift
+//  Response.swift
 //  AnotherPokemonAssignment
 //
 //  Created by Mark Chen on 2023/4/14.
