@@ -10,6 +10,7 @@ import UIKit
 
 final class ListCell: UICollectionViewCell {
     private lazy var titleLabel = makeTitleLabel()
+    private lazy var favoriteView = makeFavoriteView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -28,11 +29,28 @@ final class ListCell: UICollectionViewCell {
 // MARK: - Helper
 
 private extension ListCell {
+    @objc func favoriteButtonPressed() {
+
+    }
+}
+
+// MARK: - Layout
+
+private extension ListCell {
     func setupUI() {
         contentView.backgroundColor = .white
         contentView.addSubview(titleLabel)
+        [titleLabel, favoriteView].forEach(contentView.addSubview)
+
         titleLabel.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(8)
+            make.leading.equalToSuperview().inset(8)
+            make.trailing.lessThanOrEqualTo(favoriteView.snp.leading).offset(-8)
+            make.centerY.equalTo(favoriteView)
+        }
+
+        favoriteView.snp.makeConstraints { make in
+            make.top.bottom.trailing.equalToSuperview().inset(8)
+            make.size.equalTo(35)
         }
     }
 
@@ -40,5 +58,10 @@ private extension ListCell {
         let label = UILabel()
         label.numberOfLines = 0
         return label
+    }
+
+    func makeFavoriteView() -> FavoriteView {
+        let view = FavoriteView()
+        return view
     }
 }
