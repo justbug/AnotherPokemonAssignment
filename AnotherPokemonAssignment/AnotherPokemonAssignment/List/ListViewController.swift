@@ -9,6 +9,11 @@ import Combine
 import UIKit
 
 final class ListViewController: UIViewController {
+    fileprivate typealias DataSource = UICollectionViewDiffableDataSource<Section, Pokemon>
+    fileprivate typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Pokemon>
+
+    private lazy var collectionView = makeCollectionView()
+    private lazy var dataSource = makeDataSource()
     private let viewModel: ListViewModel
     private var cancelBag = Set<AnyCancellable>()
 
@@ -32,6 +37,10 @@ final class ListViewController: UIViewController {
 // MARK: - Helper
 
 private extension ListViewController {
+    enum Section {
+        case main
+    }
+
     func binding() {
         viewModel.$title
             .receive(on: DispatchQueue.main)
@@ -43,14 +52,21 @@ private extension ListViewController {
         viewModel.$pokemons
             .filter { !$0.isEmpty }
             .receive(on: DispatchQueue.main)
-            .sink { pokemons in
-                print(pokemons)
+            .sink { [weak self] pokemons in
+                self?.reload(pokemons)
             }
             .store(in: &cancelBag)
     }
 
     func fetchList() {
         viewModel.fetchList()
+    }
+
+    func reload(_ pokemons: [Pokemon]) {
+        var snapshot = Snapshot()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(pokemons, toSection: .main)
+        dataSource.apply(snapshot)
     }
 }
 
@@ -59,5 +75,41 @@ private extension ListViewController {
 private extension ListViewController {
     func setupUI() {
         view.backgroundColor = .white
+        view.addSubview(collectionView)
+        collectionView.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
+
+    func makeCollectionView() -> UICollectionView {
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: makeCompositionalLayout()
+        )
+        collectionView.backgroundColor = .white
+        collectionView.register(ListCell.self, forCellWithReuseIdentifier: "ListCell")
+        return collectionView
+    }
+
+    func makeDataSource() -> DataSource {
+        DataSource(collectionView: collectionView) { collectionView, indexPath, pokemon in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ListCell", for: indexPath)
+            (cell as? ListCell)?.configure(title: pokemon.name)
+            return cell
+        }
+    }
+
+    func makeCompositionalLayout() -> UICollectionViewCompositionalLayout {
+        UICollectionViewCompositionalLayout { _, _ in
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1),
+                heightDimension: .estimated(40)
+            )
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitem: item, count: 1)
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 10
+            return section
+        }
     }
 }

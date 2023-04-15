@@ -45,3 +45,13 @@ struct Pokemon {
     let name: String
     let id: Int
 }
+
+extension Pokemon: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    static func == (lhs: Pokemon, rhs: Pokemon) -> Bool {
+        lhs.id == rhs.id
+    }
+}

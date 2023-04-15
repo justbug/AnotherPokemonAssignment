@@ -21,6 +21,7 @@
 		CFCBFB3A29E943FA00602AF1 /* ListUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB3929E943FA00602AF1 /* ListUseCase.swift */; };
 		CFCBFB3D29E94D0C00602AF1 /* ListUseCaseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB3C29E94D0C00602AF1 /* ListUseCaseTest.swift */; };
 		CFCBFB4029E95D9D00602AF1 /* ListViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB3F29E95D9D00602AF1 /* ListViewModelTest.swift */; };
+		CFCBFB4529EA389B00602AF1 /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB4429EA389B00602AF1 /* ListCell.swift */; };
 		CFD9A55B29E7A90200C0817E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD9A55A29E7A90200C0817E /* AppDelegate.swift */; };
 		CFD9A55D29E7A90200C0817E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD9A55C29E7A90200C0817E /* SceneDelegate.swift */; };
 		CFD9A55F29E7A90200C0817E /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD9A55E29E7A90200C0817E /* ListViewController.swift */; };
@@ -57,6 +58,7 @@
 		CFCBFB3929E943FA00602AF1 /* ListUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUseCase.swift; sourceTree = "<group>"; };
 		CFCBFB3C29E94D0C00602AF1 /* ListUseCaseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUseCaseTest.swift; sourceTree = "<group>"; };
 		CFCBFB3F29E95D9D00602AF1 /* ListViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewModelTest.swift; sourceTree = "<group>"; };
+		CFCBFB4429EA389B00602AF1 /* ListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
 		CFD9A55729E7A90200C0817E /* AnotherPokemonAssignment.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnotherPokemonAssignment.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFD9A55A29E7A90200C0817E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CFD9A55C29E7A90200C0817E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -158,6 +160,14 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		CFCBFB4329EA386F00602AF1 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				CFCBFB4429EA389B00602AF1 /* ListCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		CFD9A54E29E7A90200C0817E = {
 			isa = PBXGroup;
 			children = (
@@ -207,6 +217,7 @@
 		CFD9A58A29E7B55F00C0817E /* List */ = {
 			isa = PBXGroup;
 			children = (
+				CFCBFB4329EA386F00602AF1 /* Cell */,
 				CFD9A55E29E7A90200C0817E /* ListViewController.swift */,
 				CFD9A58B29E7B8C500C0817E /* ListViewModel.swift */,
 			);
@@ -335,6 +346,7 @@
 				CFD9A55F29E7A90200C0817E /* ListViewController.swift in Sources */,
 				CFA2025829E8FF840052AFBD /* PokemonService.swift in Sources */,
 				CFA2024C29E7F0C30052AFBD /* Request.swift in Sources */,
+				CFCBFB4529EA389B00602AF1 /* ListCell.swift in Sources */,
 				CFD9A55B29E7A90200C0817E /* AppDelegate.swift in Sources */,
 				CFA2025429E8EB390052AFBD /* Response.swift in Sources */,
 				CFCBFB3729E935FC00602AF1 /* IntExtension.swift in Sources */,
