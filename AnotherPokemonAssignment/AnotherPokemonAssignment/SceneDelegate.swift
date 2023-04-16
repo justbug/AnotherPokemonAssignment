@@ -56,7 +56,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 private extension SceneDelegate {
     func getRootViewController() -> UIViewController {
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [getListViewControllerWithNav()]
+        tabBarController.viewControllers = [getListViewControllerWithNav(), getFavoriteCollectionViewControllerWithNav()]
         return tabBarController
     }
 
@@ -65,6 +65,15 @@ private extension SceneDelegate {
         vc.tabBarItem = makeTabBarItem(
             image: UIImage(systemName: "list.bullet.rectangle.portrait"),
             selectedImage: UIImage(systemName: "list.bullet.rectangle.portrait.fill")
+        )
+        return UINavigationController(rootViewController: vc)
+    }
+
+    func getFavoriteCollectionViewControllerWithNav() -> UINavigationController {
+        let vc = FavoriteCollectionViewController(viewModel: FavoriteCollectionViewModel())
+        vc.tabBarItem = makeTabBarItem(
+            image: UIImage(systemName: "heart"),
+            selectedImage: UIImage(systemName: "heart.fill")
         )
         return UINavigationController(rootViewController: vc)
     }
