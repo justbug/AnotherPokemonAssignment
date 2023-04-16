@@ -42,21 +42,3 @@ private extension PokemonStoreUseCase {
         pokemons[index] = pokemon
     }
 }
-
-struct StorePokemon: Codable {
-    let name: String
-    let id: String
-    let isFavorite: Bool
-}
-
-extension UserDefaults: PokemonStore {
-    func getPokemons() -> [StorePokemon] {
-        guard let data = UserDefaults.standard.data(forKey: PokemonStoreUseCase.key) else { return [] }
-        return (try? PropertyListDecoder().decode([StorePokemon].self, from: data)) ?? []
-    }
-
-    func savePokemons(_ pokemons: [StorePokemon]) {
-        guard let data = try? PropertyListEncoder().encode(pokemons) else { return }
-        UserDefaults.standard.set(data, forKey: PokemonStoreUseCase.key)
-    }
-}
