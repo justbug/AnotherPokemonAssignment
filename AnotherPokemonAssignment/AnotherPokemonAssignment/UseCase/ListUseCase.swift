@@ -8,36 +8,16 @@
 import Foundation
 
 final class ListUseCase {
-    let listService: ListServiceSpec
+    let listService: GetListSpec
 
-    init(listService: ListServiceSpec) {
+    init(listService: GetListSpec) {
         self.listService = listService
     }
 
     private let limit = 30
 
     func fetchList(offset: Int) async throws -> [Pokemon] {
-        let entity = try await listService.fetchList(limit: limit, offset: offset)
-        let pokemons = makeToModel(entity: entity)
-        return pokemons
-    }
-}
-
-private extension ListUseCase {
-    func makeToModel(entity: ListEntity) -> [Pokemon] {
-        entity.results.compactMap({ entity in
-            guard let id = getID(urlString: entity.url) else {
-                return nil
-            }
-            return Pokemon(name: entity.name, id: id)
-        })
-    }
-
-    func getID(urlString: String) -> String? {
-        guard let url = URL(string: urlString), let intValue = Int(url.lastPathComponent) else {
-            return nil
-        }
-        return String(intValue)
+        try await listService.fetchList(limit: limit, offset: offset)
     }
 }
 

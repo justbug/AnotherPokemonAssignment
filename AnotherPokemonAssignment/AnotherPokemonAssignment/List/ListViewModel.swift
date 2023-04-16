@@ -14,7 +14,7 @@ final class ListViewModel {
     private var offset = 0
     private let listUseCase: ListUseCase
 
-    init(listService: ListServiceSpec) {
+    init(listService: GetListSpec) {
         self.listUseCase = ListUseCase(listService: listService)
     }
 

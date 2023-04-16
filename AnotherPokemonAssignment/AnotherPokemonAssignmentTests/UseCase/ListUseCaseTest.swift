@@ -10,37 +10,26 @@ import XCTest
 
 final class ListUseCaseTest: XCTestCase {
     func test_validURL_result() async throws {
-        let sut = makeSUT(entity: .init(next: nil, results: [ListEntity.ResultEntity(name: dummyName, url: dummyURL)]))
+        let sut = makeSUT(pokemons: [.init(name: dummyName, id: dummyID)])
         let model = try await sut.fetchList(offset: 0)
         XCTAssertEqual(model.first?.name, dummyName)
         XCTAssertEqual(model.first?.id, dummyID)
     }
 
-    func test_invalidURL_result() async throws {
-        let sut = makeSUT(entity: .init(next: nil, results: [ListEntity.ResultEntity(name: dummyName, url: "https://pokeapi.co/d")]))
-        let model = try await sut.fetchList(offset: 0)
-        XCTAssertEqual(model.first?.name, nil)
-        XCTAssertEqual(model.first?.id, nil)
-    }
-
     func test_empty_result() async throws {
-        let sut = makeSUT(entity: .init(next: nil, results: []))
+        let sut = makeSUT(pokemons: [])
         let model = try await sut.fetchList(offset: 0)
         XCTAssertEqual(model.isEmpty, true)
     }
 }
 
 private extension ListUseCaseTest {
-    func makeSUT(entity: ListEntity) -> ListUseCase {
-        ListUseCase(listService: ListServiceStub(entity: entity))
+    func makeSUT(pokemons: [Pokemon]) -> ListUseCase {
+        ListUseCase(listService: ListServiceStub(pokemons: pokemons))
     }
 
     var dummyName: String {
         "charizard"
-    }
-
-    var dummyURL: String {
-        "https://pokeapi.co/api/v2/pokemon/\(dummyID)/"
     }
 
     var dummyID: String {
@@ -48,10 +37,10 @@ private extension ListUseCaseTest {
     }
 }
 
-struct ListServiceStub: ListServiceSpec {
-    let entity: ListEntity
+struct ListServiceStub: GetListSpec {
+    let pokemons: [Pokemon]
 
-    func fetchList(limit: Int?, offset: Int?) async throws -> ListEntity {
-        entity
+    func fetchList(limit: Int?, offset: Int?) async throws -> [AnotherPokemonAssignment.Pokemon] {
+        pokemons
     }
 }

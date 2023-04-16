@@ -19,10 +19,7 @@ final class ListViewModelTest: XCTestCase {
     }
 
     func test_fetchList_withEntity() {
-        let results: [ListEntity.ResultEntity] = [
-            .init(name: "butterfree", url: "https://pokeapi.co/api/v2/pokemon/12/")
-        ]
-        let stub = EntityStub(entity: .init(next: nil, results: results))
+        let stub = EntityStub(pokemons: [.init(name: "butterfree", id: "12")])
         let sut = makeSUT(listService: stub)
 
         sut.$pokemons
@@ -38,10 +35,7 @@ final class ListViewModelTest: XCTestCase {
     }
 
     func test_pagination() {
-        let results: [ListEntity.ResultEntity] = [
-            .init(name: "butterfree", url: "https://pokeapi.co/api/v2/pokemon/12/")
-        ]
-        let stub = EntityStub(entity: .init(next: nil, results: results))
+        let stub = EntityStub(pokemons: [.init(name: "butterfree", id: "12")])
         let sut = makeSUT(listService: stub)
         var fetchCount = 0
 
@@ -61,7 +55,7 @@ final class ListViewModelTest: XCTestCase {
 }
 
 private extension ListViewModelTest {
-    func makeSUT(listService: ListServiceSpec) -> ListViewModel {
+    func makeSUT(listService: GetListSpec) -> ListViewModel {
         ListViewModel(listService: listService)
     }
 }
@@ -69,17 +63,17 @@ private extension ListViewModelTest {
 // MARK: - Stub
 
 private extension ListViewModelTest {
-    final class EntityStub: ListServiceSpec {
-        let entity: ListEntity
+    final class EntityStub: GetListSpec {
+        let pokemons: [Pokemon]
         var offset: Int? = nil
 
-        init(entity: ListEntity) {
-            self.entity = entity
+        init(pokemons: [Pokemon]) {
+            self.pokemons = pokemons
         }
 
-        func fetchList(limit: Int?, offset: Int?) async throws -> ListEntity {
+        func fetchList(limit: Int?, offset: Int?) async throws -> [Pokemon] {
             self.offset = offset
-            return entity
+            return pokemons
         }
     }
 }
