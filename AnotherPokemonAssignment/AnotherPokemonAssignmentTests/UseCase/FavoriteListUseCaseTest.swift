@@ -9,25 +9,25 @@ import XCTest
 @testable import AnotherPokemonAssignment
 
 final class FavoriteListUseCaseTest: XCTestCase {
-    func test_offset_startIndexIsZero() async throws {
+    func test_favoriteListUseCase_offset_startIndexIsZero() async throws {
         let sut = makeSUT(pokemons: dummyPokemons)
         let pokemons = try await sut.fetchList(offset: 0)
         XCTAssertEqual(pokemons.count, 3)
     }
 
-    func test_offset_startIndexIsOne() async throws {
+    func test_favoriteListUseCase_offset_startIndexIsOne() async throws {
         let sut = makeSUT(pokemons: dummyPokemons)
         let pokemons = try await sut.fetchList(offset: 1)
         XCTAssertEqual(pokemons.count, 2)
     }
 
-    func test_offset_startIndexAboveItemCount() async throws {
+    func test_favoriteListUseCase_offset_startIndexAboveItemCount() async throws {
         let sut = makeSUT(pokemons: dummyPokemons)
         let pokemons = try await sut.fetchList(offset: 4)
         XCTAssertEqual(pokemons.isEmpty, true)
     }
 
-    func test_emptyPokemons() async throws {
+    func test_favoriteListUseCase_emptyPokemons() async throws {
         let sut = makeSUT(pokemons: [])
         let pokemons = try await sut.fetchList(offset: 4)
         XCTAssertEqual(pokemons.isEmpty, true)

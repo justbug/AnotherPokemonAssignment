@@ -9,12 +9,12 @@ import XCTest
 @testable import AnotherPokemonAssignment
 
 final class PokemonStoreUseCaseTest: XCTestCase {
-    func test_init() {
+    func test_pokemonStoreUseCase_init() {
         let sut = makeSUT()
         XCTAssertEqual(sut.getPokemon(id: dummyID)?.id, nil)
     }
 
-    func test_setAndGetMethod() {
+    func test_pokemonStoreUseCase_setAndGetMethod() {
         let otherID = "id2"
         let sut = makeSUT()
         sut.savePokemon(name: dummyName, id: dummyID, isFavorite: true)
@@ -24,14 +24,14 @@ final class PokemonStoreUseCaseTest: XCTestCase {
         XCTAssertEqual(sut.getPokemon(id: dummyID)!.name, dummyName)
     }
 
-    func test_notFound_pokemon() {
+    func test_pokemonStoreUseCase_notFound_pokemon() {
         let otherID = "id2"
         let sut = makeSUT()
         sut.savePokemon(name: dummyName, id: dummyID, isFavorite: true)
         XCTAssertEqual(sut.getPokemon(id: otherID)?.id, nil)
     }
 
-    func test_update_pokemon_isFavorite() {
+    func test_pokemonStoreUseCase_update_pokemon_isFavorite() {
         let sut = makeSUT()
         sut.savePokemon(name: dummyName, id: dummyID, isFavorite: true)
         sut.savePokemon(name: dummyName, id: dummyID, isFavorite: false)
@@ -41,14 +41,6 @@ final class PokemonStoreUseCaseTest: XCTestCase {
 }
 
 private extension PokemonStoreUseCaseTest {
-    var dummyID: String {
-        "id"
-    }
-
-    var dummyName: String {
-        "name"
-    }
-
     func makeSUT() -> PokemonStoreUseCase {
         PokemonStoreUseCase(store: MockStore())
     }

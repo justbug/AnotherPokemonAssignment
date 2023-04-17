@@ -18,7 +18,7 @@ final class ListViewModelTest: XCTestCase {
         cancelBag = []
     }
 
-    func test_fetchList() {
+    func test_listViewModel_fetchList() {
         let mock = MockList(pokemons: [.init(name: "butterfree", id: "12")])
         let sut = makeSUT(listService: mock)
 

@@ -9,7 +9,7 @@ import XCTest
 @testable import AnotherPokemonAssignment
 
 final class PokemonRequestMakerTest: XCTestCase {
-    func testPokemonRequest() throws {
+    func test_pokemonRequestMaker_PokemonRequest() throws {
         let sut = makeSUT(path: "poke", query: [("q1", "v1")])
         let url = try sut.makeToURLRequest().url
         XCTAssertEqual(url?.absoluteString, "https://pokeapi.co/api/v2/poke?q1=v1")

@@ -9,7 +9,7 @@ import XCTest
 @testable import AnotherPokemonAssignment
 
 final class RequestTest: XCTestCase {
-    func test_init() throws {
+    func test_request_init() throws {
         let sut = makeSUT(path: dummyPath)
         let request = try sut.makeToURLRequest()
 
@@ -18,7 +18,7 @@ final class RequestTest: XCTestCase {
     }
 
 
-    func test_urlWithQuery() throws {
+    func test_request_urlWithQuery() throws {
         let sut = makeSUT(path: dummyPath, query: [("q1", "v1"), ("q2", nil), ("q3", "v3")])
         let url = try sut.makeToURLRequest().url!
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)!

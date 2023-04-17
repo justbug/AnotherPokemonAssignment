@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import XCTest
 @testable import AnotherPokemonAssignment
 
 enum Helper {
@@ -31,5 +32,15 @@ class MockStore: PokemonStore {
 
     func getPokemons() -> [LocalPokemon] {
         array
+    }
+}
+
+extension XCTestCase {
+    var dummyID: String {
+        "1"
+    }
+
+    var dummyName: String {
+        "a"
     }
 }

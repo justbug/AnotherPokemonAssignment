@@ -55,12 +55,4 @@ private extension FavoriteViewModelTest {
         viewModel.setID(id, name: name)
         return viewModel
     }
-
-    var dummyID: String {
-        "id"
-    }
-
-    var dummyName: String {
-        "a"
-    }
 }

@@ -9,13 +9,13 @@ import XCTest
 @testable import AnotherPokemonAssignment
 
 final class PokemonServiceTest: XCTestCase {
-    func test_successEntityStub() async throws {
+    func test_pokemonService_successEntityStub() async throws {
         let sut = makeSUT(stub: SuccessStub())
         let entity: SuccessEntity = try await sut.fetch(path: Helper.dummyPath, query: nil)
         XCTAssertEqual(entity.foo, "bar")
     }
 
-    func test_errorStub500_shouldThrowInvalidStatusCodeError() {
+    func test_pokemonService_errorStub500_shouldThrowInvalidStatusCodeError() {
         Task {
             do {
                 let sut = makeSUT(stub: ErrorStub())
