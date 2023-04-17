@@ -56,7 +56,7 @@ final class ListViewModelTest: XCTestCase {
 
 private extension ListViewModelTest {
     func makeSUT(listService: GetListSpec) -> ListViewModel {
-        ListViewModel(listService: listService)
+        ListViewModel(title: "", listUseCase: ListUseCase(listService: listService))
     }
 }
 

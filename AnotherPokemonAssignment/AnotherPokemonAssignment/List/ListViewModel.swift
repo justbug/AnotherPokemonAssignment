@@ -9,13 +9,14 @@ import Combine
 import Foundation
 
 final class ListViewModel {
-    @Published var title: String? = "List"
+    @Published var title: String?
     @Published var pokemons: [Pokemon] = []
     private var offset = 0
-    private let listUseCase: ListUseCase
+    private let listUseCase: ListUseCaseSpec
 
-    init(listService: GetListSpec) {
-        self.listUseCase = ListUseCase(listService: listService)
+    init(title: String, listUseCase: ListUseCaseSpec) {
+        self.title = title
+        self.listUseCase = listUseCase
     }
 
     func fetchList() {

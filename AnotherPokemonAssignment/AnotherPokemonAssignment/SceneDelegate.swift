@@ -61,8 +61,11 @@ private extension SceneDelegate {
     }
 
     func getListViewControllerWithNav() -> UINavigationController {
-        let vc = ListViewController(viewModel: ListViewModel(listService: ListService()))
+        let title = "List"
+        let useCase = ListUseCase(listService: ListService())
+        let vc = ListViewController(viewModel: ListViewModel(title: title, listUseCase: useCase))
         vc.tabBarItem = makeTabBarItem(
+            title: title,
             image: UIImage(systemName: "list.bullet.rectangle.portrait"),
             selectedImage: UIImage(systemName: "list.bullet.rectangle.portrait.fill")
         )
@@ -70,16 +73,20 @@ private extension SceneDelegate {
     }
 
     func getFavoriteCollectionViewControllerWithNav() -> UINavigationController {
-        let vc = FavoriteCollectionViewController(viewModel: FavoriteCollectionViewModel())
+        let title = "Favorite"
+        let useCase = FavoriteListUseCase(store: UserDefaultsStore())
+        let vc = ListViewController(viewModel: ListViewModel(title: title, listUseCase: useCase))
         vc.tabBarItem = makeTabBarItem(
+            title: title,
             image: UIImage(systemName: "heart"),
             selectedImage: UIImage(systemName: "heart.fill")
         )
         return UINavigationController(rootViewController: vc)
     }
 
-    func makeTabBarItem(image: UIImage?, selectedImage: UIImage?) -> UITabBarItem {
+    func makeTabBarItem(title: String, image: UIImage?, selectedImage: UIImage?) -> UITabBarItem {
         let tabBarItem = UITabBarItem()
+        tabBarItem.title = title
         tabBarItem.image = image
         tabBarItem.selectedImage = selectedImage
         return tabBarItem
