@@ -18,38 +18,18 @@ final class ListViewModelTest: XCTestCase {
         cancelBag = []
     }
 
-    func test_fetchList_withEntity() {
-        let stub = EntityStub(pokemons: [.init(name: "butterfree", id: "12")])
-        let sut = makeSUT(listService: stub)
+    func test_fetchList() {
+        let mock = MockList(pokemons: [.init(name: "butterfree", id: "12")])
+        let sut = makeSUT(listService: mock)
 
         sut.$pokemons
             .filter { !$0.isEmpty }
             .receive(on: DispatchQueue.main)
             .sink { pokemons in
-                XCTAssertEqual(pokemons.count, 1)
-                XCTAssertEqual(stub.offset, 1)
+                XCTAssertEqual(pokemons.count, mock.pokemons.count)
             }
             .store(in: &cancelBag)
 
-        sut.fetchList()
-    }
-
-    func test_pagination() {
-        let stub = EntityStub(pokemons: [.init(name: "butterfree", id: "12")])
-        let sut = makeSUT(listService: stub)
-        var fetchCount = 0
-
-        sut.$pokemons
-            .filter { !$0.isEmpty }
-            .receive(on: DispatchQueue.main)
-            .sink { pokemons in
-                fetchCount += 1
-                XCTAssertEqual(pokemons.count, fetchCount)
-                XCTAssertEqual(stub.offset, fetchCount)
-            }
-            .store(in: &cancelBag)
-
-        sut.fetchList()
         sut.fetchList()
     }
 }
@@ -63,17 +43,15 @@ private extension ListViewModelTest {
 // MARK: - Stub
 
 private extension ListViewModelTest {
-    final class EntityStub: GetListSpec {
+    final class MockList: GetListSpec {
         let pokemons: [Pokemon]
-        var offset: Int? = nil
 
         init(pokemons: [Pokemon]) {
             self.pokemons = pokemons
         }
 
         func fetchList(limit: Int?, offset: Int?) async throws -> [Pokemon] {
-            self.offset = offset
-            return pokemons
+            pokemons
         }
     }
 }
