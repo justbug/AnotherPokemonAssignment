@@ -52,16 +52,4 @@ private extension PokemonStoreUseCaseTest {
     func makeSUT() -> PokemonStoreUseCase {
         PokemonStoreUseCase(store: MockStore())
     }
-
-    class MockStore: PokemonStore {
-        var array: [StorePokemon] = []
-
-        func savePokemons(_ pokemons: [StorePokemon]) {
-            array = pokemons
-        }
-
-        func getPokemons() -> [StorePokemon] {
-            array
-        }
-    }
 }
