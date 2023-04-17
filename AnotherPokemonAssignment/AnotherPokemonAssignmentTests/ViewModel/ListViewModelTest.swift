@@ -19,14 +19,13 @@ final class ListViewModelTest: XCTestCase {
     }
 
     func test_listViewModel_fetchList() {
-        let mock = MockList(pokemons: [.init(name: "butterfree", id: "12")])
+        let mock = ListServiceStub(data: listStubData)
         let sut = makeSUT(listService: mock)
-
         sut.$pokemons
             .filter { !$0.isEmpty }
             .receive(on: DispatchQueue.main)
             .sink { pokemons in
-                XCTAssertEqual(pokemons.count, mock.pokemons.count)
+                XCTAssertEqual(pokemons.count, mock.getListEntity()?.results.count)
             }
             .store(in: &cancelBag)
 
@@ -37,21 +36,5 @@ final class ListViewModelTest: XCTestCase {
 private extension ListViewModelTest {
     func makeSUT(listService: GetListSpec) -> ListViewModel {
         ListViewModel(title: "", listUseCase: ListUseCase(listService: listService))
-    }
-}
-
-// MARK: - Stub
-
-private extension ListViewModelTest {
-    final class MockList: GetListSpec {
-        let pokemons: [Pokemon]
-
-        init(pokemons: [Pokemon]) {
-            self.pokemons = pokemons
-        }
-
-        func fetchList(limit: Int?, offset: Int?) async throws -> [Pokemon] {
-            pokemons
-        }
     }
 }

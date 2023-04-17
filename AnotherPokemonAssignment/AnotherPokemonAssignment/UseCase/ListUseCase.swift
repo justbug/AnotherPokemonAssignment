@@ -24,7 +24,26 @@ final class ListUseCase: ListUseCaseSpec {
     private let limit = 30
 
     func fetchList(offset: Int) async throws -> [Pokemon] {
-        try await listService.fetchList(limit: limit, offset: offset)
+        let entity = try await listService.fetchList(limit: limit, offset: offset)
+        return mapToModel(entity)
+    }
+}
+
+private extension ListUseCase {
+    func mapToModel(_ entity: ListEntity) -> [Pokemon] {
+        entity.results.compactMap({ entity in
+            guard let id = getID(urlString: entity.url) else {
+                return nil
+            }
+            return Pokemon(name: entity.name, id: id)
+        })
+    }
+
+    func getID(urlString: String) -> String? {
+        guard let url = URL(string: urlString), let intValue = Int(url.lastPathComponent) else {
+            return nil
+        }
+        return String(intValue)
     }
 }
 

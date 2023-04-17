@@ -10,29 +10,26 @@ import XCTest
 
 final class ListUseCaseTest: XCTestCase {
     func test_listUseCase_fetchList_result() async throws {
-        let sut = makeSUT(pokemons: [.init(name: dummyName, id: dummyID)])
+        let sut = makeSUT(data: listStubData)
         let model = try await sut.fetchList(offset: 0)
         XCTAssertEqual(model.first?.name, dummyName)
         XCTAssertEqual(model.first?.id, dummyID)
     }
 
     func test_listUseCase_fetchList_empty_result() async throws {
-        let sut = makeSUT(pokemons: [])
+        let data = """
+        {
+            "results": []
+        }
+        """.data(using: .utf8)!
+        let sut = makeSUT(data: data)
         let model = try await sut.fetchList(offset: 0)
         XCTAssertEqual(model.isEmpty, true)
     }
 }
 
 private extension ListUseCaseTest {
-    func makeSUT(pokemons: [Pokemon]) -> ListUseCase {
-        ListUseCase(listService: ListServiceStub(pokemons: pokemons))
-    }
-}
-
-struct ListServiceStub: GetListSpec {
-    let pokemons: [Pokemon]
-
-    func fetchList(limit: Int?, offset: Int?) async throws -> [AnotherPokemonAssignment.Pokemon] {
-        pokemons
+    func makeSUT(data: Data) -> ListUseCase {
+        ListUseCase(listService: ListServiceStub(data: data))
     }
 }

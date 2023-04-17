@@ -35,6 +35,19 @@ class MockStore: PokemonStore {
     }
 }
 
+struct ListServiceStub: GetListSpec {
+    let data: Data
+    private let decoder = JSONDecoder()
+
+    func fetchList(limit: Int?, offset: Int?) async throws -> ListEntity {
+        try decoder.decode(ListEntity.self, from: data)
+    }
+
+    func getListEntity() -> ListEntity? {
+        return try? decoder.decode(ListEntity.self, from: data)
+    }
+}
+
 extension XCTestCase {
     var dummyID: String {
         "1"
@@ -42,5 +55,18 @@ extension XCTestCase {
 
     var dummyName: String {
         "a"
+    }
+
+    var listStubData: Data{
+            """
+            {
+                "results": [
+                    {
+                        "name": "\(dummyName)",
+                        "url": "https://pokeapi.co/api/v2/ability/\(dummyID)/"
+                    }
+                ]
+            }
+            """.data(using: .utf8)!
     }
 }

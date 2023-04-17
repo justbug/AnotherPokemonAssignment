@@ -8,37 +8,17 @@
 import Foundation
 
 protocol GetListSpec {
-    func fetchList(limit: Int?, offset: Int?) async throws -> [Pokemon]
+    func fetchList(limit: Int?, offset: Int?) async throws -> ListEntity
 }
 
 struct ListService: GetListSpec {
     private let path = "pokemon"
 
-    func fetchList(limit: Int?, offset: Int?) async throws -> [Pokemon] {
-        let entity: ListEntity = try await service.fetch(
+    func fetchList(limit: Int?, offset: Int?) async throws -> ListEntity {
+        try await service.fetch(
             path: path,
             query: [("limit", limit.toString), ("offset", offset.toString)]
         )
-        let pokemons = makeToModel(entity: entity)
-        return pokemons
-    }
-}
-
-private extension ListService {
-    func makeToModel(entity: ListEntity) -> [Pokemon] {
-        entity.results.compactMap({ entity in
-            guard let id = getID(urlString: entity.url) else {
-                return nil
-            }
-            return Pokemon(name: entity.name, id: id)
-        })
-    }
-
-    func getID(urlString: String) -> String? {
-        guard let url = URL(string: urlString), let intValue = Int(url.lastPathComponent) else {
-            return nil
-        }
-        return String(intValue)
     }
 }
 
