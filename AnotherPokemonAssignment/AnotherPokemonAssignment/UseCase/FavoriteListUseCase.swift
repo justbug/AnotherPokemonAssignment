@@ -24,12 +24,10 @@ final class FavoriteListUseCase: ListUseCaseSpec {
 }
 
 private extension FavoriteListUseCase {
-    private func getPokemons(limit: Int?, offset: Int?) -> [LocalPokemon] {
+    private func getPokemons(limit: Int, offset: Int) -> [LocalPokemon] {
         let pokemons = store.getPokemons()
-        if pokemons.isEmpty { return [] }
-        let limit = limit ?? 30
-        let offset = offset ?? 0
         let endIndex = min(offset + limit, pokemons.count)
+        if offset > endIndex { return [] }
         return Array(pokemons[offset..<endIndex])
     }
 }
