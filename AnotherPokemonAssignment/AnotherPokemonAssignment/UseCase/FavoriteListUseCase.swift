@@ -17,7 +17,8 @@ final class FavoriteListUseCase: ListUseCaseSpec {
 
     func fetchList(offset: Int) async throws -> [Pokemon] {
         await withUnsafeContinuation { continuation in
-            let pokemons = getPokemons(limit: limit, offset: offset).map { Pokemon(name: $0.name, id: $0.id) }
+            let pokemons = getPokemons(limit: limit, offset: offset)
+                .map { Pokemon(name: $0.name, id: $0.id) }
             continuation.resume(returning: pokemons)
         }
     }
@@ -26,6 +27,7 @@ final class FavoriteListUseCase: ListUseCaseSpec {
 private extension FavoriteListUseCase {
     private func getPokemons(limit: Int, offset: Int) -> [LocalPokemon] {
         let pokemons = store.getPokemons()
+            .filter { $0.isFavorite }
         let endIndex = min(offset + limit, pokemons.count)
         if offset > endIndex { return [] }
         return Array(pokemons[offset..<endIndex])

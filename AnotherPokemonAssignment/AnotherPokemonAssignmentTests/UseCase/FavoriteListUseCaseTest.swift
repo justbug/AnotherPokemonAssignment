@@ -42,8 +42,9 @@ private extension FavoriteListUseCaseTest {
     var dummyPokemons: [LocalPokemon] {
         [
             .init(name: "a", id: "1", isFavorite: false),
-            .init(name: "b", id: "2", isFavorite: false),
-            .init(name: "c", id: "3", isFavorite: false)
+            .init(name: "b", id: "2", isFavorite: true),
+            .init(name: "c", id: "3", isFavorite: true),
+            .init(name: "d", id: "4", isFavorite: true)
         ]
     }
 }
