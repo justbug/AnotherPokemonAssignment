@@ -10,6 +10,7 @@ import Foundation
 protocol PokemonStore {
     func savePokemons(_ pokemons: [LocalPokemon])
     func getPokemons() -> [LocalPokemon]
+    func removePokemon(by id: String)
 }
 
 final class PokemonStoreUseCase {
@@ -27,7 +28,12 @@ final class PokemonStoreUseCase {
     func getPokemon(id: String) -> LocalPokemon? {
         store.getPokemons().first(where: { $0.id == id })
     }
+
+    func removePokemon(by id: String) {
+        store.removePokemon(by: id)
+    }
 }
+
 extension Notification.Name {
     static let didFavorite: Notification.Name = .init(rawValue: "didFavorite")
 }

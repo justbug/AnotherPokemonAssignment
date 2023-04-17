@@ -16,9 +16,13 @@ final class FavoriteViewModel {
         self.useCase = PokemonStoreUseCase(store: store)
     }
 
-    func setIsFavorite(_ value: Bool) {
-        useCase.savePokemon(name: name, id: id, isFavorite: value)
-        postNotification(isFavorite: value)
+    func setIsFavorite(_ isFavorite: Bool) {
+        if isFavorite {
+            useCase.savePokemon(name: name, id: id, isFavorite: isFavorite)
+        } else {
+            useCase.removePokemon(by: id)
+        }
+        postNotification(isFavorite: isFavorite)
     }
 
     func getIsFavorite(id: String) -> Bool {

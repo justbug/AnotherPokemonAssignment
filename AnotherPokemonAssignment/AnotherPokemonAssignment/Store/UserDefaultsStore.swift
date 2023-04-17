@@ -15,6 +15,13 @@ final class UserDefaultsStore {
 }
 
 extension UserDefaultsStore: PokemonStore {
+    func removePokemon(by id: String) {
+        var pokemons = getPokemons()
+        guard let index = pokemons.firstIndex(where: { $0.id == id }) else { return }
+        pokemons.remove(at: index)
+        savePokemons(pokemons)
+    }
+
     func getPokemons() -> [LocalPokemon] {
         guard let data = userDefaults.data(forKey: Self.storePokemonKey) else { return [] }
         return (try? decoder.decode([LocalPokemon].self, from: data)) ?? []

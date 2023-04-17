@@ -50,7 +50,6 @@ private extension ListViewController {
             .store(in: &cancelBag)
 
         viewModel.$pokemons
-            .filter { !$0.isEmpty }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] pokemons in
                 self?.reload(pokemons)

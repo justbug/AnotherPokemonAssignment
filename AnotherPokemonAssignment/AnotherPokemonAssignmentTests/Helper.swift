@@ -14,6 +14,11 @@ enum Helper {
 }
 
 class MockStore: PokemonStore {
+    func removePokemon(by id: String) {
+        guard let index = array.firstIndex(where: { $0.id == id }) else { return }
+        array.remove(at: index)
+    }
+
     var array: [LocalPokemon]
 
     init(array: [LocalPokemon] = []) {
