@@ -12,6 +12,7 @@
 		CFA2025429E8EB390052AFBD /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA2025329E8EB390052AFBD /* Response.swift */; };
 		CFA2025829E8FF840052AFBD /* PokemonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA2025729E8FF840052AFBD /* PokemonService.swift */; };
 		CFC4893E29EC2B2800885F25 /* UserDefaultsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC4893D29EC2B2800885F25 /* UserDefaultsStore.swift */; };
+		CFC4894029ECDF3A00885F25 /* FavoriteListUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC4893F29ECDF3A00885F25 /* FavoriteListUseCase.swift */; };
 		CFCBFB2829E9100900602AF1 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB2729E9100900602AF1 /* Helper.swift */; };
 		CFCBFB2A29E912B100602AF1 /* PokemonServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB2929E912B100602AF1 /* PokemonServiceTest.swift */; };
 		CFCBFB2C29E9139200602AF1 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB2B29E9139200602AF1 /* Helper.swift */; };
@@ -26,8 +27,6 @@
 		CFCBFB4A29EA690700602AF1 /* PokemonStoreUseCaseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB4929EA690700602AF1 /* PokemonStoreUseCaseTest.swift */; };
 		CFCBFB4C29EA71C800602AF1 /* FavoriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB4B29EA71C800602AF1 /* FavoriteView.swift */; };
 		CFCBFB4E29EA735000602AF1 /* FavoriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB4D29EA735000602AF1 /* FavoriteViewModel.swift */; };
-		CFCBFB5029EA793600602AF1 /* FavoriteCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB4F29EA793600602AF1 /* FavoriteCollectionViewController.swift */; };
-		CFCBFB5229EA7A6100602AF1 /* FavoriteCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB5129EA7A6100602AF1 /* FavoriteCollectionViewModel.swift */; };
 		CFCBFB5429EA7C8A00602AF1 /* PokemonStoreUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCBFB5329EA7C8A00602AF1 /* PokemonStoreUseCase.swift */; };
 		CFD9A55B29E7A90200C0817E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD9A55A29E7A90200C0817E /* AppDelegate.swift */; };
 		CFD9A55D29E7A90200C0817E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD9A55C29E7A90200C0817E /* SceneDelegate.swift */; };
@@ -56,6 +55,7 @@
 		CFA2025329E8EB390052AFBD /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		CFA2025729E8FF840052AFBD /* PokemonService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonService.swift; sourceTree = "<group>"; };
 		CFC4893D29EC2B2800885F25 /* UserDefaultsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsStore.swift; sourceTree = "<group>"; };
+		CFC4893F29ECDF3A00885F25 /* FavoriteListUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListUseCase.swift; sourceTree = "<group>"; };
 		CFCBFB2729E9100900602AF1 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		CFCBFB2929E912B100602AF1 /* PokemonServiceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonServiceTest.swift; sourceTree = "<group>"; };
 		CFCBFB2B29E9139200602AF1 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
@@ -70,8 +70,6 @@
 		CFCBFB4929EA690700602AF1 /* PokemonStoreUseCaseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonStoreUseCaseTest.swift; sourceTree = "<group>"; };
 		CFCBFB4B29EA71C800602AF1 /* FavoriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteView.swift; sourceTree = "<group>"; };
 		CFCBFB4D29EA735000602AF1 /* FavoriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewModel.swift; sourceTree = "<group>"; };
-		CFCBFB4F29EA793600602AF1 /* FavoriteCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCollectionViewController.swift; sourceTree = "<group>"; };
-		CFCBFB5129EA7A6100602AF1 /* FavoriteCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCollectionViewModel.swift; sourceTree = "<group>"; };
 		CFCBFB5329EA7C8A00602AF1 /* PokemonStoreUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonStoreUseCase.swift; sourceTree = "<group>"; };
 		CFD9A55729E7A90200C0817E /* AnotherPokemonAssignment.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnotherPokemonAssignment.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFD9A55A29E7A90200C0817E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -163,6 +161,7 @@
 			children = (
 				CFCBFB3929E943FA00602AF1 /* ListUseCase.swift */,
 				CFCBFB5329EA7C8A00602AF1 /* PokemonStoreUseCase.swift */,
+				CFC4893F29ECDF3A00885F25 /* FavoriteListUseCase.swift */,
 			);
 			path = UseCase;
 			sourceTree = "<group>";
@@ -197,8 +196,6 @@
 			children = (
 				CFCBFB4B29EA71C800602AF1 /* FavoriteView.swift */,
 				CFCBFB4D29EA735000602AF1 /* FavoriteViewModel.swift */,
-				CFCBFB4F29EA793600602AF1 /* FavoriteCollectionViewController.swift */,
-				CFCBFB5129EA7A6100602AF1 /* FavoriteCollectionViewModel.swift */,
 			);
 			path = Favorite;
 			sourceTree = "<group>";
@@ -381,13 +378,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				CFD9A55F29E7A90200C0817E /* ListViewController.swift in Sources */,
+				CFC4894029ECDF3A00885F25 /* FavoriteListUseCase.swift in Sources */,
 				CFA2025829E8FF840052AFBD /* PokemonService.swift in Sources */,
 				CFA2024C29E7F0C30052AFBD /* Request.swift in Sources */,
 				CFCBFB4529EA389B00602AF1 /* ListCell.swift in Sources */,
-				CFCBFB5029EA793600602AF1 /* FavoriteCollectionViewController.swift in Sources */,
 				CFD9A55B29E7A90200C0817E /* AppDelegate.swift in Sources */,
 				CFC4893E29EC2B2800885F25 /* UserDefaultsStore.swift in Sources */,
-				CFCBFB5229EA7A6100602AF1 /* FavoriteCollectionViewModel.swift in Sources */,
 				CFA2025429E8EB390052AFBD /* Response.swift in Sources */,
 				CFCBFB3729E935FC00602AF1 /* IntExtension.swift in Sources */,
 				CFCBFB3429E9346D00602AF1 /* ListService.swift in Sources */,
