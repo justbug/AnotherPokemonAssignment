@@ -11,7 +11,6 @@ import Foundation
 final class ListViewModel {
     @Published var title: String?
     @Published var pokemons: [Pokemon] = []
-    private var offset = 0
     private let listUseCase: ListUseCaseSpec
 
     init(title: String, listUseCase: ListUseCaseSpec) {
@@ -22,9 +21,7 @@ final class ListViewModel {
     func fetchList() {
         Task {
             do {
-                let model = try await listUseCase.fetchList(offset: offset)
-                offset = model.count
-                pokemons.append(contentsOf: model)
+                self.pokemons = try await listUseCase.fetchList(offset: 0)
             } catch {
                 print(error)
             }
