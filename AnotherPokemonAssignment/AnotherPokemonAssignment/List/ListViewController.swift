@@ -56,6 +56,13 @@ private extension ListViewController {
                 self?.reload(pokemons)
             }
             .store(in: &cancelBag)
+
+        NotificationCenter.default
+            .publisher(for: .didFavorite)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.viewModel.handleDidFavoriteNotification()
+            }.store(in: &cancelBag)
     }
 
     func fetchList() {

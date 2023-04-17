@@ -5,16 +5,19 @@
 //  Created by Mark Chen on 2023/4/15.
 //
 
+import Combine
 import UIKit
 
 final class FavoriteView: UIView {
     private let viewModel: FavoriteViewModel
     private lazy var favoriteButton = makeFavoriteButton()
+    private var cancelBag = Set<AnyCancellable>()
 
     init(viewModel: FavoriteViewModel) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupUI()
+        binding()
     }
 
     required init?(coder: NSCoder) {
@@ -33,6 +36,23 @@ private extension FavoriteView {
     @objc func favoriteButtonPressed(_ button: UIButton) {
         button.isSelected.toggle()
         viewModel.setIsFavorite(button.isSelected)
+    }
+
+    func binding() {
+        NotificationCenter.default
+            .publisher(for: .didFavorite)
+            .sink { [weak self] notification in
+                guard let self = self else { return }
+                guard let userInfo = notification.userInfo?[FavoriteUserInfo.key] as? FavoriteUserInfo else { return }
+                let shouldUpdate = self.viewModel.shouldUpdate(
+                    userInfo: userInfo,
+                    currentFavoriteState: self.favoriteButton.isSelected
+                )
+
+                if shouldUpdate {
+                    self.favoriteButton.isSelected = userInfo.isFavorite
+                }
+            }.store(in: &cancelBag)
     }
 }
 

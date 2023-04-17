@@ -27,4 +27,10 @@ final class ListViewModel {
             }
         }
     }
+
+    func handleDidFavoriteNotification() {
+        if listUseCase.shouldReloadWhenFavoriteUpdated {
+            fetchList()
+        }
+    }
 }

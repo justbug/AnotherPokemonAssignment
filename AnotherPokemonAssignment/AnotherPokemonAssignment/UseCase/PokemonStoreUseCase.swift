@@ -28,6 +28,9 @@ final class PokemonStoreUseCase {
         store.getPokemons().first(where: { $0.id == id })
     }
 }
+extension Notification.Name {
+    static let didFavorite: Notification.Name = .init(rawValue: "didFavorite")
+}
 
 private extension PokemonStoreUseCase {
     func savePokemon(_ pokemon: LocalPokemon) {

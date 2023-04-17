@@ -8,10 +8,13 @@
 import Foundation
 
 protocol ListUseCaseSpec {
+    var shouldReloadWhenFavoriteUpdated: Bool { get }
     func fetchList(offset: Int) async throws -> [Pokemon]
 }
 
 final class ListUseCase: ListUseCaseSpec {
+    var shouldReloadWhenFavoriteUpdated: Bool = false
+
     let listService: GetListSpec
 
     init(listService: GetListSpec) {

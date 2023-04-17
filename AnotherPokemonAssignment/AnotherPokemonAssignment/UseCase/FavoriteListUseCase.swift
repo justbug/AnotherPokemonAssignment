@@ -8,6 +8,8 @@
 import Foundation
 
 final class FavoriteListUseCase: ListUseCaseSpec {
+    var shouldReloadWhenFavoriteUpdated: Bool = true
+
     private let store: PokemonStore
     private let limit = 30
 
