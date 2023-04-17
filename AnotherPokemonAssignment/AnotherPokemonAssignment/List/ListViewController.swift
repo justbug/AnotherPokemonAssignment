@@ -76,6 +76,15 @@ private extension ListViewController {
     }
 }
 
+// MARK: -
+
+extension ListViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = DetailViewController(viewModel: .init(id: viewModel.pokemons[indexPath.item].id))
+        navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
 // MARK: - Layout
 
 private extension ListViewController {
@@ -94,6 +103,7 @@ private extension ListViewController {
         )
         collectionView.backgroundColor = .white
         collectionView.register(ListCell.self, forCellWithReuseIdentifier: "ListCell")
+        collectionView.delegate = self
         return collectionView
     }
 
