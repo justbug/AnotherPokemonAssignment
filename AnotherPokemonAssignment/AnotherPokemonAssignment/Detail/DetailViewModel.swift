@@ -10,17 +10,17 @@ import Foundation
 final class DetailViewModel {
     @Published var detail: DetailModel? = nil
     private let id: String
-    private let service: DetailService
+    private let useCase: DetailUseCase
 
-    init(id: String) {
+    init(id: String, useCase: DetailUseCase) {
         self.id = id
-        self.service = .init(id: id)
+        self.useCase = useCase
     }
 
     func fetchDetail() {
         Task {
             do {
-                self.detail = try await service.fetchDetail()
+                self.detail = try await useCase.fetchDetail()
             } catch {
                 print(error)
             }

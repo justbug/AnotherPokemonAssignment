@@ -7,35 +7,15 @@
 
 import Foundation
 
-struct DetailService {
-    private let id: String
-
-    init(id: String) {
-        self.id = id
-    }
-
-    func fetchDetail() async throws -> DetailModel {
-        let entity: DetailEntity = try await service.fetch(
-            path: "pokemon/\(id)",
-            query: nil
-        )
-        return makeToModel(entity: entity)
-    }
+protocol DetailServiceSpec {
+    func fetchDetail(id: String) async throws -> DetailEntity
 }
 
-private extension DetailService {
-    func makeToModel(entity: DetailEntity) -> DetailModel {
-        let type = entity.types
-            .map { $0.type.name }
-            .joined(separator: ", ")
-        let imageURLString = entity.sprites?.front_default ?? ""
-
-        return DetailModel(
-            id: entity.id,
-            weight: entity.weight,
-            height: entity.height,
-            type: type,
-            imageURL: URL(string: imageURLString)
+struct DetailService: DetailServiceSpec {
+    func fetchDetail(id: String) async throws -> DetailEntity {
+        try await service.fetch(
+            path: "pokemon/\(id)",
+            query: nil
         )
     }
 }
