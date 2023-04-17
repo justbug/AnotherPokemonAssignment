@@ -8,6 +8,7 @@
 import Foundation
 
 final class FavoriteViewModel {
+    @Published var isFavorite: Bool = false
     private let useCase: PokemonStoreUseCase
     private(set) var id: String = ""
     private(set) var name: String = ""
@@ -17,16 +18,14 @@ final class FavoriteViewModel {
     }
 
     func setIsFavorite(_ isFavorite: Bool) {
-        if isFavorite {
-            useCase.savePokemon(name: name, id: id, isFavorite: isFavorite)
-        } else {
-            useCase.removePokemon(by: id)
-        }
+        self.isFavorite = isFavorite
+        syncStore(isFavorite)
         postNotification(isFavorite: isFavorite)
     }
 
-    func getIsFavorite(id: String) -> Bool {
-        useCase.getPokemon(id: id)?.isFavorite ?? false
+    func reloadFavorite(id: String) {
+        let isFavorite = useCase.getPokemon(id: id)?.isFavorite ?? false
+        self.isFavorite = isFavorite
     }
 
     func setID(_ id: String, name: String) {
@@ -34,10 +33,10 @@ final class FavoriteViewModel {
         self.name = name
     }
 
-    func shouldUpdate(userInfo: FavoriteUserInfo, currentFavoriteState: Bool) -> Bool {
-        if userInfo.id != id { return false }
-        if userInfo.isFavorite == currentFavoriteState { return false }
-        return true
+    func shouldUpdate(userInfo: FavoriteUserInfo) {
+        if userInfo.id != id { return }
+        if userInfo.isFavorite == isFavorite { return }
+        isFavorite = userInfo.isFavorite
     }
 }
 
@@ -47,6 +46,14 @@ private extension FavoriteViewModel {
     func postNotification(isFavorite: Bool) {
         let userInfo = FavoriteUserInfo(id: id, isFavorite: isFavorite)
         NotificationCenter.default.post(name: .didFavorite, object: nil, userInfo: [FavoriteUserInfo.key: userInfo])
+    }
+
+    func syncStore(_ isFavorite: Bool) {
+        if isFavorite {
+            useCase.savePokemon(name: name, id: id, isFavorite: isFavorite)
+        } else {
+            useCase.removePokemon(by: id)
+        }
     }
 }
 

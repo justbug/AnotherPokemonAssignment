@@ -26,7 +26,7 @@ final class FavoriteView: UIView {
 
     func reload(id: String, name: String) {
         viewModel.setID(id, name: name)
-        favoriteButton.isSelected = viewModel.getIsFavorite(id: id)
+        viewModel.reloadFavorite(id: id)
     }
 }
 
@@ -34,24 +34,23 @@ final class FavoriteView: UIView {
 
 private extension FavoriteView {
     @objc func favoriteButtonPressed(_ button: UIButton) {
-        button.isSelected.toggle()
-        viewModel.setIsFavorite(button.isSelected)
+        var isSelected = button.isSelected
+        isSelected.toggle()
+        viewModel.setIsFavorite(isSelected)
     }
 
     func binding() {
         NotificationCenter.default
             .publisher(for: .didFavorite)
-            .sink { [weak self] notification in
+            .compactMap { $0.userInfo?[FavoriteUserInfo.key] as? FavoriteUserInfo }
+            .sink { [weak self] userInfo in
                 guard let self = self else { return }
-                guard let userInfo = notification.userInfo?[FavoriteUserInfo.key] as? FavoriteUserInfo else { return }
-                let shouldUpdate = self.viewModel.shouldUpdate(
-                    userInfo: userInfo,
-                    currentFavoriteState: self.favoriteButton.isSelected
-                )
+                self.viewModel.shouldUpdate(userInfo: userInfo)
+            }.store(in: &cancelBag)
 
-                if shouldUpdate {
-                    self.favoriteButton.isSelected = userInfo.isFavorite
-                }
+        viewModel.$isFavorite
+            .sink { [weak self] isFavorite in
+                self?.favoriteButton.isSelected = isFavorite
             }.store(in: &cancelBag)
     }
 }

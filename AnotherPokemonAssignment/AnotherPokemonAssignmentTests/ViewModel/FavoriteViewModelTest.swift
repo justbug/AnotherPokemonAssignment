@@ -14,38 +14,34 @@ final class FavoriteViewModelTest: XCTestCase {
     func test_favoriteViewModel_storeIsEmpty() {
         let mockStore = MockStore(array: [])
         let sut = makeSUT(store: mockStore, id: dummyID, name: dummyName)
-        XCTAssertEqual(sut.getIsFavorite(id: dummyID), false)
+        XCTAssertEqual(sut.isFavorite, false)
 
         sut.setIsFavorite(true)
-        XCTAssertEqual(sut.getIsFavorite(id: dummyID), true)
+        XCTAssertEqual(sut.isFavorite, true)
     }
 
     func test_favoriteViewModel_hadStoredIsFavorite() {
         let mockStore = MockStore(array: [.init(name: dummyName, id: dummyID, isFavorite: true)])
         let sut = makeSUT(store: mockStore, id: dummyID, name: dummyName)
-        XCTAssertEqual(sut.getIsFavorite(id: dummyID), true)
+        XCTAssertEqual(sut.isFavorite, true)
 
         sut.setIsFavorite(false)
-        XCTAssertEqual(sut.getIsFavorite(id: dummyID), false)
+        XCTAssertEqual(sut.isFavorite, false)
     }
 
-    func test_favoriteViewModel_notificationShouldUpdate() {
+    func test_favoriteViewModel_emptyStore_notificationShouldUpdate() {
         let mockStore = MockStore(array: [])
         let sut = makeSUT(store: mockStore, id: dummyID, name: dummyName)
+        sut.shouldUpdate(userInfo: .init(id: dummyID, isFavorite: true))
+        XCTAssertEqual(sut.isFavorite, true)
+    }
 
-        // state is same
-        let result1 = sut.shouldUpdate(userInfo: .init(id: dummyID, isFavorite: true), currentFavoriteState: true)
-        XCTAssertEqual(result1, false)
 
-        let result2 = sut.shouldUpdate(userInfo: .init(id: dummyID, isFavorite: false), currentFavoriteState: false)
-        XCTAssertEqual(result2, false)
-
-        // state is diff
-        let result3 = sut.shouldUpdate(userInfo: .init(id: dummyID, isFavorite: false), currentFavoriteState: true)
-        XCTAssertEqual(result3, true)
-
-        let result4 = sut.shouldUpdate(userInfo: .init(id: dummyID, isFavorite: true), currentFavoriteState: false)
-        XCTAssertEqual(result4, true)
+    func test_favoriteViewModel_notificationShouldUpdate() {
+        let mockStore = MockStore(array: [.init(name: dummyName, id: dummyID, isFavorite: false)])
+        let sut = makeSUT(store: mockStore, id: dummyID, name: dummyName)
+        sut.shouldUpdate(userInfo: .init(id: dummyID, isFavorite: true))
+        XCTAssertEqual(sut.isFavorite, true)
     }
 }
 
@@ -53,6 +49,7 @@ private extension FavoriteViewModelTest {
     func makeSUT(store: PokemonStore, id: String, name: String) -> FavoriteViewModel {
         let viewModel = FavoriteViewModel(store: store)
         viewModel.setID(id, name: name)
+        viewModel.reloadFavorite(id: id)
         return viewModel
     }
 }
