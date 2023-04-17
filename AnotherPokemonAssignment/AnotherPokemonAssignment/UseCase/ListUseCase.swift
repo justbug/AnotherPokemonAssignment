@@ -7,7 +7,11 @@
 
 import Foundation
 
-final class ListUseCase {
+protocol ListUseCaseSpec {
+    func fetchList(offset: Int) async throws -> [Pokemon]
+}
+
+final class ListUseCase: ListUseCaseSpec {
     let listService: GetListSpec
 
     init(listService: GetListSpec) {
