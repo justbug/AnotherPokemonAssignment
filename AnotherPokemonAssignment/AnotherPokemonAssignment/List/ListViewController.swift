@@ -80,9 +80,9 @@ private extension ListViewController {
 
 extension ListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let id = viewModel.pokemons[indexPath.item].id
-        let useCase = DetailUseCase(service: DetailService(), id: id)
-        let vc = DetailViewController(viewModel: .init(id: id, useCase: useCase))
+        let pokemon = viewModel.pokemons[indexPath.item]
+        let useCase = DetailUseCase(service: DetailService(), id: pokemon.id)
+        let vc = DetailViewController(viewModel: .init(id: pokemon.id, name: pokemon.name, useCase: useCase))
         navigationController?.pushViewController(vc, animated: true)
     }
 }

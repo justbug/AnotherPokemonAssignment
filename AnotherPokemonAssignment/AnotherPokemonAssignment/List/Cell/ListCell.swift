@@ -62,7 +62,7 @@ private extension ListCell {
     }
 
     func makeFavoriteView() -> FavoriteView {
-        let view = FavoriteView(viewModel: .init(store: UserDefaultsStore()))
+        let view = FavoriteView(viewModel: .init(store: userDefaultsStore))
         return view
     }
 }

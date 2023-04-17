@@ -17,6 +17,8 @@ final class DetailViewController: UIViewController {
     private lazy var heightLabel = makeLabel()
     private lazy var weightLabel = makeLabel()
     private lazy var typeLabel = makeLabel()
+    private lazy var favoriteView = makeFavoriteView()
+
     private var cancelBag = Set<AnyCancellable>()
 
     init(viewModel: DetailViewModel) {
@@ -33,10 +35,6 @@ final class DetailViewController: UIViewController {
         setupUI()
         binding()
         viewModel.fetchDetail()
-    }
-
-    deinit {
-        print("DetailViewController deinit")
     }
 }
 
@@ -72,6 +70,12 @@ private extension DetailViewController {
                 self?.typeLabel.text = detail.typeText
             })
             .store(in: &cancelBag)
+
+        viewModel.$title
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] title in
+                self?.title = title
+            }.store(in: &cancelBag)
     }
 }
 
@@ -80,9 +84,15 @@ private extension DetailViewController {
 private extension DetailViewController {
     func setupUI() {
         view.backgroundColor = .white
-        view.addSubview(scrollView)
+        [scrollView, favoriteView].forEach(view.addSubview)
+
         scrollView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+
+        favoriteView.snp.makeConstraints { make in
+            make.top.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.size.equalTo(45)
         }
     }
 
@@ -132,5 +142,11 @@ private extension DetailViewController {
         stackView.axis = .vertical
         stackView.spacing = 10
         return stackView
+    }
+
+    func makeFavoriteView() -> FavoriteView {
+        let view = FavoriteView(viewModel: .init(store: userDefaultsStore))
+        view.reload(id: viewModel.id, name: viewModel.name)
+        return view
     }
 }

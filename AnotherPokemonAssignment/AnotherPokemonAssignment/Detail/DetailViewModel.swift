@@ -8,13 +8,17 @@
 import Foundation
 
 final class DetailViewModel {
+    @Published var title: String? = nil
     @Published var detail: DetailModel? = nil
-    private let id: String
+    let id: String
+    let name: String
     private let useCase: DetailUseCase
 
-    init(id: String, useCase: DetailUseCase) {
+    init(id: String, name: String, useCase: DetailUseCase) {
         self.id = id
+        self.name = name
         self.useCase = useCase
+        self.title = name
     }
 
     func fetchDetail() {

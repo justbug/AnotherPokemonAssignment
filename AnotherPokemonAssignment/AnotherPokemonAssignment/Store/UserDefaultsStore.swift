@@ -7,6 +7,8 @@
 
 import Foundation
 
+let userDefaultsStore = UserDefaultsStore()
+
 final class UserDefaultsStore {
     private let userDefaults = UserDefaults.standard
     private lazy var decoder = PropertyListDecoder()
