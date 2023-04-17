@@ -8,8 +8,8 @@
 import Foundation
 
 protocol PokemonStore {
-    func savePokemons(_ pokemons: [StorePokemon])
-    func getPokemons() -> [StorePokemon]
+    func savePokemons(_ pokemons: [LocalPokemon])
+    func getPokemons() -> [LocalPokemon]
 }
 
 final class PokemonStoreUseCase {
@@ -21,16 +21,16 @@ final class PokemonStoreUseCase {
     }
 
     func savePokemon(name: String, id: String, isFavorite: Bool = false) {
-        savePokemon(StorePokemon(name: name, id: id, isFavorite: isFavorite))
+        savePokemon(LocalPokemon(name: name, id: id, isFavorite: isFavorite))
     }
 
-    func getPokemon(id: String) -> StorePokemon? {
+    func getPokemon(id: String) -> LocalPokemon? {
         store.getPokemons().first(where: { $0.id == id })
     }
 }
 
 private extension PokemonStoreUseCase {
-    func savePokemon(_ pokemon: StorePokemon) {
+    func savePokemon(_ pokemon: LocalPokemon) {
         var pokemons = store.getPokemons()
         defer {
             store.savePokemons(pokemons)

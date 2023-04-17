@@ -15,18 +15,18 @@ final class UserDefaultsStore {
 }
 
 extension UserDefaultsStore: PokemonStore {
-    func getPokemons() -> [StorePokemon] {
+    func getPokemons() -> [LocalPokemon] {
         guard let data = userDefaults.data(forKey: Self.storePokemonKey) else { return [] }
-        return (try? decoder.decode([StorePokemon].self, from: data)) ?? []
+        return (try? decoder.decode([LocalPokemon].self, from: data)) ?? []
     }
 
-    func savePokemons(_ pokemons: [StorePokemon]) {
+    func savePokemons(_ pokemons: [LocalPokemon]) {
         guard let data = try? encoder.encode(pokemons) else { return }
         userDefaults.set(data, forKey: Self.storePokemonKey)
     }
 }
 
-struct StorePokemon: Codable {
+struct LocalPokemon: Codable {
     let name: String
     let id: String
     let isFavorite: Bool
