@@ -44,13 +44,13 @@ private extension ListCell {
         [titleLabel, favoriteView].forEach(contentView.addSubview)
 
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().inset(8)
+            make.top.bottom.leading.equalToSuperview().inset(8)
             make.trailing.lessThanOrEqualTo(favoriteView.snp.leading).offset(-8)
-            make.centerY.equalTo(favoriteView)
         }
 
         favoriteView.snp.makeConstraints { make in
-            make.top.bottom.trailing.equalToSuperview().inset(8)
+            make.trailing.equalToSuperview().inset(8)
+            make.centerY.equalTo(favoriteView)
             make.size.equalTo(35)
         }
     }
