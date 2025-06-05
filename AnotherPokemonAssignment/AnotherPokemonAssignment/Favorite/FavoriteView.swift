@@ -34,9 +34,8 @@ final class FavoriteView: UIView {
 
 private extension FavoriteView {
     @objc func favoriteButtonPressed(_ button: UIButton) {
-        var isSelected = button.isSelected
-        isSelected.toggle()
-        viewModel.setIsFavorite(isSelected)
+        let newState = !button.isSelected
+        viewModel.setIsFavorite(newState)
     }
 
     func binding() {
