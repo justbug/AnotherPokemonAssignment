@@ -5,24 +5,24 @@
 //  Created by Mark Chen on 2023/4/17.
 //
 
-import XCTest
+import Testing
 @testable import AnotherPokemonAssignment
 
-final class DetailUseCaseTest: XCTestCase {
+@Suite struct DetailUseCaseTest {
     func test() async throws {
         let dummyWeight = 1
         let dummyHeight = 2
         let dummyType = "type"
         let sut = makeSUT(weight: dummyWeight, height: dummyHeight, type: dummyType)
         let model = try await sut.fetchDetail()
-        XCTAssertEqual(String(model.id), dummyID)
-        XCTAssertEqual(model.weight, dummyWeight)
-        XCTAssertEqual(model.height, dummyHeight)
-        XCTAssertEqual(model.type, dummyType)
-        XCTAssertEqual(model.idText, "id: \(dummyID)")
-        XCTAssertEqual(model.weightText, "weight: \(dummyWeight)")
-        XCTAssertEqual(model.heightText, "height: \(dummyHeight)")
-        XCTAssertEqual(model.typeText, "type: \(dummyType)")
+        #expect(String(model.id) == dummyID)
+        #expect(model.weight == dummyWeight)
+        #expect(model.height == dummyHeight)
+        #expect(model.type == dummyType)
+        #expect(model.idText == "id: \(dummyID)")
+        #expect(model.weightText == "weight: \(dummyWeight)")
+        #expect(model.heightText == "height: \(dummyHeight)")
+        #expect(model.typeText == "type: \(dummyType)")
     }
 }
 

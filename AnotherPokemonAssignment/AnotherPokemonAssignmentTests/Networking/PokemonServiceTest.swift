@@ -5,14 +5,14 @@
 //  Created by Mark Chen on 2023/4/14.
 //
 
-import XCTest
+import Testing
 @testable import AnotherPokemonAssignment
 
-final class PokemonServiceTest: XCTestCase {
+@Suite struct PokemonServiceTest {
     func test_pokemonService_successEntityStub() async throws {
         let sut = makeSUT(stub: SuccessStub())
         let entity: SuccessEntity = try await sut.fetch(path: Helper.dummyPath, query: nil)
-        XCTAssertEqual(entity.foo, "bar")
+        #expect(entity.foo == "bar")
     }
 
     func test_pokemonService_errorStub500_shouldThrowInvalidStatusCodeError() {
@@ -20,9 +20,9 @@ final class PokemonServiceTest: XCTestCase {
             do {
                 let sut = makeSUT(stub: ErrorStub())
                 let _: SuccessEntity = try await sut.fetch(path: Helper.dummyPath, query: nil)
-                XCTFail("should throw error")
+                #expect(false, because: "should throw error")
             } catch {
-                XCTAssertEqual(error as! PokemonServiceError, PokemonServiceError.invalidStatusCode)
+                #expect((error as? PokemonServiceError) == PokemonServiceError.invalidStatusCode)
             }
         }
     }

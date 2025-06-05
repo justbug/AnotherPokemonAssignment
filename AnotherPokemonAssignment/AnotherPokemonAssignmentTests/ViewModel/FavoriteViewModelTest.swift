@@ -7,33 +7,33 @@
 
 import Combine
 import Foundation
-import XCTest
+import Testing
 @testable import AnotherPokemonAssignment
 
-final class FavoriteViewModelTest: XCTestCase {
+@Suite struct FavoriteViewModelTest {
     func test_favoriteViewModel_storeIsEmpty() {
         let mockStore = MockStore(array: [])
         let sut = makeSUT(store: mockStore, id: dummyID, name: dummyName)
-        XCTAssertEqual(sut.isFavorite, false)
+        #expect(sut.isFavorite == false)
 
         sut.setIsFavorite(true)
-        XCTAssertEqual(sut.isFavorite, true)
+        #expect(sut.isFavorite == true)
     }
 
     func test_favoriteViewModel_hadStoredIsFavorite() {
         let mockStore = MockStore(array: [.init(name: dummyName, id: dummyID, isFavorite: true)])
         let sut = makeSUT(store: mockStore, id: dummyID, name: dummyName)
-        XCTAssertEqual(sut.isFavorite, true)
+        #expect(sut.isFavorite == true)
 
         sut.setIsFavorite(false)
-        XCTAssertEqual(sut.isFavorite, false)
+        #expect(sut.isFavorite == false)
     }
 
     func test_favoriteViewModel_emptyStore_notificationShouldUpdate() {
         let mockStore = MockStore(array: [])
         let sut = makeSUT(store: mockStore, id: dummyID, name: dummyName)
         sut.shouldUpdate(userInfo: .init(id: dummyID, isFavorite: true))
-        XCTAssertEqual(sut.isFavorite, true)
+        #expect(sut.isFavorite == true)
     }
 
 
@@ -41,7 +41,7 @@ final class FavoriteViewModelTest: XCTestCase {
         let mockStore = MockStore(array: [.init(name: dummyName, id: dummyID, isFavorite: false)])
         let sut = makeSUT(store: mockStore, id: dummyID, name: dummyName)
         sut.shouldUpdate(userInfo: .init(id: dummyID, isFavorite: true))
-        XCTAssertEqual(sut.isFavorite, true)
+        #expect(sut.isFavorite == true)
     }
 }
 

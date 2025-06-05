@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import XCTest
+import Testing
 @testable import AnotherPokemonAssignment
 
 enum Helper {
@@ -48,25 +48,19 @@ struct ListServiceStub: GetListSpec {
     }
 }
 
-extension XCTestCase {
-    var dummyID: String {
-        "1"
-    }
+let dummyID = "1"
 
-    var dummyName: String {
-        "a"
-    }
+let dummyName = "a"
 
-    var listStubData: Data{
-            """
+var listStubData: Data {
+    """
+    {
+        "results": [
             {
-                "results": [
-                    {
-                        "name": "\(dummyName)",
-                        "url": "https://pokeapi.co/api/v2/ability/\(dummyID)/"
-                    }
-                ]
+                "name": "\(dummyName)",
+                "url": "https://pokeapi.co/api/v2/ability/\(dummyID)/"
             }
-            """.data(using: .utf8)!
+        ]
     }
+    """.data(using: .utf8)!
 }
