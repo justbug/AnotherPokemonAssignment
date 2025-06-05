@@ -44,7 +44,7 @@ private extension PokemonStoreUseCase {
         defer {
             store.savePokemons(pokemons)
         }
-        guard let index = store.getPokemons().firstIndex(where: { $0.id == pokemon.id }) else {
+        guard let index = pokemons.firstIndex(where: { $0.id == pokemon.id }) else {
             pokemons.append(pokemon)
             return
         }
