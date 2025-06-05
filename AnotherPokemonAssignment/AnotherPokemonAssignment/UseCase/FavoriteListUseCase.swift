@@ -18,11 +18,8 @@ final class FavoriteListUseCase: ListUseCaseSpec {
     }
 
     func fetchList(offset: Int) async throws -> [Pokemon] {
-        await withUnsafeContinuation { continuation in
-            let pokemons = getPokemons(limit: limit, offset: offset)
-                .map { Pokemon(name: $0.name, id: $0.id) }
-            continuation.resume(returning: pokemons)
-        }
+        getPokemons(limit: limit, offset: offset)
+            .map { Pokemon(name: $0.name, id: $0.id) }
     }
 }
 
