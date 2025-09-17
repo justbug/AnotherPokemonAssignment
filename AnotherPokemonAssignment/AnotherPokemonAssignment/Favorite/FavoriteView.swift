@@ -49,6 +49,7 @@ private extension FavoriteView {
             }.store(in: &cancelBag)
 
         viewModel.$isFavorite
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isFavorite in
                 self?.favoriteButton.isSelected = isFavorite
             }.store(in: &cancelBag)
