@@ -18,6 +18,7 @@ final class FavoriteViewModel {
     }
 
     func setIsFavorite(_ isFavorite: Bool) {
+        if isFavorite == self.isFavorite { return }
         self.isFavorite = isFavorite
         syncStore(isFavorite)
         postNotification(isFavorite: isFavorite)
