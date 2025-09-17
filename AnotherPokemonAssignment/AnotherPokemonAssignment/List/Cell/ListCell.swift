@@ -40,7 +40,6 @@ private extension ListCell {
 private extension ListCell {
     func setupUI() {
         contentView.backgroundColor = .white
-        contentView.addSubview(titleLabel)
         [titleLabel, favoriteView].forEach(contentView.addSubview)
 
         titleLabel.snp.makeConstraints { make in
@@ -50,7 +49,7 @@ private extension ListCell {
 
         favoriteView.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(8)
-            make.centerY.equalTo(favoriteView)
+            make.centerY.equalToSuperview()
             make.size.equalTo(35)
         }
     }
