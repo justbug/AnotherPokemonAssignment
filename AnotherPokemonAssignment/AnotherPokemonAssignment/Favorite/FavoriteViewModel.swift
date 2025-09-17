@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 final class FavoriteViewModel {
     @Published var isFavorite: Bool = false
     private let useCase: PokemonStoreUseCase
@@ -17,14 +18,14 @@ final class FavoriteViewModel {
         self.useCase = PokemonStoreUseCase(store: store)
     }
 
-    func setIsFavorite(_ isFavorite: Bool) {
+    func setIsFavorite(_ isFavorite: Bool) async {
         self.isFavorite = isFavorite
-        syncStore(isFavorite)
+        await syncStore(isFavorite)
         postNotification(isFavorite: isFavorite)
     }
 
-    func reloadFavorite(id: String) {
-        let isFavorite = useCase.getPokemon(id: id)?.isFavorite ?? false
+    func reloadFavorite(id: String) async {
+        let isFavorite = await useCase.getPokemon(id: id)?.isFavorite ?? false
         self.isFavorite = isFavorite
     }
 
@@ -48,11 +49,11 @@ private extension FavoriteViewModel {
         NotificationCenter.default.post(name: .didFavorite, object: nil, userInfo: [FavoriteUserInfo.key: userInfo])
     }
 
-    func syncStore(_ isFavorite: Bool) {
+    func syncStore(_ isFavorite: Bool) async {
         if isFavorite {
-            useCase.savePokemon(name: name, id: id, isFavorite: isFavorite)
+            await useCase.savePokemon(name: name, id: id, isFavorite: isFavorite)
         } else {
-            useCase.removePokemon(by: id)
+            await useCase.removePokemon(by: id)
         }
     }
 }

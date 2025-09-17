@@ -13,7 +13,7 @@ protocol PokemonStore {
     func removePokemon(by id: String)
 }
 
-final class PokemonStoreUseCase {
+actor PokemonStoreUseCase {
     static let key = "PokemonStore"
     private let store: PokemonStore
 
