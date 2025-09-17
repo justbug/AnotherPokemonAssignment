@@ -26,7 +26,9 @@ final class FavoriteView: UIView {
 
     func reload(id: String, name: String) {
         viewModel.setID(id, name: name)
-        viewModel.reloadFavorite(id: id)
+        Task {
+            await viewModel.reloadFavorite(id: id)
+        }
     }
 }
 
@@ -36,7 +38,9 @@ private extension FavoriteView {
     @objc func favoriteButtonPressed(_ button: UIButton) {
         var isSelected = button.isSelected
         isSelected.toggle()
-        viewModel.setIsFavorite(isSelected)
+        Task {
+            await viewModel.setIsFavorite(isSelected)
+        }
     }
 
     func binding() {
