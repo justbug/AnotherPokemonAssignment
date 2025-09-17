@@ -5,16 +5,16 @@
 //  Created by Mark Chen on 2023/4/13.
 //
 
-import XCTest
+import Testing
 @testable import AnotherPokemonAssignment
 
-final class RequestTest: XCTestCase {
+@Suite struct RequestTest {
     func test_request_init() throws {
         let sut = makeSUT(path: dummyPath)
         let request = try sut.makeToURLRequest()
 
-        XCTAssertEqual(request.url?.absoluteString, "https://pokeapi.co\(dummyPath)")
-        XCTAssertEqual(request.httpMethod, "GET")
+        #expect(request.url?.absoluteString == "https://pokeapi.co\(dummyPath)")
+        #expect(request.httpMethod == "GET")
     }
 
 
@@ -25,7 +25,7 @@ final class RequestTest: XCTestCase {
         let query = components.queryItems!
             .map { "\($0.name)=\($0.value!)" }
             .joined(separator: "&")
-        XCTAssertEqual(query, "q1=v1&q3=v3")
+        #expect(query == "q1=v1&q3=v3")
     }
 }
 

@@ -5,13 +5,13 @@
 //  Created by Mark Chen on 2023/4/15.
 //
 
-import XCTest
+import Testing
 @testable import AnotherPokemonAssignment
 
-final class PokemonStoreUseCaseTest: XCTestCase {
+@Suite struct PokemonStoreUseCaseTest {
     func test_pokemonStoreUseCase_init() {
         let sut = makeSUT()
-        XCTAssertEqual(sut.getPokemon(id: dummyID)?.id, nil)
+        #expect(sut.getPokemon(id: dummyID)?.id == nil)
     }
 
     func test_pokemonStoreUseCase_setAndGetMethod() {
@@ -20,22 +20,22 @@ final class PokemonStoreUseCaseTest: XCTestCase {
         sut.savePokemon(name: dummyName, id: dummyID, isFavorite: true)
         sut.savePokemon(name: dummyName, id: otherID, isFavorite: false)
         
-        XCTAssertEqual(sut.getPokemon(id: dummyID)!.isFavorite, true)
-        XCTAssertEqual(sut.getPokemon(id: dummyID)!.name, dummyName)
+        #expect(sut.getPokemon(id: dummyID)!.isFavorite == true)
+        #expect(sut.getPokemon(id: dummyID)!.name == dummyName)
     }
 
     func test_pokemonStoreUseCase_notFound_pokemon() {
         let otherID = "id2"
         let sut = makeSUT()
         sut.savePokemon(name: dummyName, id: dummyID, isFavorite: true)
-        XCTAssertEqual(sut.getPokemon(id: otherID)?.id, nil)
+        #expect(sut.getPokemon(id: otherID)?.id == nil)
     }
 
     func test_pokemonStoreUseCase_update_pokemon_isFavorite() {
         let sut = makeSUT()
         sut.savePokemon(name: dummyName, id: dummyID, isFavorite: true)
         sut.savePokemon(name: dummyName, id: dummyID, isFavorite: false)
-        XCTAssertEqual(sut.getPokemon(id: dummyID)?.isFavorite, false)
+        #expect(sut.getPokemon(id: dummyID)?.isFavorite == false)
     }
 
 }

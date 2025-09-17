@@ -5,14 +5,14 @@
 //  Created by Mark Chen on 2023/4/14.
 //
 
-import XCTest
+import Testing
 @testable import AnotherPokemonAssignment
 
-final class PokemonRequestMakerTest: XCTestCase {
+@Suite struct PokemonRequestMakerTest {
     func test_pokemonRequestMaker_PokemonRequest() throws {
         let sut = makeSUT(path: "poke", query: [("q1", "v1")])
         let url = try sut.makeToURLRequest().url
-        XCTAssertEqual(url?.absoluteString, "https://pokeapi.co/api/v2/poke?q1=v1")
+        #expect(url?.absoluteString == "https://pokeapi.co/api/v2/poke?q1=v1")
     }
 }
 

@@ -7,25 +7,20 @@
 
 import Combine
 import Foundation
-import XCTest
+import Testing
 @testable import AnotherPokemonAssignment
 
-final class ListViewModelTest: XCTestCase {
-    private var cancelBag = Set<AnyCancellable>()
-
-    override func tearDown() {
-        super.tearDown()
-        cancelBag = []
-    }
+@Suite struct ListViewModelTest {
 
     func test_listViewModel_fetchList() {
+        var cancelBag = Set<AnyCancellable>()
         let mock = ListServiceStub(data: listStubData)
         let sut = makeSUT(listService: mock)
         sut.$pokemons
             .filter { !$0.isEmpty }
             .receive(on: DispatchQueue.main)
             .sink { pokemons in
-                XCTAssertEqual(pokemons.count, mock.getListEntity()?.results.count)
+                #expect(pokemons.count == mock.getListEntity()?.results.count)
             }
             .store(in: &cancelBag)
 
