@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../models/list_entity.dart';
 import 'core/pokemon_service.dart';
 import 'core/service_helper.dart';
@@ -31,10 +33,22 @@ class ListService implements GetListSpec {
         if (offset != null) 'offset': offset.toStringOrNull,
       };
       
-      return await _pokemonService.fetch<ListEntity>(
+      final response = await _pokemonService.fetch(
         _path,
         query: query,
       );
+      
+      try {
+        final dynamic json = jsonDecode(response.body);
+        if (json is! Map<String, dynamic>) {
+          throw JsonParseException('Expected JSON object when parsing ListEntity');
+        }
+        return ListEntity.fromJson(json);
+      } on FormatException catch (e) {
+        throw JsonParseException('JSON parse error: ${e.message}');
+      } on TypeError catch (e) {
+        throw JsonParseException('JSON structure error: $e');
+      }
     } catch (e) {
       // 重新拋出錯誤，保持錯誤類型
       rethrow;
