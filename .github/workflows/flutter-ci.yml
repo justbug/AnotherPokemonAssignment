@@ -15,17 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        channel: 'stable'
-        
-    - name: Install dependencies
-      working-directory: ./flutter_another_pokemon_assignment
-      run: flutter pub get
+    - name: Setup Flutter Environment
+      uses: ./.github/actions/setup-flutter
       
     - name: Analyze code
       working-directory: ./flutter_another_pokemon_assignment
@@ -36,17 +27,8 @@ jobs:
     needs: analyze
     
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        channel: 'stable'
-        
-    - name: Install dependencies
-      working-directory: ./flutter_another_pokemon_assignment
-      run: flutter pub get
+    - name: Setup Flutter Environment
+      uses: ./.github/actions/setup-flutter
       
     - name: Run tests
       working-directory: ./flutter_another_pokemon_assignment
@@ -57,17 +39,8 @@ jobs:
     needs: analyze
     
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        channel: 'stable'
-        
-    - name: Install dependencies
-      working-directory: ./flutter_another_pokemon_assignment
-      run: flutter pub get
+    - name: Setup Flutter Environment
+      uses: ./.github/actions/setup-flutter
       
     - name: Build Android APK
       working-directory: ./flutter_another_pokemon_assignment
