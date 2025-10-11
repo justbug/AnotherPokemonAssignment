@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../networking/api_client.dart';
+import '../../networking/request_builder.dart';
 import '../../models/list_entity.dart';
 import '../../models/detail_entity.dart';
 import 'service_helper.dart';
@@ -30,7 +31,7 @@ class PokemonService {
   }) async {
     try {
       // 建構請求
-      final requestBuilder = _buildPokemonRequest(path, query);
+      final requestBuilder = RequestBuilder.pokemon(path, query: query);
       
       // 執行網路請求
       final response = await _apiClient.get(requestBuilder);
@@ -51,19 +52,6 @@ class PokemonService {
     }
   }
   
-  /// 建構 Pokemon API 請求的 private 方法
-  /// 對應原本的 PokemonRequestMaker 功能
-  RequestBuilder _buildPokemonRequest(String path, Map<String, String?>? query) {
-    const baseURL = 'https://pokeapi.co';
-    const apiVersion = 'v2';
-    final fullPath = '/api/$apiVersion/$path';
-    
-    return RequestBuilder(
-      baseURL: Uri.parse(baseURL),
-      path: fullPath,
-      query: query,
-    );
-  }
   
   /// JSON 解碼方法
   /// 對應 iOS 的 decode&lt;T: Decodable&gt; 方法
