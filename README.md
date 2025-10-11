@@ -42,7 +42,7 @@ Key components include:
 1. Open `AnotherPokemonAssignment.xcodeproj` in Xcode.
 2. Build and run the app to explore the list and detail screens.
 3. Review the use cases and services to understand how network responses are decoded and passed to the UI.
-4. Run the unit tests to verify core functionality.
+4. Run the unit tests to verify core functionality. haha
 
 ### Flutter App - TODO
 
