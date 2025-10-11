@@ -9,10 +9,12 @@ on:
     branches: [ main ]
     paths:
       - 'flutter_another_pokemon_assignment/**'
+  workflow_dispatch: # 允許手動觸發
 
 jobs:
   analyze:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     
     steps:
     - name: Checkout repository
@@ -27,6 +29,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     
     steps:
     - name: Checkout repository
@@ -41,6 +44,7 @@ jobs:
 
   build-android:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     
     steps:
     - name: Checkout repository
