@@ -7,7 +7,6 @@ on:
     types: [opened, synchronize, reopened]
     paths:
       - 'flutter_another_pokemon_assignment/**'
-  workflow_dispatch: # 允許手動觸發
 
 concurrency:
   group: ${{ github.workflow }}-pr-${{ github.event.pull_request.number }}
