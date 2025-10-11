@@ -1,15 +1,17 @@
 name: Flutter CI
 
 on:
+
   pull_request:
     branches: [ main ]
-    paths:
-      - 'flutter_another_pokemon_assignment/**'
-  push:
-    branches: [ main ]
+    types: [opened, synchronize, reopened]
     paths:
       - 'flutter_another_pokemon_assignment/**'
   workflow_dispatch: # 允許手動觸發
+
+concurrency:
+  group: ${{ github.workflow }}-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   analyze:
