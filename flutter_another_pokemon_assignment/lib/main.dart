@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'example_usage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -55,6 +56,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  final PokemonServiceExample _pokemonExample = PokemonServiceExample();
+  String _pokemonInfo = '點擊按鈕測試 Pokemon API';
+  bool _isLoading = false;
 
   void _incrementCounter() {
     setState(() {
@@ -65,6 +69,33 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+  }
+
+  Future<void> _testPokemonAPI() async {
+    setState(() {
+      _isLoading = true;
+      _pokemonInfo = '正在載入 Pokemon 資料...';
+    });
+
+    try {
+      // 測試取得 Pokemon 列表
+      await _pokemonExample.fetchPokemonList();
+      
+      // 測試取得特定 Pokemon 詳細資訊
+      await _pokemonExample.fetchPokemonDetail('1');
+      
+      setState(() {
+        _pokemonInfo = 'Pokemon API 測試成功！請查看控制台輸出。';
+      });
+    } catch (e) {
+      setState(() {
+        _pokemonInfo = 'Pokemon API 測試失敗：$e';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -88,28 +119,50 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            // Column is also a layout widget. It takes a list of children and
+            // arranges them vertically. By default, it sizes itself to fit its
+            // children horizontally, and tries to be as tall as its parent.
+            //
+            // Column has various properties to control how it sizes itself and
+            // how it positions its children. Here we use mainAxisAlignment to
+            // center the children vertically; the main axis here is the vertical
+            // axis because Columns are vertical (the cross axis would be
+            // horizontal).
+            //
+            // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+            // action in the IDE, or press "p" in the console), to see the
+            // wireframe for each widget.
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text('You have pushed the button this many times:'),
+              Text(
+                '$_counter',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const SizedBox(height: 32),
+              const Text(
+                'Pokemon API 測試',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                _pokemonInfo,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              if (_isLoading)
+                const CircularProgressIndicator()
+              else
+                ElevatedButton(
+                  onPressed: _testPokemonAPI,
+                  child: const Text('測試 Pokemon API'),
+                ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
