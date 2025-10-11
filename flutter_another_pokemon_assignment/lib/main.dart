@@ -144,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               const SizedBox(height: 32),
               const Text(
-                'Pokemon API 測試',
+                'Pokemon API 測試 ',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
