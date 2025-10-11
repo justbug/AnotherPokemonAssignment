@@ -11,7 +11,7 @@ on:
       - 'flutter_another_pokemon_assignment/**'
 
 jobs:
-  test:
+  analyze:
     runs-on: ubuntu-latest
     
     steps:
@@ -30,15 +30,46 @@ jobs:
     - name: Analyze code
       working-directory: ./flutter_another_pokemon_assignment
       run: flutter analyze
+
+  test:
+    runs-on: ubuntu-latest
+    needs: analyze
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        
+    - name: Install dependencies
+      working-directory: ./flutter_another_pokemon_assignment
+      run: flutter pub get
       
     - name: Run tests
       working-directory: ./flutter_another_pokemon_assignment
       run: flutter test
+
+  build-android:
+    runs-on: ubuntu-latest
+    needs: analyze
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        
+    - name: Install dependencies
+      working-directory: ./flutter_another_pokemon_assignment
+      run: flutter pub get
       
     - name: Build Android APK
       working-directory: ./flutter_another_pokemon_assignment
       run: flutter build apk --debug
-      
-    - name: Build iOS (no codesign)
-      working-directory: ./flutter_another_pokemon_assignment
-      run: flutter build ios --debug --no-codesign
+    
