@@ -5,18 +5,35 @@ on:
   pull_request:
     branches: [ main ]
     types: [opened, synchronize, reopened]
-    paths:
-      - 'flutter_another_pokemon_assignment/**'
 
 concurrency:
   group: ${{ github.workflow }}-pr-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
+  gate:
+    name: Gate
+    runs-on: ubuntu-latest
+    outputs:
+      touched: ${{ steps.filter.outputs.app }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            app:
+              - 'flutter_another_pokemon_assignment/**'
+      - name: Summarize
+        run: echo "changed=${{ steps.filter.outputs.app }}"
+
   analyze:
+    name: Analyze
+    needs: gate
+    if: needs.gate.outputs.touched == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -29,6 +46,9 @@ jobs:
       run: flutter analyze
 
   test:
+    name: Test
+    needs: gate
+    if: needs.gate.outputs.touched == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     
@@ -44,6 +64,9 @@ jobs:
       run: flutter test
 
   build-android:
+    name: Build Android
+    needs: gate
+    if: needs.gate.outputs.touched == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     
