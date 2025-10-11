@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../lib/services/services.dart';
+import 'package:flutter_another_pokemon_assignment/services/services.dart';
 
 void main() {
   group('PokemonService Tests', () {

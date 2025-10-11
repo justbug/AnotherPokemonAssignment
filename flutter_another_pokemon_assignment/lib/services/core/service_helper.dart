@@ -19,12 +19,12 @@ class InvalidStatusCodeException extends PokemonServiceException {
 
 /// 網路請求錯誤
 class NetworkException extends PokemonServiceException {
-  const NetworkException(String message) : super(message);
+  const NetworkException(super.message);
 }
 
 /// JSON 解析錯誤
 class JsonParseException extends PokemonServiceException {
-  const JsonParseException(String message) : super(message);
+  const JsonParseException(super.message);
 }
 
 /// 擴展 http.Response 添加狀態碼驗證

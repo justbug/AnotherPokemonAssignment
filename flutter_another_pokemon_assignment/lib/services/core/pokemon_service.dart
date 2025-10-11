@@ -19,7 +19,7 @@ class PokemonService {
   }) : _apiClient = apiClient ?? APIClient();
   
   /// 通用的 fetch 方法，支援泛型
-  /// 對應 iOS 的 fetch<T: Decodable> 方法
+  /// 對應 iOS 的 fetch&lt;T: Decodable&gt; 方法
   /// 
   /// [T] 回傳型別，必須支援 fromJson
   /// [path] API 路徑
@@ -66,7 +66,7 @@ class PokemonService {
   }
   
   /// JSON 解碼方法
-  /// 對應 iOS 的 decode<T: Decodable> 方法
+  /// 對應 iOS 的 decode&lt;T: Decodable&gt; 方法
   T _decode<T>(String jsonString) {
     try {
       final jsonMap = jsonDecode(jsonString) as Map<String, dynamic>;

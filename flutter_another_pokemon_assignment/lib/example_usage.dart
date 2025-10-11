@@ -1,4 +1,5 @@
 // 使用範例：展示如何使用 PokemonService
+import 'package:flutter/foundation.dart';
 import 'services/services.dart';
 
 /// 使用範例
@@ -12,22 +13,22 @@ class PokemonServiceExample {
       // 取得前 20 個 Pokemon
       final listEntity = await _listService.fetchList(limit: 20, offset: 0);
       
-      print('取得 ${listEntity.results.length} 個 Pokemon:');
+      debugPrint('取得 ${listEntity.results.length} 個 Pokemon:');
       for (final result in listEntity.results) {
-        print('- ${result.name}: ${result.url}');
+        debugPrint('- ${result.name}: ${result.url}');
       }
       
       if (listEntity.next != null) {
-        print('還有更多資料: ${listEntity.next}');
+        debugPrint('還有更多資料: ${listEntity.next}');
       }
     } on InvalidStatusCodeException catch (e) {
-      print('HTTP 錯誤: ${e.statusCode}');
+      debugPrint('HTTP 錯誤: ${e.statusCode}');
     } on NetworkException catch (e) {
-      print('網路錯誤: ${e.message}');
+      debugPrint('網路錯誤: ${e.message}');
     } on JsonParseException catch (e) {
-      print('JSON 解析錯誤: ${e.message}');
+      debugPrint('JSON 解析錯誤: ${e.message}');
     } catch (e) {
-      print('未知錯誤: $e');
+      debugPrint('未知錯誤: $e');
     }
   }
   
@@ -36,22 +37,22 @@ class PokemonServiceExample {
     try {
       final detailEntity = await _detailService.fetchDetail(id);
       
-      print('Pokemon #${detailEntity.id}:');
-      print('- 重量: ${detailEntity.weight}');
-      print('- 高度: ${detailEntity.height}');
-      print('- 類型: ${detailEntity.types.map((t) => t.type.name).join(', ')}');
+      debugPrint('Pokemon #${detailEntity.id}:');
+      debugPrint('- 重量: ${detailEntity.weight}');
+      debugPrint('- 高度: ${detailEntity.height}');
+      debugPrint('- 類型: ${detailEntity.types.map((t) => t.type.name).join(', ')}');
       
       if (detailEntity.sprites?.frontDefault != null) {
-        print('- 圖片: ${detailEntity.sprites!.frontDefault}');
+        debugPrint('- 圖片: ${detailEntity.sprites!.frontDefault}');
       }
     } on InvalidStatusCodeException catch (e) {
-      print('HTTP 錯誤: ${e.statusCode}');
+      debugPrint('HTTP 錯誤: ${e.statusCode}');
     } on NetworkException catch (e) {
-      print('網路錯誤: ${e.message}');
+      debugPrint('網路錯誤: ${e.message}');
     } on JsonParseException catch (e) {
-      print('JSON 解析錯誤: ${e.message}');
+      debugPrint('JSON 解析錯誤: ${e.message}');
     } catch (e) {
-      print('未知錯誤: $e');
+      debugPrint('未知錯誤: $e');
     }
   }
 }
