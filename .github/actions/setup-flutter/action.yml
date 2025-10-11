@@ -1,0 +1,15 @@
+name: 'Setup Flutter Environment'
+description: 'Setup Flutter environment for CI/CD'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        
+    - name: Install dependencies
+      working-directory: ./flutter_another_pokemon_assignment
+      run: flutter pub get
+      shell: bash
