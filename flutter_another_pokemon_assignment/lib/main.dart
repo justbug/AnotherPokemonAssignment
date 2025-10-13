@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/blocs.dart';
+import 'widgets/pokemon_list_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -91,28 +92,10 @@ class _PokemonListPageState extends State<PokemonListPage> {
           if (state is PokemonListSuccess) {
             return RefreshIndicator(
               onRefresh: _onRefresh,
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: state.pokemons.length + (state.hasMore ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index >= state.pokemons.length) {
-                    return const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-
-                  final pokemon = state.pokemons[index];
-                  return ListTile(
-                    title: Text(pokemon.name),
-                    subtitle: Text('ID: ${pokemon.id}'),
-                    leading: CircleAvatar(
-                      child: Text(pokemon.id),
-                    ),
-                  );
-                },
+              child: PokemonListWidget(
+                pokemons: state.pokemons,
+                scrollController: _scrollController,
+                showLoadingIndicator: state.hasMore,
               ),
             );
           }
@@ -120,28 +103,10 @@ class _PokemonListPageState extends State<PokemonListPage> {
           if (state is PokemonListLoadingMore) {
             return RefreshIndicator(
               onRefresh: _onRefresh,
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: state.pokemons.length + 1,
-                itemBuilder: (context, index) {
-                  if (index >= state.pokemons.length) {
-                    return const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-
-                  final pokemon = state.pokemons[index];
-                  return ListTile(
-                    title: Text(pokemon.name),
-                    subtitle: Text('ID: ${pokemon.id}'),
-                    leading: CircleAvatar(
-                      child: Text(pokemon.id),
-                    ),
-                  );
-                },
+              child: PokemonListWidget(
+                pokemons: state.pokemons,
+                scrollController: _scrollController,
+                showLoadingIndicator: true,
               ),
             );
           }
@@ -149,31 +114,11 @@ class _PokemonListPageState extends State<PokemonListPage> {
           if (state is PokemonListError) {
             return RefreshIndicator(
               onRefresh: _onRefresh,
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: (state.previousPokemons?.length ?? 0) + 1,
-                itemBuilder: (context, index) {
-                  if (index >= (state.previousPokemons?.length ?? 0)) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text(
-                          '載入失敗，請下拉刷新重試',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    );
-                  }
-
-                  final pokemon = state.previousPokemons![index];
-                  return ListTile(
-                    title: Text(pokemon.name),
-                    subtitle: Text('ID: ${pokemon.id}'),
-                    leading: CircleAvatar(
-                      child: Text(pokemon.id),
-                    ),
-                  );
-                },
+              child: PokemonListWidget(
+                pokemons: state.previousPokemons ?? [],
+                scrollController: _scrollController,
+                showError: true,
+                errorMessage: '載入失敗，請下拉刷新重試',
               ),
             );
           }
