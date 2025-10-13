@@ -71,65 +71,43 @@ jobs:
     - name: Setup Flutter Environment
       uses: ./.github/actions/setup-flutter
     
-    - name: Run Flutter tests
+    - name: Create test results directory
+      working-directory: ./flutter_another_pokemon_assignment
+      run: mkdir -p test_results
+    
+    - name: Run Flutter tests with JSON reporter
       id: test-run
       working-directory: ./flutter_another_pokemon_assignment
       run: |
-        # 執行測試並捕獲輸出
+        # 執行測試並產生 JSON 格式的測試結果
         set +e  # 暫時不讓腳本在錯誤時退出
-        flutter test --reporter=expanded --coverage 2>&1 | tee test_output.log
+        flutter test --machine > test_results/test-results.json 2>&1
         test_exit_code=$?
         set -e  # 重新啟用錯誤時退出
         
         # 將退出代碼保存到環境變量
         echo "test_exit_code=$test_exit_code" >> $GITHUB_OUTPUT
-
-    - name: Analyze test results
-      working-directory: ./flutter_another_pokemon_assignment
-      run: |
-        echo "📈 測試結果摘要："
         
-        # 分析測試結果
-        if [ "${{ steps.test-run.outputs.test_exit_code }}" -eq 0 ]; then
+        # 顯示測試結果摘要
+        echo "📈 測試結果摘要："
+        if [ "$test_exit_code" -eq 0 ]; then
           echo "✅ 所有測試通過！"
-          echo "📊 測試統計："
-          grep -E "(All tests passed!|test.*passed)" test_output.log || echo "  - 測試執行完成"
         else
           echo "❌ 測試失敗！"
-          echo ""
-          echo "📋 測試失敗詳情："
-          echo "----------------------------------------"
-          
-          # 顯示失敗的測試
-          if grep -q "FAILED" test_output.log; then
-            echo "🔍 失敗的測試："
-            grep -A 5 -B 2 "FAILED" test_output.log
-          fi
-          
-          # 顯示錯誤信息
-          if grep -q "ERROR" test_output.log; then
-            echo ""
-            echo "🚨 錯誤信息："
-            grep -A 10 -B 2 "ERROR" test_output.log
-          fi
-          
-          # 顯示異常信息
-          if grep -q "Excepcted" test_output.log; then
-            echo ""
-            echo "💥 異常信息："
-            grep -A 15 -B 5 "Expected" test_output.log
-          fi
-          
-          echo "----------------------------------------"
-          echo "📄 完整測試輸出已保存到 test_output.log"
         fi
 
-    - name: Fail on test failure
-      working-directory: ./flutter_another_pokemon_assignment
-      if: steps.test-run.outputs.test_exit_code != 0
-      run: |
-        echo "🚨 測試失敗，CI 將標記為失敗狀態"
-        exit 1
+    - name: Test Report
+      uses: dorny/test-reporter@v2
+      if: ${{ !cancelled() }}
+      with:
+        name: Flutter Tests
+        path: flutter_another_pokemon_assignment/test_results/test-results.json
+        reporter: flutter-json
+        fail-on-error: true
+        fail-on-empty: true
+        max-annotations: 10
+        list-suites: all
+        list-tests: failed
 
   build-android:
     name: Build Android
