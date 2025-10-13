@@ -76,7 +76,6 @@ void main() {
       },
       act: (bloc) => bloc.add(const FavoriteToggled()),
       expect: () => [
-        const FavoriteLoading(isFavorite: false),
         const FavoriteInitial(isFavorite: false),
         const FavoriteSuccess(isFavorite: true),
       ],
@@ -102,7 +101,6 @@ void main() {
       },
       act: (bloc) => bloc.add(const FavoriteToggled()),
       expect: () => [
-        const FavoriteLoading(isFavorite: false),
         const FavoriteInitial(isFavorite: true),
         const FavoriteSuccess(isFavorite: true),
       ],
@@ -125,7 +123,6 @@ void main() {
       },
       act: (bloc) => bloc.add(const FavoriteToggled()),
       expect: () => [
-        const FavoriteLoading(isFavorite: false),
         isA<FavoriteError>()
             .having((s) => s.message, 'message', contains('Repository error'))
             .having((s) => s.isFavorite, 'isFavorite', false),

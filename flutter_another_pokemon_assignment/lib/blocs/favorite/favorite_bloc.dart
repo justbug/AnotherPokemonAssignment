@@ -49,13 +49,7 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
       currentFavorite = currentState.isFavorite;
     } else if (currentState is FavoriteError) {
       currentFavorite = currentState.isFavorite;
-    } else if (currentState is FavoriteLoading) {
-      // 如果是 Loading 狀態，使用當前狀態的值
-      currentFavorite = currentState.isFavorite;
     }
-
-    // 發送載入中狀態
-    emit(FavoriteLoading(isFavorite: currentFavorite));
 
     try {
       final newFavorite = !currentFavorite;

@@ -18,15 +18,6 @@ class FavoriteInitial extends FavoriteState {
   List<Object> get props => [isFavorite];
 }
 
-/// 載入中狀態
-class FavoriteLoading extends FavoriteState {
-  final bool isFavorite;
-
-  const FavoriteLoading({required this.isFavorite});
-
-  @override
-  List<Object> get props => [isFavorite];
-}
 
 /// 成功狀態
 class FavoriteSuccess extends FavoriteState {
