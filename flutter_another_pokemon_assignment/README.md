@@ -1,16 +1,35 @@
 # flutter_another_pokemon_assignment
 
-A new Flutter project.
+A Flutter port of the Another Pokémon assignment that now ships the full list and favorite flows from the iOS reference app.
 
-## Getting Started
+## Feature Highlights
+- Pokemon list screen driven by `PokemonListBloc` with initial load, pull-to-refresh, and incremental paging (30 items per request).
+- Per-row `FavoriteBloc` lets users toggle favorites with optimistic updates and graceful error recovery.
+- Persistent storage of favorites through `LocalPokemonService` (`SharedPreferences`) using the generated `LocalPokemon` model.
+- Reusable `PokemonListWidget` that exposes hooks for custom list tiles while bundling loading/error states.
+- SnackBar-based error surfacing that retains existing items so the user can retry without losing context.
 
-This project is a starting point for a Flutter application.
+## Architecture Overview
+- **Presentation**: `PokemonListPage` hosts a `BlocConsumer` to react to list states and surface error banners; each tile nests a `FavoriteBloc`.
+- **Domain**: `ListRepository` consolidates pagination, JSON parsing, and mapping into the `Pokemon` domain model; `FavoritePokemonRepository` delegates persistence to `LocalPokemonService`.
+- **Services**: `PokemonService` and `DetailService` share the singleton `APIClient` via `RequestBuilder` helpers for consistent request/response handling.
+- **Models**: `Pokemon`, `ListEntity`, `DetailEntity`, and `LocalPokemon` are generated through `freezed`/`json_serializable` for equality and serialization guarantees.
+- **Testing**: Bloc tests cover success/error branches for list and favorite flows, while repository/service specs validate pagination logic and error propagation.
 
-A few resources to get you started if this is your first Flutter project:
+## Running the App
+1. `flutter pub get`
+2. `flutter run`
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Launch flows: the app dispatches `PokemonListLoadRequested` on start-up, then reacts to pull-to-refresh and infinite scroll gestures. Favorite hearts immediately reflect taps while persistence finishes in the background.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Testing
+- `flutter test` exercises bloc behavior (loading, pagination, favorites) and repository/service contracts.
+
+## Project Layout
+- `lib/blocs/` – `PokemonListBloc`, `FavoriteBloc`, and related events/states.
+- `lib/repository/` – `ListRepository` and `FavoritePokemonRepository`.
+- `lib/services/` – Networking helpers plus `LocalPokemonService`.
+- `lib/widgets/` – `PokemonListWidget` wrapper that the page reuses.
+- `test/` – Bloc and repository specs with `bloc_test`/`mockito`.
+
+Additional deep dives: [`README_POKEMON_LIST.md`](README_POKEMON_LIST.md) and [`README_POKEMON_FAVORITE.md`](README_POKEMON_FAVORITE.md).

@@ -70,10 +70,44 @@ jobs:
       
     - name: Setup Flutter Environment
       uses: ./.github/actions/setup-flutter
-      
-    - name: Run tests
+    
+    - name: Create test results directory
       working-directory: ./flutter_another_pokemon_assignment
-      run: flutter test
+      run: mkdir -p test_results
+    
+    - name: Run Flutter tests with JSON reporter
+      id: test-run
+      working-directory: ./flutter_another_pokemon_assignment
+      run: |
+        # 執行測試並產生 JSON 格式的測試結果
+        set +e  # 暫時不讓腳本在錯誤時退出
+        flutter test --reporter json --file-reporter "json:test_results/test-results.json" --coverage
+        test_exit_code=$?
+        set -e  # 重新啟用錯誤時退出
+        
+        # 將退出代碼保存到環境變量
+        echo "test_exit_code=$test_exit_code" >> $GITHUB_OUTPUT
+        
+        # 顯示測試結果摘要
+        echo "📈 測試結果摘要："
+        if [ "$test_exit_code" -eq 0 ]; then
+          echo "✅ 所有測試通過！"
+        else
+          echo "❌ 測試失敗！"
+        fi
+
+    - name: Test Report
+      uses: dorny/test-reporter@v2
+      if: ${{ !cancelled() }}
+      with:
+        name: Flutter Tests
+        path: flutter_another_pokemon_assignment/test_results/test-results.json
+        reporter: flutter-json
+        fail-on-error: true
+        fail-on-empty: true
+        max-annotations: 10
+        list-suites: all
+        list-tests: failed
 
   build-android:
     name: Build Android
