@@ -81,7 +81,7 @@ jobs:
       run: |
         # 執行測試並產生 JSON 格式的測試結果
         set +e  # 暫時不讓腳本在錯誤時退出
-        flutter test --coverage
+        flutter test --reporter json --file-reporter "json:test_results/test-results.json" --coverage
         test_exit_code=$?
         set -e  # 重新啟用錯誤時退出
         
