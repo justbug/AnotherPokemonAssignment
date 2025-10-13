@@ -4,22 +4,18 @@ import 'services/services.dart';
 
 /// 使用範例
 class PokemonServiceExample {
-  final ListService _listService = ListService();
+  final ListRepository _listRepository = ListRepository();
   final DetailService _detailService = DetailService();
   
   /// 取得 Pokemon 列表範例
   Future<void> fetchPokemonList() async {
     try {
       // 取得前 20 個 Pokemon
-      final listEntity = await _listService.fetchList(limit: 20, offset: 0);
+      final pokemons = await _listRepository.fetchList(offset: 0);
       
-      debugPrint('取得 ${listEntity.results.length} 個 Pokemon:');
-      for (final result in listEntity.results) {
-        debugPrint('- ${result.name}: ${result.url}');
-      }
-      
-      if (listEntity.next != null) {
-        debugPrint('還有更多資料: ${listEntity.next}');
+      debugPrint('取得 ${pokemons.length} 個 Pokemon:');
+      for (final pokemon in pokemons) {
+        debugPrint('- ${pokemon.name}: ID ${pokemon.id}');
       }
     } on InvalidStatusCodeException catch (e) {
       debugPrint('HTTP 錯誤: ${e.statusCode}');

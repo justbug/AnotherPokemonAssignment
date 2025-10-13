@@ -15,10 +15,10 @@ void main() {
     });
   });
 
-  group('ListService Tests', () {
-    test('ListService should be created successfully', () {
-      final listService = ListService();
-      expect(listService, isNotNull);
+  group('ListRepository Tests', () {
+    test('ListRepository should be created successfully', () {
+      final listRepository = ListRepository();
+      expect(listRepository, isNotNull);
     });
   });
 
