@@ -59,7 +59,6 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
 
     try {
       final newFavorite = !currentFavorite;
-      print('DEBUG: currentFavorite: $currentFavorite, newFavorite: $newFavorite');
       
       // 使用 Repository 切換最愛狀態
       await _favoriteRepository.toggleFavorite(pokemonId, pokemonName);
