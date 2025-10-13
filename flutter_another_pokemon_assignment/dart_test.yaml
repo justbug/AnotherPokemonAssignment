@@ -1,0 +1,2 @@
+file_reporters:
+  json: test_results/test-results.json
