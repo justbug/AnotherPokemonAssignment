@@ -179,7 +179,7 @@ void main() {
           isA<PokemonListSuccess>()
               .having((s) => s.pokemons.length, 'pokemons length', _pageSize * 2)
               .having((s) => s.hasMore, 'hasMore', true)
-              .having((s) => s.currentOffset, 'currentOffset', _pageSize * 2)
+              .having((s) => s.currentOffset, 'currentOffset', _pageSize)
               .having(
                 (s) => s.pokemons.take(_pageSize).toList(),
                 'existing pokemons',
