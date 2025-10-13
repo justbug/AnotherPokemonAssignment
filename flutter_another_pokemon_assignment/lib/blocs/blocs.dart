@@ -4,3 +4,7 @@
 export 'pokemon_list/pokemon_list_bloc.dart';
 export 'pokemon_list/pokemon_list_event.dart';
 export 'pokemon_list/pokemon_list_state.dart';
+
+export 'favorite/favorite_bloc.dart';
+export 'favorite/favorite_event.dart';
+export 'favorite/favorite_state.dart';
