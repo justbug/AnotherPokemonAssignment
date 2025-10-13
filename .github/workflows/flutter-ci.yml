@@ -114,10 +114,10 @@ jobs:
           fi
           
           # 顯示異常信息
-          if grep -q "Exception" test_output.log; then
+          if grep -q "Excepcted" test_output.log; then
             echo ""
             echo "💥 異常信息："
-            grep -A 15 -B 5 "Exception" test_output.log
+            grep -A 15 -B 5 "Expected" test_output.log
           fi
           
           echo "----------------------------------------"
