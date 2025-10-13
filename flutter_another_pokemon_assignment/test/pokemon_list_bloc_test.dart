@@ -29,7 +29,7 @@ void main() {
 
     group('PokemonListLoadRequested', () {
       blocTest<PokemonListBloc, PokemonListState>(
-        'emits [Loading, Success] when fetchList succeeds with full page',
+        'emits (Loading, Success) when fetchList succeeds with full page',
         build: () {
           final pokemons = TestPokemonFactory.createPokemonList(_pageSize);
           when(mockRepository.fetchList(offset: 0))
@@ -50,7 +50,7 @@ void main() {
       );
 
       blocTest<PokemonListBloc, PokemonListState>(
-        'emits [Loading, Success] when fetchList succeeds with partial page',
+        'emits (Loading, Success) when fetchList succeeds with partial page',
         build: () {
           final pokemons = TestPokemonFactory.createPokemonList(_pageSize ~/ 2);
           when(mockRepository.fetchList(offset: 0))
@@ -71,7 +71,7 @@ void main() {
       );
 
       blocTest<PokemonListBloc, PokemonListState>(
-        'emits [Loading, Error] when fetchList fails',
+        'emits (Loading, Error) when fetchList fails',
         build: () {
           when(mockRepository.fetchList(offset: 0))
               .thenThrow(Exception('Network error'));
@@ -91,7 +91,7 @@ void main() {
 
     group('PokemonListRefreshRequested', () {
       blocTest<PokemonListBloc, PokemonListState>(
-        'emits [Success] when refresh succeeds',
+        'emits Success when refresh succeeds',
         build: () {
           final pokemons = TestPokemonFactory.createPokemonList(_pageSize);
           when(mockRepository.fetchList(offset: 0))
@@ -111,7 +111,7 @@ void main() {
       );
 
       blocTest<PokemonListBloc, PokemonListState>(
-        'emits [Error] when refresh fails without previous data',
+        'emits Error when refresh fails without previous data',
         build: () {
           when(mockRepository.fetchList(offset: 0))
               .thenThrow(Exception('Refresh error'));
@@ -129,7 +129,7 @@ void main() {
 
       final existingPokemons = TestPokemonFactory.createPokemonList(_pageSize);
       blocTest<PokemonListBloc, PokemonListState>(
-        'emits [Error] with previous data when refresh fails after success',
+        'emits Error with previous data when refresh fails after success',
         build: () {
           when(mockRepository.fetchList(offset: 0))
               .thenThrow(Exception('Refresh error'));
@@ -162,7 +162,7 @@ void main() {
         startId: _pageSize + 1,
       );
       blocTest<PokemonListBloc, PokemonListState>(
-        'emits [LoadingMore, Success] when load more succeeds',
+        'emits (LoadingMore, Success) when load more succeeds',
         build: () {
           when(mockRepository.fetchList(offset: _pageSize))
               .thenAnswer((_) async => morePokemons);
@@ -201,7 +201,7 @@ void main() {
 
       final failingStatePokemons = TestPokemonFactory.createPokemonList(_pageSize);
       blocTest<PokemonListBloc, PokemonListState>(
-        'emits [LoadingMore, Error] when load more fails',
+        'emits (LoadingMore, Error) when load more fails',
         build: () {
           when(mockRepository.fetchList(offset: _pageSize))
               .thenThrow(Exception('Load more error'));
