@@ -1,37 +1,35 @@
 # flutter_another_pokemon_assignment
 
-A Flutter take-home that reproduces the Pokemon list experience from the iOS reference app.  
-The feature branch introduces a full BLoC-driven presentation layer, a repository that mirrors the iOS `ListUseCase`, and a lightweight networking stack on top of `http`.
+A Flutter port of the Another Pokémon assignment that now ships the full list and favorite flows from the iOS reference app.
 
 ## Feature Highlights
-- Pokemon list page backed by `PokemonListBloc` with initial load, pull-to-refresh, and infinite scroll (30 items per page).
-- SnackBar-based error surfacing while preserving the previously fetched list so the user can retry.
-- `ListRepository` that consolidates the former list service logic and maps API entities to the new `Pokemon` domain model.
-- Shared networking layer (`APIClient`, `RequestBuilder`, and custom exceptions) that encapsulates PokeAPI access and status validation.
-- Expanded test coverage to guarantee singleton wiring and service construction.
+- Pokemon list screen driven by `PokemonListBloc` with initial load, pull-to-refresh, and incremental paging (30 items per request).
+- Per-row `FavoriteBloc` lets users toggle favorites with optimistic updates and graceful error recovery.
+- Persistent storage of favorites through `LocalPokemonService` (`SharedPreferences`) using the generated `LocalPokemon` model.
+- Reusable `PokemonListWidget` that exposes hooks for custom list tiles while bundling loading/error states.
+- SnackBar-based error surfacing that retains existing items so the user can retry without losing context.
 
 ## Architecture Overview
-- **Presentation**: `PokemonListPage` renders list states emitted by `PokemonListBloc`, leveraging `BlocConsumer` for UI updates and side-effects.
-- **Domain / Repository**: `ListRepository` orchestrates pagination (`limit = 30`, `offset` increments) and converts `ListEntity` results into `Pokemon` models.
-- **Services**: `PokemonService` (singleton) and `DetailService` sit on top of `APIClient`, with reusable helpers for query building, status-code validation, and error typing.
-- **Models**: `ListEntity`, `ResultEntity`, and the new `Pokemon` value object (via `equatable`) are exported from `lib/models/models.dart` for ergonomic imports.
-- **Tooling**: Added `flutter_bloc`, `http`, `equatable`, `freezed`/`json_serializable`, and build tooling in `pubspec.yaml`.
-
-For a deeper dive into the list behaviour, see [`README_POKEMON_LIST.md`](README_POKEMON_LIST.md).
+- **Presentation**: `PokemonListPage` hosts a `BlocConsumer` to react to list states and surface error banners; each tile nests a `FavoriteBloc`.
+- **Domain**: `ListRepository` consolidates pagination, JSON parsing, and mapping into the `Pokemon` domain model; `FavoritePokemonRepository` delegates persistence to `LocalPokemonService`.
+- **Services**: `PokemonService` and `DetailService` share the singleton `APIClient` via `RequestBuilder` helpers for consistent request/response handling.
+- **Models**: `Pokemon`, `ListEntity`, `DetailEntity`, and `LocalPokemon` are generated through `freezed`/`json_serializable` for equality and serialization guarantees.
+- **Testing**: Bloc tests cover success/error branches for list and favorite flows, while repository/service specs validate pagination logic and error propagation.
 
 ## Running the App
-1. Install dependencies: `flutter pub get`
-2. Launch the simulator/device you prefer.
-3. Start the app: `flutter run`
+1. `flutter pub get`
+2. `flutter run`
 
-The initial launch triggers `PokemonListLoadRequested`, fetching the first page from the PokeAPI.
+Launch flows: the app dispatches `PokemonListLoadRequested` on start-up, then reacts to pull-to-refresh and infinite scroll gestures. Favorite hearts immediately reflect taps while persistence finishes in the background.
 
-## Tests
-- Execute the suite with `flutter test` to validate singleton wiring and repository/service construction.
+## Testing
+- `flutter test` exercises bloc behavior (loading, pagination, favorites) and repository/service contracts.
 
 ## Project Layout
-- `lib/blocs/` – Feature BLoC, events, and states.
-- `lib/repository/` – `ListRepository` implementation.
-- `lib/networking/` – `APIClient` and `RequestBuilder`.
-- `lib/services/` – Core Pokemon services and helpers.
-- `lib/models/` – Domain models and generated entities.
+- `lib/blocs/` – `PokemonListBloc`, `FavoriteBloc`, and related events/states.
+- `lib/repository/` – `ListRepository` and `FavoritePokemonRepository`.
+- `lib/services/` – Networking helpers plus `LocalPokemonService`.
+- `lib/widgets/` – `PokemonListWidget` wrapper that the page reuses.
+- `test/` – Bloc and repository specs with `bloc_test`/`mockito`.
+
+Additional deep dives: [`README_POKEMON_LIST.md`](README_POKEMON_LIST.md) and [`README_POKEMON_FAVORITE.md`](README_POKEMON_FAVORITE.md).

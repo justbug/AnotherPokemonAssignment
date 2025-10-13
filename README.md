@@ -20,20 +20,16 @@ Important subfolders include:
 - **Extension** – small helper utilities used throughout the project.
 - **Tests** – unit tests for services, use cases, and view models.
 
-### Flutter App (Dart) - TODO
+### Flutter App (Dart)
 
-The Flutter implementation is located under `flutter_another_pokemon_assignment/`.
-Key components include:
+The Flutter client lives in `flutter_another_pokemon_assignment/` and now mirrors the feature set of the iOS reference app.
 
-- **lib/models/** – data models for Pokémon entities with Freezed code generation
-- **lib/networking/** – API client for HTTP requests
-- **lib/services/** – service layer for data fetching and business logic
-- **lib/main.dart** – main application entry point
-- **lib/example_usage.dart** – example usage of the Pokémon service
-- **test/** – unit tests for services and widgets
-- **pubspec.yaml** – Flutter dependencies and configuration
-
-**Status: TODO** - The Flutter implementation is currently under development and not yet complete.
+- **Feature parity**: Implements the Pokémon list experience with pull-to-refresh, infinite scroll (30 items per page), error surfacing, and per-row favorite toggles persisted locally.
+- **State management**: Uses `flutter_bloc` with `PokemonListBloc` and `FavoriteBloc` to keep UI concerns isolated from data fetching and persistence.
+- **Data layer**: `ListRepository` consolidates pagination, JSON decoding, and mapping into the `Pokemon` domain model, while `FavoritePokemonRepository` persists favorite selections through `LocalPokemonService` (`SharedPreferences`).
+- **Networking**: `APIClient` and `RequestBuilder` wrap `http` to provide typed errors and shared request assembly that matches the iOS stack.
+- **Tooling**: Introduces `freezed`, `json_serializable`, `equatable`, `mockito`, and `bloc_test` for model generation and testability.
+- **Documentation**: See the dedicated walkthroughs in [`flutter_another_pokemon_assignment/README_POKEMON_LIST.md`](flutter_another_pokemon_assignment/README_POKEMON_LIST.md) and [`flutter_another_pokemon_assignment/README_POKEMON_FAVORITE.md`](flutter_another_pokemon_assignment/README_POKEMON_FAVORITE.md) for deeper dives into the new features.
 
 ## Getting Started
 
@@ -44,14 +40,12 @@ Key components include:
 3. Review the use cases and services to understand how network responses are decoded and passed to the UI.
 4. Run the unit tests to verify core functionality.
 
-### Flutter App - TODO
+### Flutter App
 
 1. Navigate to `flutter_another_pokemon_assignment/` directory.
 2. Run `flutter pub get` to install dependencies.
-3. Run `flutter run` to start the app.
-4. Review the service implementations and example usage.
-
-**Note: Flutter implementation is currently incomplete and marked as TODO.**
+3. Run `flutter run` to start the app. The list screen dispatches `PokemonListLoadRequested` on launch and supports pull-to-refresh and load-more interactions.
+4. Execute `flutter test` to run the bloc, repository, and service specifications that cover pagination, favorite toggling, and error handling paths.
 
 ## License
 
