@@ -1,7 +1,7 @@
 import 'dart:collection';
 
-import '../../lib/models/models.dart';
-import '../../lib/repository/list_repository.dart';
+import 'package:flutter_another_pokemon_assignment/models/models.dart';
+import 'package:flutter_another_pokemon_assignment/repository/list_repository.dart';
 
 class MockListRepository implements ListRepositorySpec {
   final Map<int, Queue<_MockResponse>> _responses = {};

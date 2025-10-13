@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../lib/blocs/pokemon_list/pokemon_list_bloc.dart';
-import '../lib/blocs/pokemon_list/pokemon_list_event.dart';
-import '../lib/blocs/pokemon_list/pokemon_list_state.dart';
+import 'package:flutter_another_pokemon_assignment/blocs/pokemon_list/pokemon_list_bloc.dart';
+import 'package:flutter_another_pokemon_assignment/blocs/pokemon_list/pokemon_list_event.dart';
+import 'package:flutter_another_pokemon_assignment/blocs/pokemon_list/pokemon_list_state.dart';
 import 'helpers/test_helpers.dart';
 
 const _pageSize = 30;
