@@ -1,16 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
+import '../../repository/list_repository.dart';
 import 'pokemon_list_event.dart';
 import 'pokemon_list_state.dart';
 
 /// Pokemon 列表 BLoC
 /// 處理 Pokemon 列表的業務邏輯
 class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
-  final ListRepository _listRepository;
+  final ListRepositorySpec _listRepository;
   static const int _limit = 30;
 
-  PokemonListBloc({ListRepository? listRepository}) 
+  PokemonListBloc({ListRepositorySpec? listRepository}) 
       : _listRepository = listRepository ?? ListRepository(),
         super(const PokemonListInitial()) {
     on<PokemonListLoadRequested>(_onLoadRequested);
@@ -30,7 +31,7 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
       emit(PokemonListSuccess(
         pokemons: pokemons,
         hasMore: pokemons.length == _limit,
-        currentOffset: _limit,
+        currentOffset: pokemons.length,
       ));
     } catch (e) {
       emit(PokemonListError(
