@@ -4,12 +4,15 @@ import 'package:equatable/equatable.dart';
 abstract class FavoriteState extends Equatable {
   const FavoriteState();
 
+  bool get isFavorite;
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [isFavorite];
 }
 
 /// 初始狀態
 class FavoriteInitial extends FavoriteState {
+  @override
   final bool isFavorite;
 
   const FavoriteInitial({required this.isFavorite});
@@ -21,6 +24,7 @@ class FavoriteInitial extends FavoriteState {
 
 /// 成功狀態
 class FavoriteSuccess extends FavoriteState {
+  @override
   final bool isFavorite;
 
   const FavoriteSuccess({required this.isFavorite});
@@ -32,6 +36,7 @@ class FavoriteSuccess extends FavoriteState {
 /// 錯誤狀態
 class FavoriteError extends FavoriteState {
   final String message;
+  @override
   final bool isFavorite;
 
   const FavoriteError({

@@ -39,20 +39,9 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     FavoriteToggled event,
     Emitter<FavoriteState> emit,
   ) async {
-    final currentState = state;
-    bool currentFavorite = false;
-
-    // 取得當前狀態
-    if (currentState is FavoriteInitial) {
-      currentFavorite = currentState.isFavorite;
-    } else if (currentState is FavoriteSuccess) {
-      currentFavorite = currentState.isFavorite;
-    } else if (currentState is FavoriteError) {
-      currentFavorite = currentState.isFavorite;
-    }
-
+    bool currentFavorite = state.isFavorite;
     try {
-      final newFavorite = !currentFavorite;
+      final newFavorite = !state.isFavorite;
       
       // 使用 Repository 切換最愛狀態
       await _favoriteRepository.toggleFavorite(pokemonId, pokemonName);
