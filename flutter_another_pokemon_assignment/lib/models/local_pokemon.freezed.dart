@@ -23,6 +23,7 @@ LocalPokemon _$LocalPokemonFromJson(Map<String, dynamic> json) {
 mixin _$LocalPokemon {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
+  String get imageURL => throw _privateConstructorUsedError;
   bool get isFavorite => throw _privateConstructorUsedError;
 
   /// Serializes this LocalPokemon to a JSON map.
@@ -42,7 +43,7 @@ abstract class $LocalPokemonCopyWith<$Res> {
     $Res Function(LocalPokemon) then,
   ) = _$LocalPokemonCopyWithImpl<$Res, LocalPokemon>;
   @useResult
-  $Res call({String id, String name, bool isFavorite});
+  $Res call({String id, String name, String imageURL, bool isFavorite});
 }
 
 /// @nodoc
@@ -62,6 +63,7 @@ class _$LocalPokemonCopyWithImpl<$Res, $Val extends LocalPokemon>
   $Res call({
     Object? id = null,
     Object? name = null,
+    Object? imageURL = null,
     Object? isFavorite = null,
   }) {
     return _then(
@@ -73,6 +75,10 @@ class _$LocalPokemonCopyWithImpl<$Res, $Val extends LocalPokemon>
             name: null == name
                 ? _value.name
                 : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            imageURL: null == imageURL
+                ? _value.imageURL
+                : imageURL // ignore: cast_nullable_to_non_nullable
                       as String,
             isFavorite: null == isFavorite
                 ? _value.isFavorite
@@ -93,7 +99,7 @@ abstract class _$$LocalPokemonImplCopyWith<$Res>
   ) = __$$LocalPokemonImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name, bool isFavorite});
+  $Res call({String id, String name, String imageURL, bool isFavorite});
 }
 
 /// @nodoc
@@ -112,6 +118,7 @@ class __$$LocalPokemonImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
+    Object? imageURL = null,
     Object? isFavorite = null,
   }) {
     return _then(
@@ -123,6 +130,10 @@ class __$$LocalPokemonImplCopyWithImpl<$Res>
         name: null == name
             ? _value.name
             : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        imageURL: null == imageURL
+            ? _value.imageURL
+            : imageURL // ignore: cast_nullable_to_non_nullable
                   as String,
         isFavorite: null == isFavorite
             ? _value.isFavorite
@@ -139,6 +150,7 @@ class _$LocalPokemonImpl implements _LocalPokemon {
   const _$LocalPokemonImpl({
     required this.id,
     required this.name,
+    required this.imageURL,
     required this.isFavorite,
   });
 
@@ -150,11 +162,13 @@ class _$LocalPokemonImpl implements _LocalPokemon {
   @override
   final String name;
   @override
+  final String imageURL;
+  @override
   final bool isFavorite;
 
   @override
   String toString() {
-    return 'LocalPokemon(id: $id, name: $name, isFavorite: $isFavorite)';
+    return 'LocalPokemon(id: $id, name: $name, imageURL: $imageURL, isFavorite: $isFavorite)';
   }
 
   @override
@@ -164,13 +178,15 @@ class _$LocalPokemonImpl implements _LocalPokemon {
             other is _$LocalPokemonImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.imageURL, imageURL) ||
+                other.imageURL == imageURL) &&
             (identical(other.isFavorite, isFavorite) ||
                 other.isFavorite == isFavorite));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, isFavorite);
+  int get hashCode => Object.hash(runtimeType, id, name, imageURL, isFavorite);
 
   /// Create a copy of LocalPokemon
   /// with the given fields replaced by the non-null parameter values.
@@ -190,6 +206,7 @@ abstract class _LocalPokemon implements LocalPokemon {
   const factory _LocalPokemon({
     required final String id,
     required final String name,
+    required final String imageURL,
     required final bool isFavorite,
   }) = _$LocalPokemonImpl;
 
@@ -200,6 +217,8 @@ abstract class _LocalPokemon implements LocalPokemon {
   String get id;
   @override
   String get name;
+  @override
+  String get imageURL;
   @override
   bool get isFavorite;
 

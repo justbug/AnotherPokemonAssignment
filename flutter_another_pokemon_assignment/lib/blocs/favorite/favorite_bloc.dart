@@ -43,7 +43,7 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     
     try {
       // 使用 Repository 切換最愛狀態
-      await _favoriteRepository.toggleFavorite(event.pokemonId, event.pokemonName);
+      await _favoriteRepository.toggleFavorite(event.pokemonId, event.pokemonName, event.imageURL);
       
       // 更新狀態
       currentStatus[event.pokemonId] = !currentFavorite;

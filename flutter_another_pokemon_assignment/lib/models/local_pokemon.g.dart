@@ -10,6 +10,7 @@ _$LocalPokemonImpl _$$LocalPokemonImplFromJson(Map<String, dynamic> json) =>
     _$LocalPokemonImpl(
       id: json['id'] as String,
       name: json['name'] as String,
+      imageURL: json['imageURL'] as String,
       isFavorite: json['isFavorite'] as bool,
     );
 
@@ -17,5 +18,6 @@ Map<String, dynamic> _$$LocalPokemonImplToJson(_$LocalPokemonImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'imageURL': instance.imageURL,
       'isFavorite': instance.isFavorite,
     };

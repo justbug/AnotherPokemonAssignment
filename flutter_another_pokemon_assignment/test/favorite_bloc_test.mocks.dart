@@ -43,9 +43,17 @@ class MockFavoritePokemonRepository extends _i1.Mock
           as _i3.Future<bool>);
 
   @override
-  _i3.Future<void> toggleFavorite(String? pokemonId, String? pokemonName) =>
+  _i3.Future<void> toggleFavorite(
+    String? pokemonId,
+    String? pokemonName,
+    String? imageURL,
+  ) =>
       (super.noSuchMethod(
-            Invocation.method(#toggleFavorite, [pokemonId, pokemonName]),
+            Invocation.method(#toggleFavorite, [
+              pokemonId,
+              pokemonName,
+              imageURL,
+            ]),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
