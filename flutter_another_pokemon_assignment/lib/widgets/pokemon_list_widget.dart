@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/pokemon.dart';
+import '../blocs/blocs.dart';
+import '../pages/pokemon_detail_page.dart';
 import 'favorite_icon_button.dart';
 
 /// Pokemon 列表元件
@@ -72,6 +75,22 @@ class PokemonListWidget extends StatelessWidget {
         pokemonName: pokemon.name,
         imageURL: pokemon.imageURL,
       ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => PokemonDetailBloc()
+                ..add(PokemonDetailLoadRequested(pokemonId: pokemon.id)),
+              child: PokemonDetailPage(
+                pokemonId: pokemon.id,
+                pokemonName: pokemon.name,
+                imageURL: pokemon.imageURL,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
