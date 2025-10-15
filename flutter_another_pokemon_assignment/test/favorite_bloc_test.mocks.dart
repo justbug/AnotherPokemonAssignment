@@ -60,4 +60,12 @@ class MockFavoritePokemonRepository extends _i1.Mock
             ),
           )
           as _i3.Future<List<_i4.LocalPokemon>>);
+
+  @override
+  _i3.Future<Map<String, bool>> getAllFavoriteStatus() =>
+      (super.noSuchMethod(
+            Invocation.method(#getAllFavoriteStatus, []),
+            returnValue: _i3.Future<Map<String, bool>>.value(<String, bool>{}),
+          )
+          as _i3.Future<Map<String, bool>>);
 }

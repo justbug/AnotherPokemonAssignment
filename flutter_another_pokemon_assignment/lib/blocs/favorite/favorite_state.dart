@@ -3,48 +3,43 @@ import 'package:equatable/equatable.dart';
 /// Favorite 狀態
 abstract class FavoriteState extends Equatable {
   const FavoriteState();
-  
-  /// 是否為收藏狀態
-  bool get isFavorite;
-  
-  @override
-  List<Object> get props => [isFavorite];
-}
 
-/// 初始狀態
-class FavoriteInitial extends FavoriteState {
-  final bool _isFavorite;
+  /// 取得所有 Pokemon 的最愛狀態
+  Map<String, bool> get favoriteStatus;
 
-  const FavoriteInitial({required bool isFavorite}) : _isFavorite = isFavorite;
+  /// 檢查特定 Pokemon 是否為最愛
+  bool isFavorite(String pokemonId) {
+    return favoriteStatus[pokemonId] ?? false;
+  }
 
   @override
-  bool get isFavorite => _isFavorite;
+  List<Object> get props => [favoriteStatus];
 }
 
 
-/// 成功狀態
+
+/// 成功狀態（包含初始狀態）
 class FavoriteSuccess extends FavoriteState {
-  final bool _isFavorite;
+  @override
+  final Map<String, bool> favoriteStatus;
 
-  const FavoriteSuccess({required bool isFavorite}) : _isFavorite = isFavorite;
+  const FavoriteSuccess({this.favoriteStatus = const {}});
 
   @override
-  bool get isFavorite => _isFavorite;
+  List<Object> get props => [favoriteStatus];
 }
 
 /// 錯誤狀態
 class FavoriteError extends FavoriteState {
   final String message;
-  final bool _isFavorite;
+  @override
+  final Map<String, bool> favoriteStatus;
 
   const FavoriteError({
     required this.message,
-    required bool isFavorite,
-  }) : _isFavorite = isFavorite;
+    required this.favoriteStatus,
+  });
 
   @override
-  bool get isFavorite => _isFavorite;
-
-  @override
-  List<Object> get props => [message, isFavorite];
+  List<Object> get props => [message, favoriteStatus];
 }
