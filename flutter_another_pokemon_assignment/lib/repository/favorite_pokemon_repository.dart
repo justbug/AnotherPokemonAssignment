@@ -49,16 +49,6 @@ class FavoritePokemonRepository {
     }
   }
 
-  /// Get all favorite Pokemon
-  Future<List<LocalPokemon>> getAllFavorites() async {
-    try {
-      final allPokemon = await _localPokemonService.getAll();
-      return allPokemon.where((pokemon) => pokemon.isFavorite).toList();
-    } catch (e) {
-      return [];
-    }
-  }
-
   /// Get favorite status map for all Pokemon
   Future<Map<String, bool>> getAllFavoriteStatus() async {
     try {

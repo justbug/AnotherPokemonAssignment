@@ -1,1 +1,1 @@
-run 'flutter analyze' and 'flutter test'
+run 'flutter analyze' and 'flutter test'. if errors are happen, fix the errors until analyze or test is passed
