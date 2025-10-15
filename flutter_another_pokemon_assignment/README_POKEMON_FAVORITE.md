@@ -1,10 +1,11 @@
 # Favorite Feature Overview
 
-This document describes the favorite functionality implemented by `FavoriteBloc`, the `FavoritePokemonRepository`, and the new local persistence stack.
+This document describes the favorite functionality implemented by the global `FavoriteBloc`, the `FavoritePokemonRepository`, and the new local persistence stack.
 
 ## Architecture
 
-- `FavoriteBloc` exposes an event-driven interface for toggling and loading the favorite status of a single Pokémon.
+- `FavoriteBloc` is now a global bloc that manages favorite status for all Pokémon in a centralized map.
+- `FavoriteIconButton` widget provides per-item UI interactions that connect to the global bloc.
 - `FavoritePokemonRepository` provides the persistence operations that the bloc depends on. It delegates storage to `LocalPokemonService`, which wraps `SharedPreferences`.
 - `LocalPokemon` (generated via `freezed`/`json_serializable`) defines the persisted schema: `id`, `name`, and `isFavorite`.
 - Data flow is unidirectional: UI ➜ bloc event ➜ repository ➜ local service ➜ bloc state ➜ UI.
@@ -13,21 +14,21 @@ This document describes the favorite functionality implemented by `FavoriteBloc`
 
 | Event | Purpose |
 | --- | --- |
-| `FavoriteLoadRequested` | Load the current favorite status from persistence during bloc initialization. |
-| `FavoriteToggled` | Flip the favorite flag for the current Pokémon. |
+| `FavoriteLoadAllRequested` | Load all favorite statuses from persistence during app initialization. |
+| `FavoriteToggled` | Flip the favorite flag for a specific Pokémon (includes pokemonId and pokemonName). |
 
-Both events are registered in the bloc constructor and `FavoriteLoadRequested` is dispatched immediately to bootstrap the state.
+The global bloc is initialized in `main.dart` and `FavoriteLoadAllRequested` is dispatched from `PokemonListPage` to load all favorite states at startup.
 
 ## States
 
-Every bloc state carries the latest `isFavorite` flag so the UI can remain consistent even while loading or when an error occurs.
+Every bloc state carries a `favoriteStatus` map (String -> bool) so the UI can remain consistent even while loading or when an error occurs.
 
 | State | Description |
 | --- | --- |
-| `FavoriteInitial` | Initial or reloaded status after a successful read. |
-| `FavoriteLoading` | Emitted while the repository operation is pending. Keeps the previous favorite value. |
-| `FavoriteSuccess` | Indicates the toggle completed successfully and exposes the updated flag. |
-| `FavoriteError` | Reports failures with a message, while preserving the last known favorite value. |
+| `FavoriteSuccess` | Contains the complete favorite status map for all Pokémon. |
+| `FavoriteError` | Reports failures with a message, while preserving the last known favorite status map. |
+
+The `favoriteStatus` map allows the `FavoriteIconButton` to efficiently check individual Pokémon favorite status using `state.isFavorite(pokemonId)`.
 
 ## Repository Responsibilities
 
@@ -41,45 +42,46 @@ Exception handling is conservative: read operations swallow errors and return sa
 
 ## Integration with the List Screen
 
-- `PokemonListWidget` wraps each list tile in its own `BlocProvider<FavoriteBloc>` instance.
-- Favorite status is loaded during bloc construction so rows immediately reflect persisted hearts when scrolled back into view.
-- Tapping the heart emits `FavoriteToggled`, which persists the inverse state through `FavoritePokemonRepository` and drives the icon update.
-- When an error occurs, the bloc emits `FavoriteError` with the previous `isFavorite` so the UI keeps the last known state while showing a SnackBar elsewhere in the list flow.
+- The global `FavoriteBloc` is provided at the app level in `main.dart` using `MultiBlocProvider`.
+- `PokemonListPage` dispatches `FavoriteLoadAllRequested` on initialization to load all favorite states.
+- `FavoriteIconButton` widgets in each list tile connect to the global bloc and use `buildWhen` to optimize rebuilds.
+- Tapping the heart emits `FavoriteToggled` with the specific Pokemon ID and name, which updates the global state map.
+- When an error occurs, the bloc emits `FavoriteError` with the previous favorite status map so the UI keeps the last known state.
 
 ## Typical Usage
 
-1. Instantiate the bloc with the Pokémon identifier and display name.
-2. Provide the bloc to the widget tree so the UI can listen to `FavoriteState`.
-3. Trigger `FavoriteToggled` from UI interactions (e.g., tapping a heart icon).
-4. React to `FavoriteLoading` to show progress indicators and to `FavoriteError` to notify the user.
+1. Provide the global `FavoriteBloc` at the app level using `MultiBlocProvider`.
+2. Use `FavoriteIconButton` in list tiles, passing the Pokemon ID and name.
+3. The button automatically connects to the global bloc and handles state updates.
+4. Dispatch `FavoriteLoadAllRequested` on app startup to load all favorite states.
 
 ```dart
-final bloc = FavoriteBloc(
-  pokemonId: '001',
-  pokemonName: 'Bulbasaur',
-);
+// In main.dart
+MultiBlocProvider(
+  providers: [
+    BlocProvider(create: (context) => PokemonListBloc()..add(const PokemonListLoadRequested())),
+    BlocProvider(create: (context) => FavoriteBloc()),
+  ],
+  child: MaterialApp(...),
+)
 
-IconButton(
-  onPressed: () => bloc.add(const FavoriteToggled()),
-  icon: BlocBuilder<FavoriteBloc, FavoriteState>(
-    builder: (context, state) {
-      final isFavorite = state is FavoriteInitial ||
-              state is FavoriteSuccess ||
-              state is FavoriteLoading ||
-              state is FavoriteError
-          ? state.isFavorite
-          : false;
+// In PokemonListPage
+WidgetsBinding.instance.addPostFrameCallback((_) {
+  context.read<FavoriteBloc>().add(const FavoriteLoadAllRequested());
+});
 
-      return Icon(isFavorite ? Icons.favorite : Icons.favorite_border);
-    },
-  ),
-);
+// In list tiles
+FavoriteIconButton(
+  pokemonId: pokemon.id,
+  pokemonName: pokemon.name,
+)
 ```
 
-The bloc schedules `FavoriteLoadRequested` during construction, so the first state update reflects the persisted flag without additional UI code.
+The global bloc loads all favorite states on startup, so all buttons immediately reflect the correct favorite status.
 
 ## Testing Notes
 
-- `test/favorite_bloc_test.dart` covers initialization, toggle success, toggle removal, and repository error propagation using Mockito to drive each branch.
+- `test/favorite_bloc_test.dart` covers global state management, toggle success, toggle removal, and repository error propagation using Mockito to drive each branch.
 - Mock or stub the repository when unit-testing the bloc to simulate favorite toggles and failure scenarios.
+- Test the `FavoriteIconButton` widget with a global bloc provider to verify UI interactions.
 - For integration-style testing, provide a fake `LocalPokemonService` that writes to an in-memory map to avoid disk access from `SharedPreferences`.

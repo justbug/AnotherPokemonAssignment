@@ -28,14 +28,15 @@ This Flutter application delivers the Pokemon list feature with the BLoC pattern
 - `PokemonListEvent`: Defines user-driven events
 - `PokemonListState`: Defines UI states
 - `PokemonListBloc`: Orchestrates state management and business logic
-- `FavoriteBloc`: Scoped per tile to read/persist favorite status while the list interacts with pagination
+- `FavoriteBloc`: Global bloc that manages all Pokemon favorite states centrally
 
 ### 4. UI Layer
-- `PokemonListPage`: Main list page
+- `PokemonListPage` (in `pages/`): Main list page with clean separation from main.dart
 - Uses `BlocConsumer` to listen for state updates
 - Uses `RefreshIndicator` to support pull-to-refresh
 - Uses `ScrollController` to observe scroll events
 - Delegates rendering to `PokemonListWidget`, which exposes extension points for custom tiles and wraps loading/error rows
+- Integrates with global `FavoriteBloc` for favorite state management
 
 ## Key Behaviors
 
@@ -60,9 +61,10 @@ This Flutter application delivers the Pokemon list feature with the BLoC pattern
 - Provides a retry mechanism via pull-to-refresh
 
 ### Favorite Integration
-- Each item renders a heart icon bound to a `FavoriteBloc` that toggles state locally and persists via `FavoritePokemonRepository`.
-- Favorite status is loaded on bloc creation so the UI reflects stored preferences immediately.
-- Errors encountered while toggling emit `FavoriteError` but preserve the previous `isFavorite` value, avoiding visual flicker.
+- Each item renders a `FavoriteIconButton` that connects to the global `FavoriteBloc` for state management.
+- Favorite status is loaded globally on app startup via `FavoriteLoadAllRequested` event.
+- The global `FavoriteBloc` manages all Pokemon favorite states in a centralized map.
+- Errors encountered while toggling emit `FavoriteError` but preserve the previous favorite status, avoiding visual flicker.
 
 ## How to Use
 

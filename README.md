@@ -25,7 +25,8 @@ Important subfolders include:
 The Flutter client lives in `flutter_another_pokemon_assignment/` and now mirrors the feature set of the iOS reference app.
 
 - **Feature parity**: Implements the Pokémon list experience with pull-to-refresh, infinite scroll (30 items per page), error surfacing, and per-row favorite toggles persisted locally.
-- **State management**: Uses `flutter_bloc` with `PokemonListBloc` and `FavoriteBloc` to keep UI concerns isolated from data fetching and persistence.
+- **State management**: Uses `flutter_bloc` with `PokemonListBloc` and a global `FavoriteBloc` to manage all favorite states centrally, keeping UI concerns isolated from data fetching and persistence.
+- **Architecture**: Clean separation with dedicated `pages/` directory for UI screens and `widgets/` for reusable components like `FavoriteIconButton`.
 - **Data layer**: `ListRepository` consolidates pagination, JSON decoding, and mapping into the `Pokemon` domain model, while `FavoritePokemonRepository` persists favorite selections through `LocalPokemonService` (`SharedPreferences`).
 - **Networking**: `APIClient` and `RequestBuilder` wrap `http` to provide typed errors and shared request assembly that matches the iOS stack.
 - **Tooling**: Introduces `freezed`, `json_serializable`, `equatable`, `mockito`, and `bloc_test` for model generation and testability.
