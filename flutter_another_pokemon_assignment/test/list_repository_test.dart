@@ -149,17 +149,17 @@ void main() {
         // Assert
         expect(pokemons, hasLength(3));
         
-        // 驗證第一個 Pokemon
+        // Verify first Pokemon
         expect(pokemons[0].name, equals('bulbasaur'));
         expect(pokemons[0].id, equals('1'));
         expect(pokemons[0].imageURL, equals('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'));
         
-        // 驗證第二個 Pokemon
+        // Verify second Pokemon
         expect(pokemons[1].name, equals('ivysaur'));
         expect(pokemons[1].id, equals('2'));
         expect(pokemons[1].imageURL, equals('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png'));
         
-        // 驗證第三個 Pokemon
+        // Verify third Pokemon
         expect(pokemons[2].name, equals('venusaur'));
         expect(pokemons[2].id, equals('3'));
         expect(pokemons[2].imageURL, equals('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png'));
@@ -229,7 +229,7 @@ void main() {
         final pokemons = await listRepository.fetchList(offset: 0);
 
         // Assert
-        expect(pokemons, hasLength(2)); // 只有有效的 Pokemon 被包含
+        expect(pokemons, hasLength(2)); // Only valid Pokemon are included
         expect(pokemons[0].name, equals('valid-pokemon'));
         expect(pokemons[1].name, equals('another-valid-pokemon'));
       });
@@ -264,12 +264,12 @@ void main() {
         expect(pokemons, hasLength(1));
         final pokemon = pokemons.first;
         
-        // 驗證 imageURL 格式
+        // Verify imageURL format
         expect(pokemon.imageURL, startsWith('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'));
         expect(pokemon.imageURL, endsWith('.png'));
         expect(pokemon.imageURL, contains(testId));
         
-        // 驗證完整的 URL 格式
+        // Verify complete URL format
         expect(pokemon.imageURL, equals('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$testId.png'));
       });
     });

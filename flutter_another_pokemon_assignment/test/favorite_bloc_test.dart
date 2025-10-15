@@ -26,13 +26,13 @@ void main() {
       favoriteBloc.close();
     });
 
-    test('初始狀態應該是 FavoriteSuccess with empty favoriteStatus', () {
+    test('Initial state should be FavoriteSuccess with empty favoriteStatus', () {
       expect(favoriteBloc.state, isA<FavoriteSuccess>());
       expect((favoriteBloc.state as FavoriteSuccess).favoriteStatus, isEmpty);
     });
 
     blocTest<FavoriteBloc, FavoriteState>(
-      '當載入所有最愛狀態時，應該正確載入所有狀態',
+      'When loading all favorite states, should correctly load all states',
       build: () {
         when(mockFavoriteRepository.getAllFavoriteStatus()).thenAnswer((_) async => {
           '1': false,
@@ -52,7 +52,7 @@ void main() {
 
 
     blocTest<FavoriteBloc, FavoriteState>(
-      '點擊 favorite 按鈕應該切換狀態並儲存到 Repository',
+      'Clicking favorite button should toggle state and save to Repository',
       build: () {
         when(mockFavoriteRepository.toggleFavorite('1', 'Pikachu', 'https://example.com/pikachu.png')).thenAnswer((_) async {});
         return FavoriteBloc(
@@ -69,7 +69,7 @@ void main() {
     );
 
     blocTest<FavoriteBloc, FavoriteState>(
-      '當 Pokemon 已經是最愛時，點擊應該移除最愛狀態',
+      'When Pokemon is already favorite, clicking should remove favorite state',
       build: () {
         when(mockFavoriteRepository.toggleFavorite('1', 'Pikachu', 'https://example.com/pikachu.png')).thenAnswer((_) async {});
         return FavoriteBloc(
@@ -87,7 +87,7 @@ void main() {
     );
 
     blocTest<FavoriteBloc, FavoriteState>(
-      '當 Repository 操作失敗時，應該顯示錯誤狀態',
+      'When Repository operation fails, should show error state',
       build: () {
         when(mockFavoriteRepository.toggleFavorite('1', 'Pikachu', 'https://example.com/pikachu.png'))
             .thenThrow(Exception('Repository error'));

@@ -1,22 +1,22 @@
 import '../models/models.dart';
 import '../services/detail_service.dart';
 
-/// Pokemon 詳細資訊倉庫規格介面
-/// 對應 iOS 的 DetailUseCaseSpec protocol
+/// Pokemon detail repository specification interface
+/// Corresponds to iOS DetailUseCaseSpec protocol
 abstract class DetailRepositorySpec {
   Future<PokemonDetail> fetchDetail(String id);
 }
 
-/// Pokemon 詳細資訊倉庫
-/// 對應 iOS 的 DetailUseCase struct
+/// Pokemon detail repository
+/// Corresponds to iOS DetailUseCase struct
 class DetailRepository implements DetailRepositorySpec {
   final DetailService _detailService;
 
   DetailRepository({DetailService? detailService}) 
       : _detailService = detailService ?? DetailService();
 
-  /// 取得 Pokemon 詳細資訊
-  /// 對應 iOS 的 fetchDetail(id: String) 方法
+  /// Get Pokemon detail
+  /// Corresponds to iOS fetchDetail(id: String) method
   /// 
   /// [id] Pokemon ID
   @override
@@ -26,13 +26,13 @@ class DetailRepository implements DetailRepositorySpec {
       final model = _mapToModel(entity);
       return model;
     } catch (e) {
-      // 重新拋出錯誤，保持錯誤類型
+      // Re-throw error to preserve error type
       rethrow;
     }
   }
 
-  /// 將 DetailEntity 轉換為 PokemonDetail 模型
-  /// 對應 iOS 的 mapToModel(_ entity: DetailEntity) 方法
+  /// Convert DetailEntity to PokemonDetail model
+  /// Corresponds to iOS mapToModel(_ entity: DetailEntity) method
   PokemonDetail _mapToModel(DetailEntity entity) {
     return PokemonDetail(
       id: entity.id,

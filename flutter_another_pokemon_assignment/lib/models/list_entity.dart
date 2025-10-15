@@ -3,8 +3,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'list_entity.freezed.dart';
 part 'list_entity.g.dart';
 
-/// Pokemon 列表實體
-/// 對應 iOS 的 ListEntity struct
+/// Pokemon list entity
+/// Corresponds to iOS ListEntity struct
 @freezed
 class ListEntity with _$ListEntity {
   const factory ListEntity({
@@ -16,8 +16,8 @@ class ListEntity with _$ListEntity {
       _$ListEntityFromJson(json);
 }
 
-/// Pokemon 結果實體
-/// 對應 iOS 的 ListEntity.ResultEntity struct
+/// Pokemon result entity
+/// Corresponds to iOS ListEntity.ResultEntity struct
 @freezed
 class ResultEntity with _$ResultEntity {
   const factory ResultEntity({

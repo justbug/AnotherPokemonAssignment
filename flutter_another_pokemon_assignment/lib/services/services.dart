@@ -1,5 +1,5 @@
-// 服務層統一匯出檔案
-// 方便其他模組匯入所有服務
+// Service layer unified export file
+// Convenient for other modules to import all services
 
 export 'core/pokemon_service.dart';
 export 'core/service_helper.dart';

@@ -58,7 +58,7 @@ void main() {
         expect: () => [
           const FavoritesListLoading(),
           isA<FavoritesListError>()
-              .having((s) => s.message, 'message', '載入收藏列表失敗: Exception: Network error')
+              .having((s) => s.message, 'message', 'Failed to load favorites list: Exception: Network error')
               .having((s) => s.previousFavoritePokemons, 'previousFavoritePokemons', isEmpty),
         ],
         verify: (_) {
@@ -97,7 +97,7 @@ void main() {
         act: (bloc) => bloc.add(const FavoritesListRefreshRequested()),
         expect: () => [
           isA<FavoritesListError>()
-              .having((s) => s.message, 'message', '刷新收藏列表失敗: Exception: Refresh error')
+              .having((s) => s.message, 'message', 'Failed to refresh favorites list: Exception: Refresh error')
               .having((s) => s.previousFavoritePokemons, 'previousFavoritePokemons', isEmpty),
         ],
         verify: (_) {
@@ -122,7 +122,7 @@ void main() {
               .having(
                 (s) => s.message,
                 'message',
-                '刷新收藏列表失敗: Exception: Refresh error',
+                'Failed to refresh favorites list: Exception: Refresh error',
               )
               .having(
                 (s) => s.previousFavoritePokemons,

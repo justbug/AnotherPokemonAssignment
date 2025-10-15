@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import '../../models/models.dart';
 
-/// Pokemon 列表狀態
-/// 定義 UI 的各種狀態
+/// Pokemon list states
+/// Define various UI states
 abstract class PokemonListState extends Equatable {
   const PokemonListState();
 
@@ -10,20 +10,20 @@ abstract class PokemonListState extends Equatable {
   List<Object> get props => [];
 }
 
-/// 初始狀態
-/// 頁面剛載入時的狀態
+/// Initial state
+/// State when page first loads
 class PokemonListInitial extends PokemonListState {
   const PokemonListInitial();
 }
 
-/// 載入中狀態
-/// 首次載入資料時的狀態
+/// Loading state
+/// State when first loading data
 class PokemonListLoading extends PokemonListState {
   const PokemonListLoading();
 }
 
-/// 成功狀態
-/// 資料載入成功時的狀態
+/// Success state
+/// State when data loads successfully
 class PokemonListSuccess extends PokemonListState {
   final List<Pokemon> pokemons;
   final bool hasMore;
@@ -38,7 +38,7 @@ class PokemonListSuccess extends PokemonListState {
   @override
   List<Object> get props => [pokemons, hasMore, currentOffset];
 
-  /// 複製並更新狀態
+  /// Copy and update state
   PokemonListSuccess copyWith({
     List<Pokemon>? pokemons,
     bool? hasMore,
@@ -52,8 +52,8 @@ class PokemonListSuccess extends PokemonListState {
   }
 }
 
-/// 載入更多中狀態
-/// 載入更多資料時的狀態
+/// Loading more state
+/// State when loading more data
 class PokemonListLoadingMore extends PokemonListState {
   final List<Pokemon> pokemons;
   final bool hasMore;
@@ -69,8 +69,8 @@ class PokemonListLoadingMore extends PokemonListState {
   List<Object> get props => [pokemons, hasMore, currentOffset];
 }
 
-/// 錯誤狀態
-/// 載入失敗時的狀態
+/// Error state
+/// State when loading fails
 class PokemonListError extends PokemonListState {
   final String message;
   final List<Pokemon>? previousPokemons;

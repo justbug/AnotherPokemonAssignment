@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 
-/// Pokemon 服務相關的自訂錯誤
+/// Pokemon service related custom errors
 class PokemonServiceException implements Exception {
   final String message;
   final int? statusCode;
@@ -11,26 +11,26 @@ class PokemonServiceException implements Exception {
   String toString() => 'PokemonServiceException: $message${statusCode != null ? ' (Status: $statusCode)' : ''}';
 }
 
-/// 無效狀態碼錯誤
+/// Invalid status code error
 class InvalidStatusCodeException extends PokemonServiceException {
   const InvalidStatusCodeException(int statusCode) 
       : super('Invalid status code: $statusCode', statusCode);
 }
 
-/// 網路請求錯誤
+/// Network request error
 class NetworkException extends PokemonServiceException {
   const NetworkException(super.message);
 }
 
-/// JSON 解析錯誤
+/// JSON parsing error
 class JsonParseException extends PokemonServiceException {
   const JsonParseException(super.message);
 }
 
-/// 擴展 http.Response 添加狀態碼驗證
+/// Extension for http.Response to add status code validation
 extension ResponseValidation on http.Response {
-  /// 驗證狀態碼是否在 200-299 範圍內
-  /// 如果無效則拋出 InvalidStatusCodeException
+  /// Validate if status code is within 200-299 range
+  /// Throws InvalidStatusCodeException if invalid
   void validateStatusCode() {
     if (statusCode < 200 || statusCode >= 300) {
       throw InvalidStatusCodeException(statusCode);
@@ -38,8 +38,8 @@ extension ResponseValidation on http.Response {
   }
 }
 
-/// 擴展 int? 添加轉換為 String? 的方法
+/// Extension for int? to add conversion to String? method
 extension IntToString on int? {
-  /// 將 int? 轉換為 String?，對應 iOS 的 toString 屬性
+  /// Convert int? to String?, corresponds to iOS toString property
   String? get toStringOrNull => this?.toString();
 }

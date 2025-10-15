@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-/// Pokemon 模型
-/// 對應 iOS 的 Pokemon struct
+/// Pokemon model
+/// Corresponds to iOS Pokemon struct
 class Pokemon extends Equatable {
   final String name;
   final String id;

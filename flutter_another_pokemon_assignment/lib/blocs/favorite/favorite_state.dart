@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-/// Favorite 狀態
+/// Favorite states
 abstract class FavoriteState extends Equatable {
   const FavoriteState();
 
-  /// 取得所有 Pokemon 的最愛狀態
+  /// Get favorite status for all Pokemon
   Map<String, bool> get favoriteStatus;
 
-  /// 檢查特定 Pokemon 是否為最愛
+  /// Check if specific Pokemon is favorite
   bool isFavorite(String pokemonId) {
     return favoriteStatus[pokemonId] ?? false;
   }
@@ -18,7 +18,7 @@ abstract class FavoriteState extends Equatable {
 
 
 
-/// 成功狀態（包含初始狀態）
+/// Success state (includes initial state)
 class FavoriteSuccess extends FavoriteState {
   @override
   final Map<String, bool> favoriteStatus;
@@ -29,7 +29,7 @@ class FavoriteSuccess extends FavoriteState {
   List<Object> get props => [favoriteStatus];
 }
 
-/// 錯誤狀態
+/// Error state
 class FavoriteError extends FavoriteState {
   final String message;
   @override

@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import '../../models/models.dart';
 
-/// Pokemon 詳細資訊狀態
-/// 定義 UI 的各種狀態
+/// Pokemon detail states
+/// Define various UI states
 abstract class PokemonDetailState extends Equatable {
   const PokemonDetailState();
 
@@ -10,20 +10,20 @@ abstract class PokemonDetailState extends Equatable {
   List<Object> get props => [];
 }
 
-/// 初始狀態
-/// 頁面剛載入時的狀態
+/// Initial state
+/// State when page first loads
 class PokemonDetailInitial extends PokemonDetailState {
   const PokemonDetailInitial();
 }
 
-/// 載入中狀態
-/// 載入 Pokemon 詳細資訊時的狀態
+/// Loading state
+/// State when loading Pokemon detail
 class PokemonDetailLoading extends PokemonDetailState {
   const PokemonDetailLoading();
 }
 
-/// 成功狀態
-/// Pokemon 詳細資訊載入成功時的狀態
+/// Success state
+/// State when Pokemon detail loads successfully
 class PokemonDetailSuccess extends PokemonDetailState {
   final PokemonDetail detail;
 
@@ -33,8 +33,8 @@ class PokemonDetailSuccess extends PokemonDetailState {
   List<Object> get props => [detail];
 }
 
-/// 錯誤狀態
-/// 載入 Pokemon 詳細資訊失敗時的狀態
+/// Error state
+/// State when loading Pokemon detail fails
 class PokemonDetailError extends PokemonDetailState {
   final String message;
 

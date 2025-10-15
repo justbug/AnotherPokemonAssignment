@@ -4,8 +4,8 @@ import '../blocs/blocs.dart';
 import '../models/pokemon.dart';
 import '../widgets/pokemon_list_widget.dart';
 
-/// 收藏列表頁面
-/// 顯示用戶收藏的 Pokemon 列表，按收藏時間排序
+/// Favorites list page
+/// Shows user's favorite Pokemon list, sorted by favorite time
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
 
@@ -17,15 +17,15 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   void initState() {
     super.initState();
-    // 觸發初始載入
+    // Trigger initial load
     context.read<FavoritesListBloc>().add(const FavoritesListLoadRequested());
   }
 
-  /// 處理下拉刷新
+  /// Handle pull-to-refresh
   Future<void> _onRefresh() async {
-    // 重新載入收藏狀態
+    // Reload favorite states
     context.read<FavoriteBloc>().add(const FavoriteLoadAllRequested());
-    // 重新載入收藏列表
+    // Reload favorites list
     context.read<FavoritesListBloc>().add(const FavoritesListRefreshRequested());
   }
 
@@ -33,12 +33,12 @@ class _FavoritesPageState extends State<FavoritesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('收藏列表'),
+        title: const Text('Favorites'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: BlocListener<FavoriteBloc, FavoriteState>(
         listener: (context, state) {
-          // 當收藏狀態改變時，重新載入收藏列表
+          // When favorite state changes, reload favorites list
           if (state is FavoriteSuccess) {
             context.read<FavoritesListBloc>().add(const FavoritesListRefreshRequested());
           }
@@ -78,7 +78,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
               onPressed: () {
                 context.read<FavoritesListBloc>().add(const FavoritesListLoadRequested());
               },
-              child: const Text('重試'),
+              child: const Text('Retry'),
             ),
           ],
         ),
@@ -86,7 +86,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
     }
 
     if (state is FavoritesListSuccess) {
-      // 將 LocalPokemon 轉換為 Pokemon
+      // Convert LocalPokemon to Pokemon
       final favoritePokemons = state.favoritePokemons.map((localPokemon) => Pokemon(
         id: localPokemon.id,
         name: localPokemon.name,
@@ -111,7 +111,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     ),
                     SizedBox(height: 16),
                     Text(
-                      '尚無收藏的 Pokemon',
+                      'No favorite Pokemon yet',
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.grey,
@@ -134,7 +134,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
       );
     }
 
-    // 初始狀態
+    // Initial state
     return const Center(
       child: CircularProgressIndicator(),
     );

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-/// Pokemon 詳細資訊模型
-/// 對應 iOS 的 PokemonDetail struct
+/// Pokemon detail model
+/// Corresponds to iOS PokemonDetail struct
 class PokemonDetail extends Equatable {
   final int id;
   final int weight;

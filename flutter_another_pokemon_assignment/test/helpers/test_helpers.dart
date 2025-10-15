@@ -24,7 +24,7 @@ class TestLocalPokemonFactory {
         name: 'pokemon-${startId + index}',
         imageURL: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${startId + index}.png',
         isFavorite: true,
-        created: now + index * 1000, // 每個 Pokemon 間隔 1 秒
+        created: now + index * 1000, // 1 second interval between each Pokemon
       ),
     );
   }

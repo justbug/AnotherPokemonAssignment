@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-/// Pokemon 詳細資訊事件
-/// 定義用戶行為和系統觸發的事件
+/// Pokemon detail events
+/// Define user actions and system-triggered events
 abstract class PokemonDetailEvent extends Equatable {
   const PokemonDetailEvent();
 
@@ -9,8 +9,8 @@ abstract class PokemonDetailEvent extends Equatable {
   List<Object> get props => [];
 }
 
-/// 載入 Pokemon 詳細資訊事件
-/// 對應進入 Pokemon 詳細頁面時的載入行為
+/// Load Pokemon detail event
+/// Corresponds to loading behavior when entering Pokemon detail page
 class PokemonDetailLoadRequested extends PokemonDetailEvent {
   final String pokemonId;
 

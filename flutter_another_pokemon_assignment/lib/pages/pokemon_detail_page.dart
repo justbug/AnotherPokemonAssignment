@@ -4,8 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../blocs/blocs.dart';
 import '../widgets/favorite_icon_button.dart';
 
-/// Pokemon 詳細資訊頁面
-/// 顯示 Pokemon 的完整詳細資訊，包含收藏功能
+/// Pokemon detail page
+/// Shows complete Pokemon detail information, includes favorite functionality
 class PokemonDetailPage extends StatelessWidget {
   final String pokemonId;
   final String pokemonName;
@@ -59,21 +59,21 @@ class PokemonDetailPage extends StatelessWidget {
           }
 
           return const Center(
-            child: Text('未知狀態'),
+            child: Text('Unknown state'),
           );
         },
       ),
     );
   }
 
-  /// 建立詳細資訊內容
+  /// Build detail content
   Widget _buildDetailContent(BuildContext context, detail) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Pokemon 圖片
+          // Pokemon image
           Center(
             child: Container(
               width: 200,
@@ -82,7 +82,7 @@ class PokemonDetailPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
+                    color: Colors.grey.withValues(alpha: 0.3),
                     spreadRadius: 2,
                     blurRadius: 8,
                     offset: const Offset(0, 4),
@@ -109,23 +109,23 @@ class PokemonDetailPage extends StatelessWidget {
           
           const SizedBox(height: 24),
           
-          // 基本資訊
+          // Basic information
           _buildInfoCard(
             context,
-            '基本資訊',
+            'Basic Information',
             [
               _buildInfoRow('ID', detail.id.toString()),
-              _buildInfoRow('體重', '${detail.weight / 10} kg'),
-              _buildInfoRow('身高', '${detail.height / 10} m'),
+              _buildInfoRow('Weight', '${detail.weight / 10} kg'),
+              _buildInfoRow('Height', '${detail.height / 10} m'),
             ],
           ),
           
           const SizedBox(height: 16),
           
-          // 類型資訊
+          // Type information
           _buildInfoCard(
             context,
-            '類型',
+            'Types',
             [
               _buildTypeRow(detail.types),
             ],
@@ -135,7 +135,7 @@ class PokemonDetailPage extends StatelessWidget {
     );
   }
 
-  /// 建立錯誤內容
+  /// Build error content
   Widget _buildErrorContent(BuildContext context, String message) {
     return Center(
       child: Padding(
@@ -164,7 +164,7 @@ class PokemonDetailPage extends StatelessWidget {
                   PokemonDetailLoadRequested(pokemonId: pokemonId),
                 );
               },
-              child: const Text('重試'),
+              child: const Text('Retry'),
             ),
           ],
         ),
@@ -172,7 +172,7 @@ class PokemonDetailPage extends StatelessWidget {
     );
   }
 
-  /// 建立資訊卡片
+  /// Build info card
   Widget _buildInfoCard(BuildContext context, String title, List<Widget> children) {
     return Card(
       elevation: 4,
@@ -198,7 +198,7 @@ class PokemonDetailPage extends StatelessWidget {
     );
   }
 
-  /// 建立資訊行
+  /// Build info row
   Widget _buildInfoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -224,7 +224,7 @@ class PokemonDetailPage extends StatelessWidget {
     );
   }
 
-  /// 建立類型行
+  /// Build type row
   Widget _buildTypeRow(List<String> types) {
     return Wrap(
       spacing: 8.0,
@@ -242,7 +242,7 @@ class PokemonDetailPage extends StatelessWidget {
     );
   }
 
-  /// 根據類型取得顏色
+  /// Get color based on type
   Color _getTypeColor(String type) {
     switch (type.toLowerCase()) {
       case 'fire':

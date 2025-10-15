@@ -3,8 +3,8 @@ import '../../repository/detail_repository.dart';
 import 'pokemon_detail_event.dart';
 import 'pokemon_detail_state.dart';
 
-/// Pokemon 詳細資訊 BLoC
-/// 處理 Pokemon 詳細資訊的業務邏輯
+/// Pokemon detail BLoC
+/// Handles Pokemon detail business logic
 class PokemonDetailBloc extends Bloc<PokemonDetailEvent, PokemonDetailState> {
   final DetailRepositorySpec _detailRepository;
 
@@ -14,7 +14,7 @@ class PokemonDetailBloc extends Bloc<PokemonDetailEvent, PokemonDetailState> {
     on<PokemonDetailLoadRequested>(_onLoadRequested);
   }
 
-  /// 處理載入 Pokemon 詳細資訊事件
+  /// Handle load Pokemon detail event
   Future<void> _onLoadRequested(
     PokemonDetailLoadRequested event,
     Emitter<PokemonDetailState> emit,
@@ -26,7 +26,7 @@ class PokemonDetailBloc extends Bloc<PokemonDetailEvent, PokemonDetailState> {
       emit(PokemonDetailSuccess(detail: detail));
     } catch (e) {
       emit(PokemonDetailError(
-        message: '載入 Pokemon 詳細資訊失敗: $e',
+        message: 'Failed to load Pokemon detail: $e',
       ));
     }
   }
