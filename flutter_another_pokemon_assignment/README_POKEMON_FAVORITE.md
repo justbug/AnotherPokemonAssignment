@@ -68,20 +68,22 @@ Exception handling is conservative: read operations swallow errors and return sa
 - The global `FavoriteBloc` and `FavoritesListBloc` are provided at the app level in `main.dart` using `BlocProvider`.
 - `MainNavigationPage` provides bottom navigation between `PokemonListPage` and `FavoritesPage`.
 - `PokemonListPage` dispatches `FavoriteLoadAllRequested` on initialization to load all favorite states.
+- `PokemonDetailPage` integrates with global `FavoriteBloc` for favorite functionality in the detail view.
 - `FavoritesPage` uses `FavoritesListBloc` to display and manage the favorites list with pull-to-refresh support.
-- `FavoriteIconButton` widgets in each list tile connect to the global bloc and use `buildWhen` to optimize rebuilds.
+- `FavoriteIconButton` widgets in each list tile and detail page connect to the global bloc and use `buildWhen` to optimize rebuilds.
 - Tapping the heart emits `FavoriteToggled` with the specific Pokemon ID, name, and imageURL, which updates the global state map.
 - When an error occurs, the bloc emits `FavoriteError` with the previous favorite status map so the UI keeps the last known state.
 
-**Enhanced Integration**: Complete favorites list page with navigation, focusing on comprehensive favorite management with full UI support.
+**Enhanced Integration**: Complete favorites list page with navigation and detail page integration, focusing on comprehensive favorite management with full UI support across all pages.
 
 ## Typical Usage
 
 1. Provide the global `FavoriteBloc` and `FavoritesListBloc` at the app level using `BlocProvider`.
 2. Use `MainNavigationPage` as the main entry point with bottom navigation.
-3. Use `FavoriteIconButton` in list tiles, passing the Pokemon ID, name, and imageURL.
+3. Use `FavoriteIconButton` in list tiles and detail pages, passing the Pokemon ID, name, and imageURL.
 4. The button automatically connects to the global bloc and handles state updates.
 5. Dispatch `FavoriteLoadAllRequested` on app startup to load all favorite states.
+6. Navigate to `PokemonDetailPage` to view comprehensive Pokemon information with favorite functionality.
 
 ```dart
 // In main.dart
@@ -100,7 +102,7 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
   context.read<FavoriteBloc>().add(const FavoriteLoadAllRequested());
 });
 
-// In list tiles
+// In list tiles and detail pages
 FavoriteIconButton(
   pokemonId: pokemon.id,
   pokemonName: pokemon.name,
@@ -108,15 +110,16 @@ FavoriteIconButton(
 )
 ```
 
-The global bloc loads all favorite states on startup, so all buttons immediately reflect the correct favorite status. The favorites page provides a dedicated view of all saved favorites with pull-to-refresh support.
+The global bloc loads all favorite states on startup, so all buttons immediately reflect the correct favorite status. The favorites page provides a dedicated view of all saved favorites with pull-to-refresh support. The detail page provides comprehensive Pokemon information with integrated favorite functionality.
 
-**Enhanced Usage**: Complete navigation system with dedicated favorites page, focusing on comprehensive favorite management with full UI support.
+**Enhanced Usage**: Complete navigation system with dedicated favorites page and detail page integration, focusing on comprehensive favorite management with full UI support across all pages.
 
 ## Testing Notes
 
 - `test/favorite_bloc_test.dart` covers global state management, toggle success, toggle removal, and repository error propagation using Mockito to drive each branch.
 - Mock or stub the repository when unit-testing the bloc to simulate favorite toggles and failure scenarios.
-- Test the `FavoriteIconButton` widget with a global bloc provider to verify UI interactions.
+- Test the `FavoriteIconButton` widget with a global bloc provider to verify UI interactions in both list and detail pages.
 - Test the `FavoritesPage` with `FavoritesListBloc` to verify favorites list display and refresh functionality.
+- Test the `PokemonDetailPage` with `FavoriteIconButton` integration to verify favorite functionality in detail view.
 - For integration-style testing, provide a fake `LocalPokemonService` that writes to an in-memory map to avoid disk access from `SharedPreferences`.
-- Test navigation between Pokemon list and favorites list to ensure proper state management.
+- Test navigation between Pokemon list, favorites list, and detail page to ensure proper state management.

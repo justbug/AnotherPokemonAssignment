@@ -5,18 +5,19 @@ This document describes the comprehensive architecture of the Flutter Pokemon ap
 ## Architecture Layers
 
 ### Presentation Layer
-- **Pages**: `MainNavigationPage`, `PokemonListPage`, `FavoritesPage`
+- **Pages**: `MainNavigationPage`, `PokemonListPage`, `FavoritesPage`, `PokemonDetailPage`
 - **Widgets**: `PokemonListWidget`, `FavoriteIconButton`
-- **Navigation**: Bottom navigation with `IndexedStack` for state preservation
+- **Navigation**: Bottom navigation with `IndexedStack` for state preservation, detail page navigation
 
 ### State Management Layer (BLoC Pattern)
 - **PokemonListBloc**: Manages Pokemon list loading, pagination, and refresh
+- **PokemonDetailBloc**: Handles Pokemon detail loading and state management
 - **FavoriteBloc**: Global bloc managing favorite states across all pages
 - **FavoritesListBloc**: Handles favorites list display and management
 
 ### Domain Layer
-- **Repositories**: `ListRepository`, `FavoritePokemonRepository`
-- **Models**: `Pokemon`, `ListEntity`, `DetailEntity`, `LocalPokemon`
+- **Repositories**: `ListRepository`, `FavoritePokemonRepository`, `DetailRepository`
+- **Models**: `Pokemon`, `ListEntity`, `DetailEntity`, `LocalPokemon`, `PokemonDetail`
 
 ### Data Layer
 - **Services**: `PokemonService`, `DetailService`, `LocalPokemonService`
@@ -59,27 +60,83 @@ This document describes the comprehensive architecture of the Flutter Pokemon ap
 - `FavoritesListSuccess`: Success state with favorite Pokemon list
 - `FavoritesListError`: Error state with message and previous data
 
+### PokemonDetailBloc
+**Purpose**: Manages Pokemon detail loading and state management
+**Events**:
+- `PokemonDetailLoadRequested`: Load Pokemon detail by ID
+
+**States**:
+- `PokemonDetailInitial`: Initial state
+- `PokemonDetailLoading`: Loading state while fetching detail
+- `PokemonDetailSuccess`: Success state with Pokemon detail data
+- `PokemonDetailError`: Error state with error message
+
 ## Data Flow Architecture
 
 ### Pokemon List Flow
-```
-User Action → PokemonListBloc → ListRepository → PokemonService → APIClient → API
-                ↓
-            PokemonListState → PokemonListWidget → UI Update
+```mermaid
+graph LR
+    A[User Action] -->|Event| B[PokemonListBloc]
+    B -->|Request| C[ListRepository]
+    C -->|API Call| D[PokemonService]
+    D -->|HTTP Request| E[APIClient]
+    E -->|Request| F[API]
+    
+    F -->|Response| E
+    E -->|Data| D
+    D -->|Pokemon List| C
+    C -->|Domain Models| B
+    B -->|PokemonListState| G[PokemonListWidget]
+    G -->|UI Update| H[User Interface]
 ```
 
 ### Favorite Toggle Flow
-```
-User Tap → FavoriteIconButton → FavoriteBloc → FavoritePokemonRepository → LocalPokemonService → SharedPreferences
-                ↓
-            FavoriteState → UI Update (Optimistic)
+```mermaid
+graph LR
+    A[User Tap] -->|Toggle Event| B[FavoriteIconButton]
+    B -->|Event| C[FavoriteBloc]
+    C -->|Toggle Request| D[FavoritePokemonRepository]
+    D -->|Save/Load| E[LocalPokemonService]
+    E -->|Persist| F[SharedPreferences]
+    
+    F -->|Saved Data| E
+    E -->|LocalPokemon| D
+    D -->|Favorite Status| C
+    C -->|FavoriteState| G[UI Components]
+    G -->|Optimistic Update| H[User Interface]
 ```
 
 ### Favorites List Flow
+```mermaid
+graph LR
+    A[Page Load] -->|Load Event| B[FavoritesListBloc]
+    B -->|Get Favorites| C[FavoritePokemonRepository]
+    C -->|Load Data| D[LocalPokemonService]
+    D -->|Read| E[SharedPreferences]
+    
+    E -->|Favorites Data| D
+    D -->|LocalPokemon List| C
+    C -->|Filtered List| B
+    B -->|FavoritesListState| F[FavoritesPage]
+    F -->|UI Update| G[User Interface]
 ```
-Page Load → FavoritesListBloc → FavoritePokemonRepository → LocalPokemonService → SharedPreferences
-                ↓
-            FavoritesListState → FavoritesPage → UI Update
+
+### Pokemon Detail Flow
+```mermaid
+graph LR
+    A[List Tile Tap] -->|Navigation| B[PokemonDetailPage]
+    B -->|Load Event| C[PokemonDetailBloc]
+    C -->|Detail Request| D[DetailRepository]
+    D -->|API Call| E[DetailService]
+    E -->|HTTP Request| F[APIClient]
+    F -->|Request| G[API]
+    
+    G -->|Detail Response| F
+    F -->|Pokemon Detail| E
+    E -->|Detail Data| D
+    D -->|PokemonDetail Model| C
+    C -->|PokemonDetailState| H[PokemonDetailPage]
+    H -->|UI Update| I[User Interface]
 ```
 
 ## Enhanced Data Model
@@ -107,6 +164,12 @@ class LocalPokemon {
 - Maps API responses to domain models
 - Manages error handling and data transformation
 
+### DetailRepository
+- Handles Pokemon detail fetching and data transformation
+- Maps API responses to PokemonDetail domain model
+- Manages error handling and data validation
+- Provides abstraction for testing
+
 ### FavoritePokemonRepository
 - Manages favorite Pokemon persistence
 - Provides operations: `isFavorite`, `toggleFavorite`, `getFavoritePokemonList`, `getAllFavoriteStatus`
@@ -133,6 +196,12 @@ class LocalPokemon {
 - Uses `IndexedStack` for state preservation
 - Integrates with global BLoC providers
 
+### PokemonDetailPage
+- Displays comprehensive Pokemon information
+- Integrates with global `FavoriteBloc` for favorite functionality
+- Provides navigation back to list with state preservation
+- Handles loading states and error scenarios
+
 ### State Preservation
 - `IndexedStack` maintains page state during navigation
 - BLoC states are preserved across page switches
@@ -142,18 +211,21 @@ class LocalPokemon {
 
 ### BLoC Testing
 - Uses `bloc_test` package for comprehensive BLoC testing
-- Tests success/error branches for all BLoCs
+- Tests success/error branches for all BLoCs including PokemonDetailBloc
 - Mocks dependencies using `mockito`
+- Tests detail loading, error handling, and state transitions
 
 ### Repository Testing
 - Tests data transformation and error handling
 - Validates persistence operations
 - Tests data filtering and sorting logic
+- Tests DetailRepository API integration and data mapping
 
 ### Integration Testing
-- Tests navigation between pages
+- Tests navigation between pages including detail page navigation
 - Verifies state consistency across BLoCs
-- Tests user interaction flows
+- Tests user interaction flows including detail page interactions
+- Tests favorite functionality integration in detail page
 
 ## Dependency Injection
 
@@ -221,7 +293,9 @@ MultiBlocProvider(
 
 ### Features
 - Add search functionality across pages
-- Implement offline support
+- Implement offline support for Pokemon details
 - Add push notifications for favorites
+- Enhance detail page with additional Pokemon information
+- Add Pokemon comparison functionality
 
 This architecture provides a solid foundation for the Pokemon app while maintaining clean separation of concerns, excellent testability, and great user experience.
