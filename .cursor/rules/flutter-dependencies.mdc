@@ -1,0 +1,61 @@
+---
+globs: flutter_another_pokemon_assignment/pubspec.yaml,flutter_another_pokemon_assignment/lib/**/*.dart
+description: Flutter dependencies and package management guidelines
+---
+
+# Flutter Dependencies and Package Management
+
+## Core Dependencies
+
+### State Management
+- **flutter_bloc**: ^9.1.1 - BLoC pattern implementation
+- **equatable**: ^2.0.5 - Value equality for states and events
+
+### HTTP and Networking
+- **http**: ^1.5.0 - HTTP client for API requests
+
+### Data Persistence
+- **shared_preferences**: ^2.3.2 - Local storage for favorites
+
+### Model Generation
+- **freezed_annotation**: ^2.4.1 - Immutable class generation
+- **json_annotation**: ^4.8.1 - JSON serialization annotations
+
+## Development Dependencies
+
+### Code Generation
+- **build_runner**: ^2.4.6 - Code generation runner
+- **freezed**: ^2.4.5 - Immutable classes and unions
+- **json_serializable**: ^6.7.1 - JSON serialization code generation
+
+### Testing
+- **bloc_test**: ^10.0.0 - BLoC testing utilities
+- **mockito**: ^5.4.2 - Mock object generation
+
+### Linting
+- **flutter_lints**: ^5.0.0 - Flutter linting rules
+
+## Package Management Guidelines
+
+### Adding New Dependencies
+- Always specify version constraints
+- Use caret (^) for compatible version ranges
+- Add to appropriate section (dependencies vs dev_dependencies)
+- Update pubspec.lock after adding dependencies
+
+### Code Generation
+- Run `flutter packages pub run build_runner build` after model changes
+- Use `--delete-conflicting-outputs` flag when needed
+- Regenerate code when changing annotations
+
+### Version Management
+- Keep dependencies up to date
+- Test thoroughly after dependency updates
+- Use `flutter pub outdated` to check for updates
+- Pin critical dependencies if needed
+
+### Import Organization
+- Group imports by type (dart, flutter, packages, local)
+- Use relative imports for local files
+- Avoid unused imports
+- Follow consistent import ordering

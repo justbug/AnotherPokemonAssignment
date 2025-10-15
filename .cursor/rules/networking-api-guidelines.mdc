@@ -1,0 +1,69 @@
+---
+description: Networking and API integration guidelines for both platforms
+---
+
+# Networking and API Guidelines
+
+## API Integration
+
+### Base URL and Endpoints
+- Use PokeAPI as the primary data source
+- Base URL: `https://pokeapi.co/api/v2/`
+- List endpoint: `/pokemon?limit=30&offset={offset}`
+- Detail endpoint: `/pokemon/{id}`
+
+### Request/Response Handling
+
+#### Flutter Implementation
+- Use `http` package for network requests
+- Implement [APIClient](mdc:flutter_another_pokemon_assignment/lib/networking/api_client.dart) for request building
+- Use [RequestBuilder](mdc:flutter_another_pokemon_assignment/lib/networking/request_builder.dart) for consistent request creation
+- Handle JSON parsing with proper error handling
+
+#### iOS Implementation
+- Use URLSession for network requests
+- Implement [APIClient.swift](mdc:AnotherPokemonAssignment/AnotherPokemonAssignment/Networking/APIClient.swift) for HTTP handling
+- Use [Request.swift](mdc:AnotherPokemonAssignment/AnotherPokemonAssignment/Networking/Request.swift) for request configuration
+- Parse JSON responses with Codable protocols
+
+### Error Handling
+- Implement custom error types for different failure scenarios
+- Handle network timeouts and connectivity issues
+- Provide user-friendly error messages
+- Log errors for debugging purposes
+
+#### Error Types
+- `NetworkError`: Connection issues, timeouts
+- `ServerError`: HTTP error responses
+- `ParseError`: JSON parsing failures
+- `UnknownError`: Unexpected errors
+
+### Pagination Strategy
+- Load 30 items per page
+- Use offset parameter for pagination
+- Implement infinite scroll for seamless loading
+- Handle edge cases (no more data, network errors)
+
+### Caching Strategy
+- Cache Pokemon list data temporarily
+- Implement pull-to-refresh to reload data
+- Store favorite Pokemon locally
+- Use appropriate cache invalidation
+
+### Performance Considerations
+- Implement request cancellation for abandoned requests
+- Use background queues for network operations
+- Optimize image loading and caching
+- Minimize unnecessary API calls
+
+### Security Best Practices
+- Validate all API responses
+- Sanitize user input before API calls
+- Use HTTPS for all network requests
+- Implement proper certificate pinning if needed
+
+### Testing Network Layer
+- Mock network responses for unit tests
+- Test error scenarios and edge cases
+- Verify request/response handling
+- Test timeout and retry logic

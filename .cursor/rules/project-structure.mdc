@@ -1,0 +1,41 @@
+---
+alwaysApply: true
+description: Project structure and architecture guidelines for Pokemon assignment
+---
+
+# Pokemon Assignment Project Structure
+
+This repository contains both iOS (Swift) and Flutter implementations of a Pokemon list application with favorite functionality.
+
+## Project Architecture
+
+### iOS App Structure
+- **Entry Points**: [AppDelegate.swift](mdc:AnotherPokemonAssignment/AnotherPokemonAssignment/AppDelegate.swift) and [SceneDelegate.swift](mdc:AnotherPokemonAssignment/AnotherPokemonAssignment/SceneDelegate.swift)
+- **MVVM Pattern**: ViewModels handle business logic, Views handle UI
+- **Networking**: [APIClient.swift](mdc:AnotherPokemonAssignment/AnotherPokemonAssignment/Networking/APIClient.swift) for HTTP requests
+- **Services**: Business logic in [Service/](mdc:AnotherPokemonAssignment/AnotherPokemonAssignment/Service/) directory
+- **Use Cases**: [UseCase/](mdc:AnotherPokemonAssignment/AnotherPokemonAssignment/UseCase/) for coordinating services
+- **Storage**: [UserDefaultsStore.swift](mdc:AnotherPokemonAssignment/AnotherPokemonAssignment/Store/UserDefaultsStore.swift) for local persistence
+
+### Flutter App Structure
+- **Entry Point**: [main.dart](mdc:flutter_another_pokemon_assignment/lib/main.dart) with BLoC providers
+- **BLoC Pattern**: State management with [blocs/](mdc:flutter_another_pokemon_assignment/lib/blocs/) directory
+- **Models**: Generated with freezed/json_serializable in [models/](mdc:flutter_another_pokemon_assignment/lib/models/)
+- **Services**: API and local services in [services/](mdc:flutter_another_pokemon_assignment/lib/services/)
+- **Repository**: Data layer abstraction in [repository/](mdc:flutter_another_pokemon_assignment/lib/repository/)
+- **Pages**: UI screens in [pages/](mdc:flutter_another_pokemon_assignment/lib/pages/)
+
+## Key Features
+- Pokemon list with pagination (30 items per page)
+- Pull-to-refresh functionality
+- Infinite scroll loading
+- Favorite toggle per Pokemon
+- Local persistence of favorites
+- Error handling with user feedback
+
+## Development Guidelines
+- Follow platform-specific architectural patterns (MVVM for iOS, BLoC for Flutter)
+- Maintain feature parity between iOS and Flutter implementations
+- Use dependency injection for testability
+- Implement comprehensive error handling
+- Write unit tests for business logic

@@ -1,0 +1,87 @@
+---
+description: Error handling patterns and user experience guidelines
+---
+
+# Error Handling Guidelines
+
+## Error Handling Strategy
+
+### User Experience Principles
+- Show user-friendly error messages
+- Provide actionable error recovery options
+- Maintain app stability during errors
+- Preserve user data and state when possible
+
+### Error Types and Handling
+
+#### Network Errors
+- **No Internet Connection**: Show offline message with retry option
+- **Timeout**: Display timeout message with retry button
+- **Server Error (4xx/5xx)**: Show generic error with retry option
+- **Rate Limiting**: Inform user and suggest waiting
+
+#### Data Errors
+- **JSON Parsing**: Log error and show generic message
+- **Missing Data**: Handle gracefully with default values
+- **Validation Errors**: Show specific field errors
+
+#### Local Storage Errors
+- **Storage Full**: Inform user and suggest cleanup
+- **Permission Denied**: Guide user to enable permissions
+- **Data Corruption**: Reset to default state
+
+## Platform-Specific Implementation
+
+### Flutter Error Handling
+- Use `BlocConsumer` for error state handling
+- Show errors via `SnackBar` for non-critical errors
+- Use error dialogs for critical failures
+- Implement retry mechanisms in BLoCs
+
+#### Error State Pattern
+```dart
+abstract class PokemonListState extends Equatable {
+  final String? errorMessage;
+  final bool hasError;
+}
+```
+
+### iOS Error Handling
+- Use `Result` types for operations that can fail
+- Implement proper error propagation
+- Show alerts for critical errors
+- Use completion handlers for async operations
+
+#### Error Handling Pattern
+```swift
+enum PokemonError: Error {
+    case networkError(NetworkError)
+    case parsingError
+    case unknownError
+}
+```
+
+## Error Recovery Strategies
+
+### Automatic Recovery
+- Retry failed network requests with exponential backoff
+- Fallback to cached data when available
+- Reset to safe state on critical errors
+
+### User-Initiated Recovery
+- Provide retry buttons for failed operations
+- Allow users to refresh data manually
+- Offer alternative actions when primary action fails
+
+### Error Logging
+- Log errors for debugging purposes
+- Include relevant context (user actions, system state)
+- Use appropriate log levels (debug, info, warning, error)
+- Avoid logging sensitive user data
+
+## Testing Error Scenarios
+- Test network failure scenarios
+- Verify error message display
+- Test retry mechanisms
+- Validate error recovery flows
+- Ensure app stability during errors
