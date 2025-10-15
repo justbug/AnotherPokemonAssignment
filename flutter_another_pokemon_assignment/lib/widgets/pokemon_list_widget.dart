@@ -79,15 +79,7 @@ class PokemonListWidget extends StatelessWidget {
         ),
         child: BlocBuilder<FavoriteBloc, FavoriteState>(
           builder: (context, state) {
-            bool isFavorite = false;
-            
-            if (state is FavoriteInitial) {
-              isFavorite = state.isFavorite;
-            } else if (state is FavoriteSuccess) {
-              isFavorite = state.isFavorite;
-            } else if (state is FavoriteError) {
-              isFavorite = state.isFavorite;
-            }
+            bool isFavorite = state.isFavorite;
 
             return IconButton(
               icon: Icon(
