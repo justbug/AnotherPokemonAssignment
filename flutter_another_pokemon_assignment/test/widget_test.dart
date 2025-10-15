@@ -3,29 +3,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:flutter_another_pokemon_assignment/pages/pokemon_list_page.dart';
-import 'package:flutter_another_pokemon_assignment/blocs/blocs.dart';
+import 'package:flutter_another_pokemon_assignment/main.dart';
 
 void main() {
   testWidgets('Pokemon List Page smoke test', (WidgetTester tester) async {
-    // Build our app with proper BLoC providers and trigger a frame.
-    await tester.pumpWidget(
-      MaterialApp(
-        home: MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (context) => PokemonListBloc()..add(const PokemonListLoadRequested()),
-            ),
-            BlocProvider(
-              create: (context) => FavoriteBloc(),
-            ),
-          ],
-          child: const PokemonListPage(),
-        ),
-      ),
-    );
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const MyApp());
 
     // Verify that the app bar title is displayed.
     expect(find.text('Pokemon 列表'), findsOneWidget);

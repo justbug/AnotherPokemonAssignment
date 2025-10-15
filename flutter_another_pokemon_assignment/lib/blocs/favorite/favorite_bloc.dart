@@ -4,54 +4,64 @@ import 'favorite_event.dart';
 import 'favorite_state.dart';
 
 /// Favorite BLoC
-/// 管理所有 Pokemon 最愛狀態的業務邏輯
+/// 管理 Pokemon 最愛狀態的業務邏輯
 class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
+  final String pokemonId;
+  final String pokemonName;
   final FavoritePokemonRepository _favoriteRepository;
 
   FavoriteBloc({
+    required this.pokemonId,
+    required this.pokemonName,
     FavoritePokemonRepository? favoriteRepository,
   }) : _favoriteRepository = favoriteRepository ?? FavoritePokemonRepository(),
-       super(const FavoriteSuccess()) {
+       super(const FavoriteInitial(isFavorite: false)) {
     on<FavoriteToggled>(_onFavoriteToggled);
-    on<FavoriteLoadAllRequested>(_onLoadAllRequested);
+    on<FavoriteLoadRequested>(_onLoadRequested);
+    add(const FavoriteLoadRequested());
   }
 
-  /// 載入所有最愛狀態
-  Future<void> _onLoadAllRequested(
-    FavoriteLoadAllRequested event,
+  /// 載入初始狀態
+  Future<void> _onLoadRequested(
+    FavoriteLoadRequested event,
     Emitter<FavoriteState> emit,
   ) async {
     try {
-      final favoriteStatus = await _favoriteRepository.getAllFavoriteStatus();
-      emit(FavoriteSuccess(favoriteStatus: favoriteStatus));
+      final isFavorite = await _favoriteRepository.isFavorite(pokemonId);
+      emit(FavoriteInitial(isFavorite: isFavorite));
     } catch (e) {
-      emit(FavoriteError(
-        message: '載入最愛狀態失敗: $e',
-        favoriteStatus: const {},
-      ));
+      emit(const FavoriteInitial(isFavorite: false));
     }
   }
-
 
   /// 處理切換最愛狀態事件
   Future<void> _onFavoriteToggled(
     FavoriteToggled event,
     Emitter<FavoriteState> emit,
   ) async {
-    final currentStatus = Map<String, bool>.from(state.favoriteStatus);
-    final currentFavorite = currentStatus[event.pokemonId] ?? false;
-    
+    final currentState = state;
+    bool currentFavorite = false;
+
+    // 取得當前狀態
+    if (currentState is FavoriteInitial) {
+      currentFavorite = currentState.isFavorite;
+    } else if (currentState is FavoriteSuccess) {
+      currentFavorite = currentState.isFavorite;
+    } else if (currentState is FavoriteError) {
+      currentFavorite = currentState.isFavorite;
+    }
+
     try {
-      // 使用 Repository 切換最愛狀態
-      await _favoriteRepository.toggleFavorite(event.pokemonId, event.pokemonName);
+      final newFavorite = !currentFavorite;
       
-      // 更新狀態
-      currentStatus[event.pokemonId] = !currentFavorite;
-      emit(FavoriteSuccess(favoriteStatus: currentStatus));
+      // 使用 Repository 切換最愛狀態
+      await _favoriteRepository.toggleFavorite(pokemonId, pokemonName);
+
+      emit(FavoriteSuccess(isFavorite: newFavorite));
     } catch (e) {
       emit(FavoriteError(
         message: '更新最愛狀態失敗: $e',
-        favoriteStatus: currentStatus,
+        isFavorite: currentFavorite,
       ));
     }
   }
