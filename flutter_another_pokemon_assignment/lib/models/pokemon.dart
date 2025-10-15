@@ -5,15 +5,17 @@ import 'package:equatable/equatable.dart';
 class Pokemon extends Equatable {
   final String name;
   final String id;
+  final String imageURL;
 
   const Pokemon({
     required this.name,
     required this.id,
+    required this.imageURL,
   });
 
   @override
-  List<Object> get props => [name, id];
+  List<Object> get props => [name, id, imageURL];
 
   @override
-  String toString() => 'Pokemon(name: $name, id: $id)';
+  String toString() => 'Pokemon(name: $name, id: $id, imageURL: $imageURL)';
 }

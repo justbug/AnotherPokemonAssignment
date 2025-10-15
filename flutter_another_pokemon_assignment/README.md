@@ -4,13 +4,14 @@ A Flutter port of the Another Pokémon assignment that now ships the full list a
 
 ## Feature Highlights
 - Pokemon list screen driven by `PokemonListBloc` with initial load, pull-to-refresh, and incremental paging (30 items per request).
-- Per-row `FavoriteBloc` lets users toggle favorites with optimistic updates and graceful error recovery.
+- Global `FavoriteBloc` manages all Pokemon favorite states with `FavoriteIconButton` providing per-item interactions and optimistic updates.
 - Persistent storage of favorites through `LocalPokemonService` (`SharedPreferences`) using the generated `LocalPokemon` model.
 - Reusable `PokemonListWidget` that exposes hooks for custom list tiles while bundling loading/error states.
 - SnackBar-based error surfacing that retains existing items so the user can retry without losing context.
 
 ## Architecture Overview
-- **Presentation**: `PokemonListPage` hosts a `BlocConsumer` to react to list states and surface error banners; each tile nests a `FavoriteBloc`.
+- **Presentation**: `PokemonListPage` (in `pages/`) hosts a `BlocConsumer` to react to list states and surface error banners; uses `FavoriteIconButton` widget that connects to a global `FavoriteBloc`.
+- **State Management**: Global `FavoriteBloc` manages all Pokemon favorite states centrally, with `FavoriteIconButton` providing per-item UI interactions.
 - **Domain**: `ListRepository` consolidates pagination, JSON parsing, and mapping into the `Pokemon` domain model; `FavoritePokemonRepository` delegates persistence to `LocalPokemonService`.
 - **Services**: `PokemonService` and `DetailService` share the singleton `APIClient` via `RequestBuilder` helpers for consistent request/response handling.
 - **Models**: `Pokemon`, `ListEntity`, `DetailEntity`, and `LocalPokemon` are generated through `freezed`/`json_serializable` for equality and serialization guarantees.
@@ -44,10 +45,11 @@ These rules are automatically applied by Cursor to assist with:
 - Error handling implementation
 
 ## Project Layout
-- `lib/blocs/` – `PokemonListBloc`, `FavoriteBloc`, and related events/states.
+- `lib/blocs/` – `PokemonListBloc`, global `FavoriteBloc`, and related events/states.
+- `lib/pages/` – `PokemonListPage` and other screen implementations.
 - `lib/repository/` – `ListRepository` and `FavoritePokemonRepository`.
 - `lib/services/` – Networking helpers plus `LocalPokemonService`.
-- `lib/widgets/` – `PokemonListWidget` wrapper that the page reuses.
+- `lib/widgets/` – `PokemonListWidget` and `FavoriteIconButton` reusable components.
 - `test/` – Bloc and repository specs with `bloc_test`/`mockito`.
 
 Additional deep dives: [`README_POKEMON_LIST.md`](README_POKEMON_LIST.md) and [`README_POKEMON_FAVORITE.md`](README_POKEMON_FAVORITE.md).

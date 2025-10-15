@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/pokemon.dart';
-import '../blocs/favorite/favorite_bloc.dart';
-import '../blocs/favorite/favorite_event.dart';
-import '../blocs/favorite/favorite_state.dart';
+import 'favorite_icon_button.dart';
 
 /// Pokemon 列表元件
 /// 可重用的 Pokemon 列表顯示元件，支援不同的顯示狀態
@@ -13,7 +11,6 @@ class PokemonListWidget extends StatelessWidget {
   final bool showLoadingIndicator;
   final bool showError;
   final String? errorMessage;
-  final Widget Function(BuildContext context, Pokemon pokemon, int index)? itemBuilder;
 
   const PokemonListWidget({
     super.key,
@@ -22,7 +19,6 @@ class PokemonListWidget extends StatelessWidget {
     this.showLoadingIndicator = false,
     this.showError = false,
     this.errorMessage,
-    this.itemBuilder,
   });
 
   @override
@@ -55,51 +51,25 @@ class PokemonListWidget extends StatelessWidget {
         }
 
         // 顯示 Pokemon 項目
-        final pokemon = pokemons[index];
-        
-        // 使用自定義的 itemBuilder 或預設的樣式
-        if (itemBuilder != null) {
-          return itemBuilder!(context, pokemon, index);
-        }
-
-        return _buildDefaultPokemonTile(pokemon);
+        return _buildDefaultPokemonTile(context, pokemons[index]);
       },
     );
   }
 
   /// 建立預設的 Pokemon 列表項目
-  Widget _buildDefaultPokemonTile(Pokemon pokemon) {
+  Widget _buildDefaultPokemonTile(BuildContext context, Pokemon pokemon) {
     return ListTile(
+      leading: CachedNetworkImage(
+        imageUrl: pokemon.imageURL,
+        width: 60,
+        height: 60,
+        errorWidget: (context, url, error) => const Icon(Icons.error),
+      ),
       title: Text(pokemon.name),
       subtitle: Text('ID: ${pokemon.id}'),
-      trailing: BlocProvider(
-        create: (context) => FavoriteBloc(
-          pokemonId: pokemon.id,
-          pokemonName: pokemon.name,
-        ),
-        child: BlocBuilder<FavoriteBloc, FavoriteState>(
-          builder: (context, state) {
-            bool isFavorite = false;
-            
-            if (state is FavoriteInitial) {
-              isFavorite = state.isFavorite;
-            } else if (state is FavoriteSuccess) {
-              isFavorite = state.isFavorite;
-            } else if (state is FavoriteError) {
-              isFavorite = state.isFavorite;
-            }
-
-            return IconButton(
-              icon: Icon(
-                isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: isFavorite ? Colors.red : Colors.grey,
-              ),
-              onPressed: () {
-                context.read<FavoriteBloc>().add(const FavoriteToggled());
-              },
-            );
-          },
-        ),
+      trailing: FavoriteIconButton(
+        pokemonId: pokemon.id,
+        pokemonName: pokemon.name,
       ),
     );
   }
