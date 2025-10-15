@@ -7,6 +7,7 @@ class TestPokemonFactory {
       (index) => Pokemon(
         name: 'pokemon-${startId + index}',
         id: '${startId + index}',
+        imageURL: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$startId.png',
       ),
     );
   }

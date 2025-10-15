@@ -90,6 +90,7 @@ class ListRepository implements ListRepositorySpec {
     return Pokemon(
       name: result.name,
       id: id,
+      imageURL: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id.png',
     );
   }
 
