@@ -12,9 +12,6 @@ abstract class FavoritePokemonRepositorySpec {
   
   /// 取得所有最愛的 Pokemon
   Future<List<LocalPokemon>> getAllFavorites();
-  
-  /// 取得所有 Pokemon 的最愛狀態 Map
-  Future<Map<String, bool>> getAllFavoriteStatus();
 }
 
 /// Pokemon 最愛倉庫
@@ -69,23 +66,6 @@ class FavoritePokemonRepository implements FavoritePokemonRepositorySpec {
       return allPokemon.where((pokemon) => pokemon.isFavorite).toList();
     } catch (e) {
       return [];
-    }
-  }
-
-  /// 取得所有 Pokemon 的最愛狀態 Map
-  @override
-  Future<Map<String, bool>> getAllFavoriteStatus() async {
-    try {
-      final allPokemon = await _localPokemonService.getAll();
-      final Map<String, bool> favoriteStatus = {};
-      
-      for (final pokemon in allPokemon) {
-        favoriteStatus[pokemon.id] = pokemon.isFavorite;
-      }
-      
-      return favoriteStatus;
-    } catch (e) {
-      return {};
     }
   }
 }
