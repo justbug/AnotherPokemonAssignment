@@ -1,0 +1,85 @@
+---
+globs: **/*test*.dart,**/*Test*.swift,**/*Tests.swift
+description: Testing guidelines for both Flutter and iOS platforms
+---
+
+# Testing Guidelines
+
+## Flutter Testing
+
+### BLoC Testing
+- Use `bloc_test` package for testing BLoCs
+- Test all event handlers and state transitions
+- Mock dependencies using `mockito`
+- Test both success and error scenarios
+
+#### BLoC Test Structure
+```dart
+blocTest<PokemonListBloc, PokemonListState>(
+  'emits [loading, success] when load requested succeeds',
+  build: () => PokemonListBloc(repository: mockRepository),
+  act: (bloc) => bloc.add(PokemonListLoadRequested()),
+  expect: () => [
+    PokemonListLoading(),
+    PokemonListSuccess(pokemons: mockPokemons),
+  ],
+);
+```
+
+### Repository Testing
+- Test data transformation from API models to domain models
+- Mock API client responses
+- Test error handling and propagation
+- Verify pagination logic
+
+### Service Testing
+- Mock HTTP responses
+- Test request building
+- Verify error handling
+- Test timeout scenarios
+
+## iOS Testing
+
+### ViewModel Testing
+- Test business logic in ViewModels
+- Mock Services and UseCases
+- Test state changes and published properties
+- Verify error handling
+
+### UseCase Testing
+- Test business rule coordination
+- Mock Service dependencies
+- Test error propagation
+- Verify data transformation
+
+### Service Testing
+- Mock network responses
+- Test request/response handling
+- Verify error scenarios
+- Test data parsing
+
+## Testing Best Practices
+
+### Test Organization
+- Group tests by feature or component
+- Use descriptive test names
+- Follow AAA pattern (Arrange, Act, Assert)
+- Keep tests focused and isolated
+
+### Mocking Strategy
+- Mock external dependencies (APIs, databases)
+- Use dependency injection for testability
+- Create mock objects that return predictable data
+- Test both success and failure paths
+
+### Test Data
+- Use consistent test data across tests
+- Create factory methods for test objects
+- Avoid hardcoded values in tests
+- Make test data realistic but minimal
+
+### Coverage Goals
+- Aim for high test coverage on business logic
+- Focus on critical paths and error handling
+- Test edge cases and boundary conditions
+- Verify integration between components

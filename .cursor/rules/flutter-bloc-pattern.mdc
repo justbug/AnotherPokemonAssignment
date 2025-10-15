@@ -1,0 +1,58 @@
+---
+globs: flutter_another_pokemon_assignment/lib/**/*.dart
+description: Flutter BLoC pattern and state management guidelines
+---
+
+# Flutter BLoC Pattern Guidelines
+
+## BLoC Architecture
+This Flutter app uses the BLoC pattern for state management with the following structure:
+
+### Core BLoCs
+- **PokemonListBloc**: Manages Pokemon list state, pagination, and loading
+- **FavoriteBloc**: Handles individual Pokemon favorite toggles
+
+### BLoC Implementation Rules
+
+#### Events
+- Events should be immutable and use `freezed` for generation
+- Event names should be descriptive: `PokemonListLoadRequested`, `FavoriteToggled`
+- Use `const` constructors for events when possible
+
+#### States
+- States should extend `Equatable` for value equality
+- Include loading, success, error, and initial states
+- Preserve previous state data during loading states
+- Use `freezed` for immutable state generation
+
+#### BLoC Class Structure
+```dart
+class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
+  final ListRepository _repository;
+  
+  PokemonListBloc({required ListRepository repository}) 
+    : _repository = repository,
+      super(PokemonListInitial()) {
+    on<PokemonListLoadRequested>(_onLoadRequested);
+  }
+}
+```
+
+### State Management Best Practices
+- Use `BlocProvider` for dependency injection
+- Use `BlocConsumer` for UI that needs to react to state changes
+- Use `BlocBuilder` for UI that only needs to build based on state
+- Handle loading states gracefully with loading indicators
+- Show error states with user-friendly messages via SnackBar
+
+### Repository Pattern
+- Repositories should abstract data sources (API, local storage)
+- Use dependency injection for repositories
+- Handle data transformation from API models to domain models
+- Implement proper error handling and propagation
+
+### Model Generation
+- Use `freezed` and `json_serializable` for model generation
+- Run `flutter packages pub run build_runner build` after model changes
+- Models should be immutable with proper equality
+- Include `fromJson` and `toJson` methods for serialization
