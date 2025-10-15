@@ -40,6 +40,7 @@ class FavoritePokemonRepository {
           name: pokemonName,
           imageURL: imageURL,
           isFavorite: true,
+          created: DateTime.now().millisecondsSinceEpoch,
         );
         await _localPokemonService.insertOrUpdate(newPokemon);
       }
