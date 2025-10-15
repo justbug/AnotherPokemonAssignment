@@ -70,6 +70,7 @@ class PokemonListWidget extends StatelessWidget {
       trailing: FavoriteIconButton(
         pokemonId: pokemon.id,
         pokemonName: pokemon.name,
+        imageURL: pokemon.imageURL,
       ),
     );
   }

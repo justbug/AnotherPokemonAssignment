@@ -54,48 +54,48 @@ void main() {
     blocTest<FavoriteBloc, FavoriteState>(
       '點擊 favorite 按鈕應該切換狀態並儲存到 Repository',
       build: () {
-        when(mockFavoriteRepository.toggleFavorite('1', 'Pikachu')).thenAnswer((_) async {});
+        when(mockFavoriteRepository.toggleFavorite('1', 'Pikachu', 'https://example.com/pikachu.png')).thenAnswer((_) async {});
         return FavoriteBloc(
           favoriteRepository: mockFavoriteRepository,
         );
       },
-      act: (bloc) => bloc.add(const FavoriteToggled(pokemonId: '1', pokemonName: 'Pikachu')),
+      act: (bloc) => bloc.add(const FavoriteToggled(pokemonId: '1', pokemonName: 'Pikachu', imageURL: 'https://example.com/pikachu.png')),
       expect: () => [
         const FavoriteSuccess(favoriteStatus: {'1': true}),
       ],
       verify: (_) {
-        verify(mockFavoriteRepository.toggleFavorite('1', 'Pikachu')).called(1);
+        verify(mockFavoriteRepository.toggleFavorite('1', 'Pikachu', 'https://example.com/pikachu.png')).called(1);
       },
     );
 
     blocTest<FavoriteBloc, FavoriteState>(
       '當 Pokemon 已經是最愛時，點擊應該移除最愛狀態',
       build: () {
-        when(mockFavoriteRepository.toggleFavorite('1', 'Pikachu')).thenAnswer((_) async {});
+        when(mockFavoriteRepository.toggleFavorite('1', 'Pikachu', 'https://example.com/pikachu.png')).thenAnswer((_) async {});
         return FavoriteBloc(
           favoriteRepository: mockFavoriteRepository,
         );
       },
       seed: () => const FavoriteSuccess(favoriteStatus: {'1': true}),
-      act: (bloc) => bloc.add(const FavoriteToggled(pokemonId: '1', pokemonName: 'Pikachu')),
+      act: (bloc) => bloc.add(const FavoriteToggled(pokemonId: '1', pokemonName: 'Pikachu', imageURL: 'https://example.com/pikachu.png')),
       expect: () => [
         const FavoriteSuccess(favoriteStatus: {'1': false}),
       ],
       verify: (_) {
-        verify(mockFavoriteRepository.toggleFavorite('1', 'Pikachu')).called(1);
+        verify(mockFavoriteRepository.toggleFavorite('1', 'Pikachu', 'https://example.com/pikachu.png')).called(1);
       },
     );
 
     blocTest<FavoriteBloc, FavoriteState>(
       '當 Repository 操作失敗時，應該顯示錯誤狀態',
       build: () {
-        when(mockFavoriteRepository.toggleFavorite('1', 'Pikachu'))
+        when(mockFavoriteRepository.toggleFavorite('1', 'Pikachu', 'https://example.com/pikachu.png'))
             .thenThrow(Exception('Repository error'));
         return FavoriteBloc(
           favoriteRepository: mockFavoriteRepository,
         );
       },
-      act: (bloc) => bloc.add(const FavoriteToggled(pokemonId: '1', pokemonName: 'Pikachu')),
+      act: (bloc) => bloc.add(const FavoriteToggled(pokemonId: '1', pokemonName: 'Pikachu', imageURL: 'https://example.com/pikachu.png')),
       expect: () => [
         isA<FavoriteError>()
             .having((s) => s.message, 'message', contains('Repository error'))

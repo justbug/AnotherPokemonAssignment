@@ -18,13 +18,15 @@ class FavoriteLoadAllRequested extends FavoriteEvent {
 class FavoriteToggled extends FavoriteEvent {
   final String pokemonId;
   final String pokemonName;
+  final String imageURL;
   
   const FavoriteToggled({
     required this.pokemonId,
     required this.pokemonName,
+    required this.imageURL,
   });
   
   @override
-  List<Object> get props => [pokemonId, pokemonName];
+  List<Object> get props => [pokemonId, pokemonName, imageURL];
 }
 

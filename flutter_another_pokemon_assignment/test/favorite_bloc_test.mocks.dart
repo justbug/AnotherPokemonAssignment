@@ -5,8 +5,6 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:flutter_another_pokemon_assignment/models/local_pokemon.dart'
-    as _i4;
 import 'package:flutter_another_pokemon_assignment/repository/favorite_pokemon_repository.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
@@ -43,23 +41,21 @@ class MockFavoritePokemonRepository extends _i1.Mock
           as _i3.Future<bool>);
 
   @override
-  _i3.Future<void> toggleFavorite(String? pokemonId, String? pokemonName) =>
+  _i3.Future<void> toggleFavorite(
+    String? pokemonId,
+    String? pokemonName,
+    String? imageURL,
+  ) =>
       (super.noSuchMethod(
-            Invocation.method(#toggleFavorite, [pokemonId, pokemonName]),
+            Invocation.method(#toggleFavorite, [
+              pokemonId,
+              pokemonName,
+              imageURL,
+            ]),
             returnValue: _i3.Future<void>.value(),
             returnValueForMissingStub: _i3.Future<void>.value(),
           )
           as _i3.Future<void>);
-
-  @override
-  _i3.Future<List<_i4.LocalPokemon>> getAllFavorites() =>
-      (super.noSuchMethod(
-            Invocation.method(#getAllFavorites, []),
-            returnValue: _i3.Future<List<_i4.LocalPokemon>>.value(
-              <_i4.LocalPokemon>[],
-            ),
-          )
-          as _i3.Future<List<_i4.LocalPokemon>>);
 
   @override
   _i3.Future<Map<String, bool>> getAllFavoriteStatus() =>

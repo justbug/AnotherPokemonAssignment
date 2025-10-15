@@ -10,7 +10,9 @@ class LocalPokemon with _$LocalPokemon {
   const factory LocalPokemon({
     required String id,
     required String name,
+    required String imageURL,
     required bool isFavorite,
+    @Default(0) int created,
   }) = _LocalPokemon;
 
   /// 從 JSON Map 建立物件

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/blocs.dart';
-import 'pages/pokemon_list_page.dart';
+import 'pages/main_navigation_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +20,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => FavoriteBloc(),
         ),
+        BlocProvider(
+          create: (context) => FavoritesListBloc(),
+        ),
       ],
       child: MaterialApp(
         title: 'Pokemon List',
@@ -27,7 +30,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true,
         ),
-        home: const PokemonListPage(),
+        home: const MainNavigationPage(),
       ),
     );
   }

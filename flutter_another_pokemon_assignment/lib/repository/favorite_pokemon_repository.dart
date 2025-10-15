@@ -1,33 +1,20 @@
 import '../models/local_pokemon.dart';
 import '../services/local_pokemon_service.dart';
+import '../services/local_pokemon_service_spec.dart';
 
-/// Pokemon 最愛倉庫規格介面
-/// 定義最愛 Pokemon 相關的業務邏輯介面
-abstract class FavoritePokemonRepositorySpec {
-  /// 檢查 Pokemon 是否為最愛
-  Future<bool> isFavorite(String pokemonId);
-  
-  /// 切換 Pokemon 最愛狀態
-  Future<void> toggleFavorite(String pokemonId, String pokemonName);
-  
-  /// 取得所有最愛的 Pokemon
-  Future<List<LocalPokemon>> getAllFavorites();
-  
-  /// 取得所有 Pokemon 的最愛狀態 Map
-  Future<Map<String, bool>> getAllFavoriteStatus();
-}
-
-/// Pokemon 最愛倉庫
-/// 處理 Pokemon 最愛狀態的業務邏輯
-class FavoritePokemonRepository implements FavoritePokemonRepositorySpec {
-  final LocalPokemonService _localPokemonService;
+/// Pokemon favorite repository
+/// Handles business logic for Pokemon favorite status
+/// 
+/// Uses LocalPokemonServiceSpec interface with dependency injection support
+/// Easy to replace with different storage implementations (e.g., SQLite)
+class FavoritePokemonRepository {
+  final LocalPokemonServiceSpec _localPokemonService;
 
   FavoritePokemonRepository({
-    LocalPokemonService? localPokemonService,
+    LocalPokemonServiceSpec? localPokemonService,
   }) : _localPokemonService = localPokemonService ?? LocalPokemonService();
 
-  /// 檢查 Pokemon 是否為最愛
-  @override
+  /// Check if Pokemon is favorite
   Future<bool> isFavorite(String pokemonId) async {
     try {
       final localPokemon = await _localPokemonService.getById(pokemonId);
@@ -37,22 +24,23 @@ class FavoritePokemonRepository implements FavoritePokemonRepositorySpec {
     }
   }
 
-  /// 切換 Pokemon 最愛狀態
-  @override
-  Future<void> toggleFavorite(String pokemonId, String pokemonName) async {
+  /// Toggle Pokemon favorite status
+  Future<void> toggleFavorite(String pokemonId, String pokemonName, String imageURL) async {
     try {
       final currentPokemon = await _localPokemonService.getById(pokemonId);
       final isCurrentlyFavorite = currentPokemon?.isFavorite ?? false;
       
       if (isCurrentlyFavorite) {
-        // 如果目前是最愛，則移除
+        // If currently favorite, remove it
         await _localPokemonService.delete(pokemonId);
       } else {
-        // 如果目前不是最愛，則新增
+        // If not currently favorite, add it
         final newPokemon = LocalPokemon(
           id: pokemonId,
           name: pokemonName,
+          imageURL: imageURL,
           isFavorite: true,
+          created: DateTime.now().millisecondsSinceEpoch,
         );
         await _localPokemonService.insertOrUpdate(newPokemon);
       }
@@ -61,19 +49,7 @@ class FavoritePokemonRepository implements FavoritePokemonRepositorySpec {
     }
   }
 
-  /// 取得所有最愛的 Pokemon
-  @override
-  Future<List<LocalPokemon>> getAllFavorites() async {
-    try {
-      final allPokemon = await _localPokemonService.getAll();
-      return allPokemon.where((pokemon) => pokemon.isFavorite).toList();
-    } catch (e) {
-      return [];
-    }
-  }
-
-  /// 取得所有 Pokemon 的最愛狀態 Map
-  @override
+  /// Get favorite status map for all Pokemon
   Future<Map<String, bool>> getAllFavoriteStatus() async {
     try {
       final allPokemon = await _localPokemonService.getAll();
@@ -86,6 +62,19 @@ class FavoritePokemonRepository implements FavoritePokemonRepositorySpec {
       return favoriteStatus;
     } catch (e) {
       return {};
+    }
+  }
+
+  /// Get favorite Pokemon list sorted by creation time (earliest first)
+  Future<List<LocalPokemon>> getFavoritePokemonList() async {
+    try {
+      final allPokemon = await _localPokemonService.getAll();
+      final favorites = allPokemon.where((p) => p.isFavorite).toList();
+      // 按照 created 時間升序排序(越早越前面)
+      favorites.sort((a, b) => a.created.compareTo(b.created));
+      return favorites;
+    } catch (e) {
+      return [];
     }
   }
 }

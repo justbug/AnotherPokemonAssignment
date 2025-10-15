@@ -1,20 +1,27 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/local_pokemon.dart';
+import 'local_pokemon_service_spec.dart';
 
-/// LocalPokemon 服務
-/// 使用 SharedPreferences 來儲存 Pokemon 本地資料
-class LocalPokemonService {
+/// LocalPokemon service implementation
+/// 
+/// Uses SharedPreferences to store Pokemon local data
+/// 
+/// **Note**: This implementation uses SharedPreferences for demo purposes.
+/// For production environments, it's recommended to use SQLite or other more suitable database solutions.
+/// This class implements the LocalPokemonServiceSpec interface for easy future replacement.
+class LocalPokemonService implements LocalPokemonServiceSpec {
   static const String _pokemonKey = 'pokemon_data';
   static SharedPreferences? _prefs;
 
-  /// 取得 SharedPreferences 實例
+  /// Get SharedPreferences instance
   Future<SharedPreferences> get prefs async {
     _prefs ??= await SharedPreferences.getInstance();
     return _prefs!;
   }
 
-  /// 插入或更新 Pokemon 資料
+  /// Insert or update Pokemon data
+  @override
   Future<void> insertOrUpdate(LocalPokemon pokemon) async {
     final prefs = await this.prefs;
     final pokemonData = await _getPokemonMap();
@@ -23,7 +30,8 @@ class LocalPokemonService {
     await prefs.setString(_pokemonKey, _mapToString(pokemonData));
   }
 
-  /// 刪除 Pokemon 資料
+  /// Delete Pokemon data
+  @override
   Future<void> delete(String id) async {
     final prefs = await this.prefs;
     final pokemonData = await _getPokemonMap();
@@ -32,7 +40,8 @@ class LocalPokemonService {
     await prefs.setString(_pokemonKey, _mapToString(pokemonData));
   }
 
-  /// 根據 ID 取得 Pokemon 資料
+  /// Get Pokemon data by ID
+  @override
   Future<LocalPokemon?> getById(String id) async {
     final pokemonData = await _getPokemonMap();
     final data = pokemonData[id];
@@ -43,7 +52,8 @@ class LocalPokemonService {
     return null;
   }
 
-  /// 取得所有 Pokemon 資料
+  /// Get all Pokemon data
+  @override
   Future<List<LocalPokemon>> getAll() async {
     final pokemonData = await _getPokemonMap();
     final pokemonList = <LocalPokemon>[];
@@ -56,7 +66,7 @@ class LocalPokemonService {
     return pokemonList;
   }
 
-  /// 取得 Pokemon 資料的 Map
+  /// Get Pokemon data Map
   Future<Map<String, Map<String, dynamic>>> _getPokemonMap() async {
     final prefs = await this.prefs;
     final pokemonString = prefs.getString(_pokemonKey);
@@ -68,12 +78,12 @@ class LocalPokemonService {
     return _stringToMap(pokemonString);
   }
 
-  /// 將 Map 轉換為 JSON 字串
+  /// Convert Map to JSON string
   String _mapToString(Map<String, Map<String, dynamic>> map) {
     return jsonEncode(map);
   }
 
-  /// 將 JSON 字串轉換為 Map
+  /// Convert JSON string to Map
   Map<String, Map<String, dynamic>> _stringToMap(String jsonString) {
     try {
       final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
@@ -83,7 +93,8 @@ class LocalPokemonService {
     }
   }
 
-  /// 清除所有資料
+  /// Clear all data
+  @override
   Future<void> clear() async {
     final prefs = await this.prefs;
     await prefs.remove(_pokemonKey);

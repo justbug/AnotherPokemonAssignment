@@ -9,11 +9,13 @@ import '../blocs/favorite/favorite_event.dart';
 class FavoriteIconButton extends StatelessWidget {
   final String pokemonId;
   final String pokemonName;
+  final String imageURL;
 
   const FavoriteIconButton({
     super.key,
     required this.pokemonId,
     required this.pokemonName,
+    required this.imageURL,
   });
 
   @override
@@ -34,6 +36,7 @@ class FavoriteIconButton extends StatelessWidget {
             context.read<FavoriteBloc>().add(FavoriteToggled(
               pokemonId: pokemonId,
               pokemonName: pokemonName,
+              imageURL: imageURL,
             ));
           },
         );
