@@ -8,12 +8,23 @@ abstract class FavoriteEvent extends Equatable {
   List<Object> get props => [];
 }
 
-/// 載入初始狀態事件
-class FavoriteLoadRequested extends FavoriteEvent {
-  const FavoriteLoadRequested();
+/// 載入所有最愛狀態事件
+class FavoriteLoadAllRequested extends FavoriteEvent {
+  const FavoriteLoadAllRequested();
 }
+
 
 /// 切換最愛狀態事件
 class FavoriteToggled extends FavoriteEvent {
-  const FavoriteToggled();
+  final String pokemonId;
+  final String pokemonName;
+  
+  const FavoriteToggled({
+    required this.pokemonId,
+    required this.pokemonName,
+  });
+  
+  @override
+  List<Object> get props => [pokemonId, pokemonName];
 }
+
