@@ -22,15 +22,15 @@ Important subfolders include:
 
 ### Flutter App (Dart)
 
-The Flutter client lives in `flutter_another_pokemon_assignment/` and implements a simplified Pokémon list with favorite functionality.
+The Flutter client lives in `flutter_another_pokemon_assignment/` and now implements a comprehensive Pokémon list with complete favorite functionality and navigation.
 
-- **Simplified Features**: Implements the Pokémon list experience with pull-to-refresh, infinite scroll (30 items per page), error surfacing, and per-row favorite toggles persisted locally.
-- **State management**: Uses `flutter_bloc` with `PokemonListBloc` and a global `FavoriteBloc` to manage all favorite states centrally, keeping UI concerns isolated from data fetching and persistence.
-- **Streamlined Architecture**: Clean separation with dedicated `pages/` directory for UI screens and `widgets/` for reusable components like `FavoriteIconButton`. Removed complex favorites list management.
+- **Complete Features**: Implements the Pokémon list experience with pull-to-refresh, infinite scroll (30 items per page), error surfacing, per-row favorite toggles, and a dedicated favorites list page with navigation.
+- **Enhanced State Management**: Uses `flutter_bloc` with `PokemonListBloc`, global `FavoriteBloc`, and `FavoritesListBloc` to manage all states centrally, keeping UI concerns isolated from data fetching and persistence.
+- **Navigation Architecture**: Features `MainNavigationPage` with bottom navigation between Pokemon list and favorites list, using `IndexedStack` for state preservation.
 - **Data layer**: `ListRepository` consolidates pagination, JSON decoding, and mapping into the `Pokemon` domain model, while `FavoritePokemonRepository` persists favorite selections through `LocalPokemonService` (`SharedPreferences`).
 - **Networking**: `APIClient` and `RequestBuilder` wrap `http` to provide typed errors and shared request assembly that matches the iOS stack.
 - **Tooling**: Introduces `freezed`, `json_serializable`, `equatable`, `mockito`, and `bloc_test` for model generation and testability.
-- **Simplified Data Model**: `LocalPokemon` model simplified to only include essential fields (`id`, `name`, `isFavorite`), removing `imageURL` and `created` timestamp complexity.
+- **Enhanced Data Model**: `LocalPokemon` model includes `id`, `name`, `imageURL`, `isFavorite`, and `created` timestamp for comprehensive favorite management.
 - **Documentation**: See the dedicated walkthroughs in [`flutter_another_pokemon_assignment/README_POKEMON_LIST.md`](flutter_another_pokemon_assignment/README_POKEMON_LIST.md) and [`flutter_another_pokemon_assignment/README_POKEMON_FAVORITE.md`](flutter_another_pokemon_assignment/README_POKEMON_FAVORITE.md) for deeper dives into the features.
 
 ## Development Guidelines
