@@ -31,6 +31,26 @@ The Flutter client lives in `flutter_another_pokemon_assignment/` and now mirror
 - **Tooling**: Introduces `freezed`, `json_serializable`, `equatable`, `mockito`, and `bloc_test` for model generation and testability.
 - **Documentation**: See the dedicated walkthroughs in [`flutter_another_pokemon_assignment/README_POKEMON_LIST.md`](flutter_another_pokemon_assignment/README_POKEMON_LIST.md) and [`flutter_another_pokemon_assignment/README_POKEMON_FAVORITE.md`](flutter_another_pokemon_assignment/README_POKEMON_FAVORITE.md) for deeper dives into the new features.
 
+## Development Guidelines
+
+This project includes comprehensive Cursor Rules for consistent development practices:
+
+### Cursor Rules System
+- **Project Structure**: Overall architecture and file organization guidelines
+- **Flutter BLoC Pattern**: State management and BLoC implementation best practices
+- **iOS MVVM Pattern**: Swift MVVM architecture and coding standards
+- **Testing Guidelines**: Unit testing strategies for both platforms
+- **Networking & API**: HTTP client patterns and error handling
+- **Error Handling**: User experience and error recovery strategies
+- **Flutter Dependencies**: Package management and code generation
+
+These rules are automatically applied by Cursor to assist with:
+- Code generation and refactoring
+- Architecture pattern enforcement
+- Testing strategy guidance
+- Error handling implementation
+- Dependency management
+
 ## Getting Started
 
 ### iOS App

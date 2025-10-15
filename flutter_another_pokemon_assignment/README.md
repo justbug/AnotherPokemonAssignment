@@ -25,6 +25,24 @@ Launch flows: the app dispatches `PokemonListLoadRequested` on start-up, then re
 ## Testing
 - `flutter test` exercises bloc behavior (loading, pagination, favorites) and repository/service contracts.
 
+## Development Guidelines
+
+This project includes Cursor Rules for consistent Flutter development:
+
+### Cursor Rules Integration
+- **Flutter BLoC Pattern**: Automated guidance for BLoC implementation and state management
+- **Testing Guidelines**: Testing strategies for BLoCs, repositories, and services
+- **Dependencies Management**: Package management and code generation best practices
+- **Error Handling**: User experience and error recovery patterns
+
+These rules are automatically applied by Cursor to assist with:
+- BLoC pattern implementation
+- State management best practices
+- Repository pattern usage
+- Model generation with freezed
+- Testing strategy guidance
+- Error handling implementation
+
 ## Project Layout
 - `lib/blocs/` – `PokemonListBloc`, `FavoriteBloc`, and related events/states.
 - `lib/repository/` – `ListRepository` and `FavoritePokemonRepository`.
