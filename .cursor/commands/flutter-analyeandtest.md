@@ -1,0 +1,1 @@
+run 'flutter analyze' and 'flutter test'
