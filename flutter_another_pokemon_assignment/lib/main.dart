@@ -12,15 +12,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Pokemon List',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
-      home: BlocProvider(
-        create: (context) => PokemonListBloc()..add(const PokemonListLoadRequested()),
-        child: const PokemonListPage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => PokemonListBloc()..add(const PokemonListLoadRequested()),
+        ),
+        BlocProvider(
+          create: (context) => FavoriteBloc(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Pokemon List',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          useMaterial3: true,
+        ),
+        home: const PokemonListPage(),
       ),
     );
   }

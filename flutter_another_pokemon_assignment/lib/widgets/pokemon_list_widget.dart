@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/pokemon.dart';
-import '../blocs/favorite/favorite_bloc.dart';
-import '../blocs/favorite/favorite_event.dart';
-import '../blocs/favorite/favorite_state.dart';
+import 'favorite_icon_button.dart';
 
 /// Pokemon 列表元件
 /// 可重用的 Pokemon 列表顯示元件，支援不同的顯示狀態
@@ -62,35 +59,19 @@ class PokemonListWidget extends StatelessWidget {
           return itemBuilder!(context, pokemon, index);
         }
 
-        return _buildDefaultPokemonTile(pokemon);
+        return _buildDefaultPokemonTile(context, pokemon);
       },
     );
   }
 
   /// 建立預設的 Pokemon 列表項目
-  Widget _buildDefaultPokemonTile(Pokemon pokemon) {
+  Widget _buildDefaultPokemonTile(BuildContext context, Pokemon pokemon) {
     return ListTile(
       title: Text(pokemon.name),
       subtitle: Text('ID: ${pokemon.id}'),
-      trailing: BlocProvider(
-        create: (context) => FavoriteBloc(
-          pokemonId: pokemon.id,
-          pokemonName: pokemon.name,
-        ),
-        child: BlocBuilder<FavoriteBloc, FavoriteState>(
-          builder: (context, state) {
-            bool isFavorite = state.isFavorite;
-            return IconButton(
-              icon: Icon(
-                isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: isFavorite ? Colors.red : Colors.grey,
-              ),
-              onPressed: () {
-                context.read<FavoriteBloc>().add(const FavoriteToggled());
-              },
-            );
-          },
-        ),
+      trailing: FavoriteIconButton(
+        pokemonId: pokemon.id,
+        pokemonName: pokemon.name,
       ),
     );
   }

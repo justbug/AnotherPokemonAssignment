@@ -20,6 +20,11 @@ class _PokemonListPageState extends State<PokemonListPage> {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
+    
+    // 載入所有最愛狀態
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FavoriteBloc>().add(const FavoriteLoadAllRequested());
+    });
   }
 
   @override
