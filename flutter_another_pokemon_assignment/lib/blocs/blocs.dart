@@ -12,3 +12,7 @@ export 'favorite/favorite_state.dart';
 export 'favorites_list/favorites_list_bloc.dart';
 export 'favorites_list/favorites_list_event.dart';
 export 'favorites_list/favorites_list_state.dart';
+
+export 'pokemon_detail/pokemon_detail_bloc.dart';
+export 'pokemon_detail/pokemon_detail_event.dart';
+export 'pokemon_detail/pokemon_detail_state.dart';
