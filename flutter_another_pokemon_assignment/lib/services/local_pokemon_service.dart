@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/local_pokemon.dart';
-import 'local_pokemon_service_interface.dart';
+import 'local_pokemon_service_spec.dart';
 
 /// LocalPokemon service implementation
 /// 
@@ -9,8 +9,8 @@ import 'local_pokemon_service_interface.dart';
 /// 
 /// **Note**: This implementation uses SharedPreferences for demo purposes.
 /// For production environments, it's recommended to use SQLite or other more suitable database solutions.
-/// This class implements the LocalPokemonServiceInterface interface for easy future replacement.
-class LocalPokemonService implements LocalPokemonServiceInterface {
+/// This class implements the LocalPokemonServiceSpec interface for easy future replacement.
+class LocalPokemonService implements LocalPokemonServiceSpec {
   static const String _pokemonKey = 'pokemon_data';
   static SharedPreferences? _prefs;
 

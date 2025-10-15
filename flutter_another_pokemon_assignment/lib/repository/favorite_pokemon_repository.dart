@@ -1,37 +1,20 @@
 import '../models/local_pokemon.dart';
 import '../services/local_pokemon_service.dart';
-import '../services/local_pokemon_service_interface.dart';
-
-/// Pokemon favorite repository specification interface
-/// Defines the business logic interface for favorite Pokemon operations
-abstract class FavoritePokemonRepositorySpec {
-  /// Check if Pokemon is favorite
-  Future<bool> isFavorite(String pokemonId);
-  
-  /// Toggle Pokemon favorite status
-  Future<void> toggleFavorite(String pokemonId, String pokemonName, String imageURL);
-  
-  /// Get all favorite Pokemon
-  Future<List<LocalPokemon>> getAllFavorites();
-  
-  /// Get favorite status map for all Pokemon
-  Future<Map<String, bool>> getAllFavoriteStatus();
-}
+import '../services/local_pokemon_service_spec.dart';
 
 /// Pokemon favorite repository
 /// Handles business logic for Pokemon favorite status
 /// 
-/// Uses LocalPokemonServiceInterface interface with dependency injection support
+/// Uses LocalPokemonServiceSpec interface with dependency injection support
 /// Easy to replace with different storage implementations (e.g., SQLite)
-class FavoritePokemonRepository implements FavoritePokemonRepositorySpec {
-  final LocalPokemonServiceInterface _localPokemonService;
+class FavoritePokemonRepository {
+  final LocalPokemonServiceSpec _localPokemonService;
 
   FavoritePokemonRepository({
-    LocalPokemonServiceInterface? localPokemonService,
+    LocalPokemonServiceSpec? localPokemonService,
   }) : _localPokemonService = localPokemonService ?? LocalPokemonService();
 
   /// Check if Pokemon is favorite
-  @override
   Future<bool> isFavorite(String pokemonId) async {
     try {
       final localPokemon = await _localPokemonService.getById(pokemonId);
@@ -42,7 +25,6 @@ class FavoritePokemonRepository implements FavoritePokemonRepositorySpec {
   }
 
   /// Toggle Pokemon favorite status
-  @override
   Future<void> toggleFavorite(String pokemonId, String pokemonName, String imageURL) async {
     try {
       final currentPokemon = await _localPokemonService.getById(pokemonId);
@@ -67,7 +49,6 @@ class FavoritePokemonRepository implements FavoritePokemonRepositorySpec {
   }
 
   /// Get all favorite Pokemon
-  @override
   Future<List<LocalPokemon>> getAllFavorites() async {
     try {
       final allPokemon = await _localPokemonService.getAll();
@@ -78,7 +59,6 @@ class FavoritePokemonRepository implements FavoritePokemonRepositorySpec {
   }
 
   /// Get favorite status map for all Pokemon
-  @override
   Future<Map<String, bool>> getAllFavoriteStatus() async {
     try {
       final allPokemon = await _localPokemonService.getAll();
