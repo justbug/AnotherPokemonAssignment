@@ -64,4 +64,17 @@ class FavoritePokemonRepository {
       return {};
     }
   }
+
+  /// Get favorite Pokemon list sorted by creation time (earliest first)
+  Future<List<LocalPokemon>> getFavoritePokemonList() async {
+    try {
+      final allPokemon = await _localPokemonService.getAll();
+      final favorites = allPokemon.where((p) => p.isFavorite).toList();
+      // 按照 created 時間升序排序(越早越前面)
+      favorites.sort((a, b) => a.created.compareTo(b.created));
+      return favorites;
+    } catch (e) {
+      return [];
+    }
+  }
 }

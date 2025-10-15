@@ -8,3 +8,7 @@ export 'pokemon_list/pokemon_list_state.dart';
 export 'favorite/favorite_bloc.dart';
 export 'favorite/favorite_event.dart';
 export 'favorite/favorite_state.dart';
+
+export 'favorites_list/favorites_list_bloc.dart';
+export 'favorites_list/favorites_list_event.dart';
+export 'favorites_list/favorites_list_state.dart';
