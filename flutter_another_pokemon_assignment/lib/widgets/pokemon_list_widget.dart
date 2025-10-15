@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/pokemon.dart';
 import '../blocs/favorite/favorite_bloc.dart';
 import '../blocs/favorite/favorite_event.dart';
@@ -70,6 +71,12 @@ class PokemonListWidget extends StatelessWidget {
   /// 建立預設的 Pokemon 列表項目
   Widget _buildDefaultPokemonTile(Pokemon pokemon) {
     return ListTile(
+      leading: CachedNetworkImage(
+        imageUrl: pokemon.imageURL,
+        width: 60,
+        height: 60,
+        errorWidget: (context, url, error) => const Icon(Icons.error),
+      ),
       title: Text(pokemon.name),
       subtitle: Text('ID: ${pokemon.id}'),
       trailing: BlocProvider(
