@@ -28,11 +28,14 @@ class PokemonDetailPage extends StatelessWidget {
         actions: [
           BlocListener<FavoriteBloc, FavoriteState>(
             listener: (context, state) {
-              if (state is FavoriteSuccess) {
+              if (state is FavoriteSuccess &&
+                  state.currentPokemonId == pokemonId) {
                 // When favorite status changes, update the PokemonDetailBloc
                 // This ensures the detail page reflects the latest favorite status
                 context.read<PokemonDetailBloc>().add(
-                  PokemonDetailFavoriteToggled(isFavorite: state.isFavorite(pokemonId)),
+                  PokemonDetailFavoriteToggled(
+                    isFavorite: state.toggledPokemonFavoriteStatus,
+                  ),
                 );
               }
             },

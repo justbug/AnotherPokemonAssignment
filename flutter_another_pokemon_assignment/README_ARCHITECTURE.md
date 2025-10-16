@@ -46,8 +46,8 @@ This document describes the comprehensive architecture of the Flutter Pokemon ap
 
 **States**:
 - `FavoriteInitial`: Initial state when the bloc is created
-- `FavoriteSuccess`: Contains favorite status map, plus `toggledPokemonFavoriteStatus` for tracking changes
-- `FavoriteError`: Error state with previous favorite status map
+- `FavoriteSuccess`: Carries the full favorite id set, plus `toggledPokemonFavoriteStatus` for tracking changes
+- `FavoriteError`: Error state that preserves the previous favorite id set
 
 ### FavoritesListBloc
 **Purpose**: Manages favorites list page display and refresh
@@ -99,7 +99,7 @@ graph LR
 graph LR
     A[User Tap] -->|Toggle Event| B[FavoriteIconButton]
     B -->|Event| C[FavoriteBloc]
-    C -->|Toggle Request| D[FavoritePokemonRepository]
+    C -->|Update Request| D[FavoritePokemonRepository]
     D -->|Save/Load| E[LocalPokemonService]
     E -->|Persist| F[SharedPreferences]
     
@@ -208,7 +208,7 @@ class LocalPokemon {
 
 ### FavoritePokemonRepository
 - Manages favorite Pokemon persistence
-- Provides operations: `isFavorite`, `toggleFavorite`, `getFavoritePokemonList`, `getAllFavoriteStatus`
+- Provides operations: `isFavorite`, `updateFavorite`, `getFavoritePokemonList`, `getFavoritePokemonIds`
 - Handles data filtering and sorting
 - Implements conservative error handling
 

@@ -135,10 +135,10 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
 
   /// Load favorite status and set isFavorite for Pokemon list
   Future<List<Pokemon>> _loadPokemonsWithFavoriteStatus(List<Pokemon> pokemons) async {
-    final favoriteStatus = await _favoriteRepository.getAllFavoriteStatus();
+    final favoriteIds = await _favoriteRepository.getFavoritePokemonIds();
     return pokemons.map((pokemon) {
       return pokemon.copyWith(
-        isFavorite: favoriteStatus[pokemon.id] ?? false,
+        isFavorite: favoriteIds.contains(pokemon.id),
       );
     }).toList();
   }

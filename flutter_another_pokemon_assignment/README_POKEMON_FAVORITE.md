@@ -33,13 +33,13 @@ The global bloc is initialized in `main.dart` and favorite states are loaded whe
 ## States
 
 ### FavoriteBloc States
-Every bloc state carries a `favoriteStatus` map (String -> bool) so the UI can remain consistent even while loading or when an error occurs.
+Every bloc state carries a `favoritePokemonIds` set (`Set<String>`) so the UI can remain consistent even while loading or when an error occurs.
 
 | State | Description |
 | --- | --- |
 | `FavoriteInitial` | Initial state when the bloc is created. |
-| `FavoriteSuccess` | Contains the complete favorite status map for all Pokémon, plus `toggledPokemonFavoriteStatus` for tracking changes. |
-| `FavoriteError` | Reports failures with a message, while preserving the last known favorite status map. |
+| `FavoriteSuccess` | Contains the complete favorite id set for all Pokémon, plus `toggledPokemonFavoriteStatus` for tracking changes. |
+| `FavoriteError` | Reports failures with a message, while preserving the last known favorite id set. |
 
 ### FavoritesListBloc States
 | State | Description |
@@ -49,16 +49,16 @@ Every bloc state carries a `favoriteStatus` map (String -> bool) so the UI can r
 | `FavoritesListSuccess` | Success state with list of favorite Pokémon. |
 | `FavoritesListError` | Error state with message and optional previous data. |
 
-The `favoriteStatus` map allows the `FavoriteIconButton` to efficiently check individual Pokémon favorite status using `state.isFavorite(pokemonId)`.
+The `favoritePokemonIds` set allows the `FavoriteIconButton` to efficiently check individual Pokémon favorite status using `state.isFavorite(pokemonId)`.
 
 ## Repository Responsibilities
 
 `FavoritePokemonRepository` implements comprehensive operations:
 
 - `isFavorite(pokemonId)`: Queries `LocalPokemonService.getById` and returns the stored `isFavorite` flag (falls back to `false` on errors).
-- `toggleFavorite(pokemonId, pokemonName, imageURL)`: Reads the current state and either removes the Pokémon (if it was favorite) or inserts/updates it with `isFavorite = true`, `imageURL`, and `created` timestamp.
+- `updateFavorite(pokemonId, isFavorite, pokemonName, imageURL)`: Directly persists the provided favorite state, inserting/updating when `isFavorite` is `true` and removing the Pokémon when `false`, while preserving the original `created` timestamp when available.
 - `getFavoritePokemonList()`: Fetches all locally stored Pokémon, filters those marked as favorite, and sorts by creation time.
-- `getAllFavoriteStatus()`: Returns a map of all Pokémon favorite statuses for efficient UI updates.
+- `getFavoritePokemonIds()`: Returns a set of favorite Pokémon IDs for efficient UI updates.
 
 **Enhanced Data Model**: The repository now works with an enhanced `LocalPokemon` model that includes `id`, `name`, `imageURL`, `isFavorite`, and `created` timestamp for comprehensive favorite management.
 
@@ -70,11 +70,12 @@ Exception handling is conservative: read operations swallow errors and return sa
 - `MainNavigationPage` provides bottom navigation between `PokemonListPage` and `FavoritesPage`.
 - Favorite states are loaded when PokemonListBloc or PokemonDetailBloc loads data through their respective repositories.
 - `PokemonDetailPage` integrates with global `FavoriteBloc` for favorite functionality in the detail view.
+- Detail listener only reacts when `FavoriteSuccess.currentPokemonId` matches the displayed Pokémon, forwarding `state.toggledPokemonFavoriteStatus` to `PokemonDetailBloc`.
 - `FavoritesPage` uses `FavoritesListBloc` to display and manage the favorites list with pull-to-refresh support.
 - `FavoriteIconButton` widgets in each list tile and detail page connect to the global bloc and receive `isFavorite` as a prop.
 - **Event-Driven Updates**: Page-level `BlocListener<FavoriteBloc>` components listen for favorite changes and propagate updates to other BLoCs.
 - Tapping the heart emits `FavoriteToggled` with the specific Pokemon ID, name, and imageURL, which triggers the event-driven update flow.
-- When an error occurs, the bloc emits `FavoriteError` with the previous favorite status map so the UI keeps the last known state.
+- When an error occurs, the bloc emits `FavoriteError` with the previous favorite id set so the UI keeps the last known state.
 
 **Enhanced Integration**: Complete favorites list page with navigation and detail page integration, focusing on comprehensive favorite management with event-driven state synchronization across all pages.
 
@@ -84,7 +85,7 @@ Exception handling is conservative: read operations swallow errors and return sa
 2. Use `MainNavigationPage` as the main entry point with bottom navigation.
 3. Use `FavoriteIconButton` in list tiles and detail pages, passing the Pokemon ID, name, imageURL, and current `isFavorite` status.
 4. The button automatically connects to the global bloc and handles state updates.
-5. Use `BlocListener<FavoriteBloc>` at the page level to listen for favorite changes and propagate updates to other BLoCs.
+5. Use `BlocListener<FavoriteBloc>` at the page level to listen for favorite changes and propagate updates to other BLoCs, guarding detail updates by matching `state.currentPokemonId`.
 6. Favorite states are loaded when PokemonListBloc or PokemonDetailBloc loads data through their respective repositories.
 7. Navigate to `PokemonDetailPage` to view comprehensive Pokemon information with favorite functionality.
 
@@ -135,5 +136,6 @@ The global bloc manages favorite toggle operations and emits events for other BL
 - Test the `FavoriteIconButton` widget with a global bloc provider to verify UI interactions in both list and detail pages.
 - Test the `FavoritesPage` with `FavoritesListBloc` to verify favorites list display and refresh functionality.
 - Test the `PokemonDetailPage` with `FavoriteIconButton` integration to verify favorite functionality in detail view.
+- Add a listener test to ensure mismatched `currentPokemonId` values do not trigger `PokemonDetailFavoriteToggled`.
 - For integration-style testing, provide a fake `LocalPokemonService` that writes to an in-memory map to avoid disk access from `SharedPreferences`.
 - Test navigation between Pokemon list, favorites list, and detail page to ensure proper state management.

@@ -25,44 +25,52 @@ class FavoritePokemonRepository {
     }
   }
 
-  /// Toggle Pokemon favorite status
-  Future<void> toggleFavorite(String pokemonId, String pokemonName, String imageURL) async {
+  /// Update Pokemon favorite status directly
+  Future<void> updateFavorite(
+    String pokemonId,
+    bool isFavorite,
+    String pokemonName,
+    String imageURL,
+  ) async {
     try {
-      final currentPokemon = await _localPokemonService.getById(pokemonId);
-      final isCurrentlyFavorite = currentPokemon?.isFavorite ?? false;
-      
-      if (isCurrentlyFavorite) {
-        // If currently favorite, remove it
+      if (!isFavorite) {
+        // Remove Pokemon when marking as not favorite
         await _localPokemonService.delete(pokemonId);
-      } else {
-        // If not currently favorite, add it
-        final newPokemon = LocalPokemon(
-          id: pokemonId,
-          name: pokemonName,
-          imageURL: imageURL,
-          isFavorite: true,
-          created: DateTime.now().millisecondsSinceEpoch,
-        );
-        await _localPokemonService.insertOrUpdate(newPokemon);
+        return;
       }
+
+      final existingPokemon = await _localPokemonService.getById(pokemonId);
+
+      // Preserve original created timestamp when available
+      final createdTimestamp = existingPokemon?.created ?? DateTime.now().millisecondsSinceEpoch;
+
+      final newPokemon = LocalPokemon(
+        id: pokemonId,
+        name: pokemonName,
+        imageURL: imageURL,
+        isFavorite: true,
+        created: createdTimestamp,
+      );
+
+      await _localPokemonService.insertOrUpdate(newPokemon);
     } catch (e) {
       rethrow;
     }
   }
 
-  /// Get favorite status map for all Pokemon
-  Future<Map<String, bool>> getAllFavoriteStatus() async {
+  /// Get favorite id set for all favorite Pokemon
+  Future<Set<String>> getFavoritePokemonIds() async {
     try {
       final allPokemon = await _localPokemonService.getAll();
-      final Map<String, bool> favoriteStatus = {};
-      
+      final favoriteIds = <String>{};
       for (final pokemon in allPokemon) {
-        favoriteStatus[pokemon.id] = pokemon.isFavorite;
+        if (pokemon.isFavorite) {
+          favoriteIds.add(pokemon.id);
+        }
       }
-      
-      return favoriteStatus;
+      return favoriteIds;
     } catch (e) {
-      return {};
+      return <String>{};
     }
   }
 

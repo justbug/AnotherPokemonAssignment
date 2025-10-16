@@ -42,14 +42,16 @@ class MockFavoritePokemonRepository extends _i1.Mock
           as _i3.Future<bool>);
 
   @override
-  _i3.Future<void> toggleFavorite(
+  _i3.Future<void> updateFavorite(
     String? pokemonId,
+    bool? isFavorite,
     String? pokemonName,
     String? imageURL,
   ) =>
       (super.noSuchMethod(
-            Invocation.method(#toggleFavorite, [
+            Invocation.method(#updateFavorite, [
               pokemonId,
+              isFavorite,
               pokemonName,
               imageURL,
             ]),
@@ -59,12 +61,12 @@ class MockFavoritePokemonRepository extends _i1.Mock
           as _i3.Future<void>);
 
   @override
-  _i3.Future<Map<String, bool>> getAllFavoriteStatus() =>
+  _i3.Future<Set<String>> getFavoritePokemonIds() =>
       (super.noSuchMethod(
-            Invocation.method(#getAllFavoriteStatus, []),
-            returnValue: _i3.Future<Map<String, bool>>.value(<String, bool>{}),
+            Invocation.method(#getFavoritePokemonIds, []),
+            returnValue: _i3.Future<Set<String>>.value(<String>{}),
           )
-          as _i3.Future<Map<String, bool>>);
+          as _i3.Future<Set<String>>);
 
   @override
   _i3.Future<List<_i4.Pokemon>> getFavoritePokemonList() =>
