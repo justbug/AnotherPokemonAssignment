@@ -70,6 +70,7 @@ Exception handling is conservative: read operations swallow errors and return sa
 - `MainNavigationPage` provides bottom navigation between `PokemonListPage` and `FavoritesPage`.
 - Favorite states are loaded when PokemonListBloc or PokemonDetailBloc loads data through their respective repositories.
 - `PokemonDetailPage` integrates with global `FavoriteBloc` for favorite functionality in the detail view.
+- Detail listener only reacts when `FavoriteSuccess.currentPokemonId` matches the displayed Pokémon, forwarding `state.toggledPokemonFavoriteStatus` to `PokemonDetailBloc`.
 - `FavoritesPage` uses `FavoritesListBloc` to display and manage the favorites list with pull-to-refresh support.
 - `FavoriteIconButton` widgets in each list tile and detail page connect to the global bloc and receive `isFavorite` as a prop.
 - **Event-Driven Updates**: Page-level `BlocListener<FavoriteBloc>` components listen for favorite changes and propagate updates to other BLoCs.
@@ -84,7 +85,7 @@ Exception handling is conservative: read operations swallow errors and return sa
 2. Use `MainNavigationPage` as the main entry point with bottom navigation.
 3. Use `FavoriteIconButton` in list tiles and detail pages, passing the Pokemon ID, name, imageURL, and current `isFavorite` status.
 4. The button automatically connects to the global bloc and handles state updates.
-5. Use `BlocListener<FavoriteBloc>` at the page level to listen for favorite changes and propagate updates to other BLoCs.
+5. Use `BlocListener<FavoriteBloc>` at the page level to listen for favorite changes and propagate updates to other BLoCs, guarding detail updates by matching `state.currentPokemonId`.
 6. Favorite states are loaded when PokemonListBloc or PokemonDetailBloc loads data through their respective repositories.
 7. Navigate to `PokemonDetailPage` to view comprehensive Pokemon information with favorite functionality.
 
@@ -135,5 +136,6 @@ The global bloc manages favorite toggle operations and emits events for other BL
 - Test the `FavoriteIconButton` widget with a global bloc provider to verify UI interactions in both list and detail pages.
 - Test the `FavoritesPage` with `FavoritesListBloc` to verify favorites list display and refresh functionality.
 - Test the `PokemonDetailPage` with `FavoriteIconButton` integration to verify favorite functionality in detail view.
+- Add a listener test to ensure mismatched `currentPokemonId` values do not trigger `PokemonDetailFavoriteToggled`.
 - For integration-style testing, provide a fake `LocalPokemonService` that writes to an in-memory map to avoid disk access from `SharedPreferences`.
 - Test navigation between Pokemon list, favorites list, and detail page to ensure proper state management.
