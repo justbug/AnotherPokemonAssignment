@@ -27,25 +27,26 @@ This document describes the comprehensive architecture of the Flutter Pokemon ap
 ## BLoC Architecture Details
 
 ### PokemonListBloc
-**Purpose**: Manages Pokemon list data loading and pagination
+**Purpose**: Manages Pokemon list data loading and pagination with favorite integration
 **Events**:
 - `PokemonListLoadRequested`: Initial load or refresh
 - `PokemonListLoadMoreRequested`: Load next page for infinite scroll
+- `PokemonListFavoriteToggled`: Update favorite status for a specific Pokemon
 
 **States**:
 - `PokemonListInitial`: Initial state
 - `PokemonListLoading`: Loading state with optional previous data
-- `PokemonListSuccess`: Success state with Pokemon list
+- `PokemonListSuccess`: Success state with Pokemon list (includes `isFavorite` property for each Pokemon)
 - `PokemonListError`: Error state with message and previous data
 
 ### FavoriteBloc (Global)
-**Purpose**: Manages favorite states across all pages
+**Purpose**: Manages favorite toggle operations and emits events for other BLoCs to react
 **Events**:
-- Favorite states are automatically loaded when PokemonListBloc or PokemonDetailBloc loads data
 - `FavoriteToggled`: Toggle favorite status for a specific Pokemon
 
 **States**:
-- `FavoriteSuccess`: Contains favorite status map
+- `FavoriteInitial`: Initial state when the bloc is created
+- `FavoriteSuccess`: Contains favorite status map, plus `toggledPokemonId` and `toggledPokemonFavoriteStatus` for tracking changes
 - `FavoriteError`: Error state with previous favorite status map
 
 ### FavoritesListBloc
@@ -61,14 +62,15 @@ This document describes the comprehensive architecture of the Flutter Pokemon ap
 - `FavoritesListError`: Error state with message and previous data
 
 ### PokemonDetailBloc
-**Purpose**: Manages Pokemon detail loading and state management
+**Purpose**: Manages Pokemon detail loading and state management with favorite integration
 **Events**:
 - `PokemonDetailLoadRequested`: Load Pokemon detail by ID
+- `PokemonDetailFavoriteToggled`: Update favorite status for the current Pokemon
 
 **States**:
 - `PokemonDetailInitial`: Initial state
 - `PokemonDetailLoading`: Loading state while fetching detail
-- `PokemonDetailSuccess`: Success state with Pokemon detail data
+- `PokemonDetailSuccess`: Success state with Pokemon detail data (includes `isFavorite` property)
 - `PokemonDetailError`: Error state with error message
 
 ## Data Flow Architecture
@@ -86,8 +88,10 @@ graph LR
     E -->|Data| D
     D -->|Pokemon List| C
     C -->|Domain Models| B
-    B -->|PokemonListState| G[PokemonListWidget]
-    G -->|UI Update| H[User Interface]
+    B -->|Load Favorites| G[FavoritePokemonRepository]
+    G -->|Favorite Status| B
+    B -->|PokemonListState| H[PokemonListWidget]
+    H -->|UI Update| I[User Interface]
 ```
 
 ### Favorite Toggle Flow
@@ -102,8 +106,10 @@ graph LR
     F -->|Saved Data| E
     E -->|LocalPokemon| D
     D -->|Favorite Status| C
-    C -->|FavoriteState| G[UI Components]
-    G -->|Optimistic Update| H[User Interface]
+    C -->|FavoriteState| G[BlocListener]
+    G -->|Propagate Event| H[PokemonListBloc/PokemonDetailBloc]
+    H -->|Update State| I[UI Components]
+    I -->|Optimistic Update| J[User Interface]
 ```
 
 ### Favorites List Flow
@@ -135,24 +141,51 @@ graph LR
     F -->|Pokemon Detail| E
     E -->|Detail Data| D
     D -->|PokemonDetail Model| C
-    C -->|PokemonDetailState| H[PokemonDetailPage]
-    H -->|UI Update| I[User Interface]
+    C -->|Load Favorite| H[FavoritePokemonRepository]
+    H -->|Favorite Status| C
+    C -->|PokemonDetailState| I[PokemonDetailPage]
+    I -->|UI Update| J[User Interface]
 ```
 
 ## Enhanced Data Model
+
+### Pokemon Model
+```dart
+class Pokemon extends Equatable {
+  final String name;
+  final String id;
+  final String imageURL;
+  final bool isFavorite;      // NEW: Favorite status
+}
+```
+
+### PokemonDetail Model
+```dart
+class PokemonDetail extends Equatable {
+  final int id;
+  final int weight;
+  final int height;
+  final List<String> types;
+  final String? imageUrl;
+  final bool isFavorite;      // NEW: Favorite status
+}
+```
 
 ### LocalPokemon Model
 ```dart
 class LocalPokemon {
   final String id;
   final String name;
-  final String imageURL;      // NEW: Image URL for display
+  final String imageURL;      // Image URL for display
   final bool isFavorite;
-  final int created;          // NEW: Creation timestamp
+  final int created;          // Creation timestamp
 }
 ```
 
 **Enhancements**:
+- Added `isFavorite` property to `Pokemon` and `PokemonDetail` models
+- Added `copyWith` methods for immutable updates
+- Models carry their own favorite status instead of querying global state
 - Added `imageURL` for Pokemon image display
 - Added `created` timestamp for sorting favorites by creation time
 - Maintains backward compatibility with existing data
@@ -226,6 +259,33 @@ class LocalPokemon {
 - Verifies state consistency across BLoCs
 - Tests user interaction flows including detail page interactions
 - Tests favorite functionality integration in detail page
+
+## Event-Driven State Synchronization
+
+### BlocListener Pattern
+The app uses `BlocListener<FavoriteBloc>` at the page level to listen for favorite changes and propagate updates to other BLoCs:
+
+```dart
+BlocListener<FavoriteBloc, FavoriteState>(
+  listener: (context, state) {
+    if (state is FavoriteSuccess) {
+      context.read<PokemonListBloc>().add(
+        PokemonListFavoriteToggled(
+          pokemonId: state.toggledPokemonId,
+          isFavorite: state.toggledPokemonFavoriteStatus,
+        ),
+      );
+    }
+  },
+  child: // UI Components
+)
+```
+
+### Benefits
+- **Precise Updates**: Only affected BLoCs receive updates
+- **Performance**: Avoids unnecessary state synchronization
+- **Maintainability**: Clear event flow and dependencies
+- **Testability**: Easy to mock and test individual components
 
 ## Dependency Injection
 
