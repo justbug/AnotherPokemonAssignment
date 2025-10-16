@@ -306,10 +306,10 @@ void main() {
         // Assert
         expect(result, hasLength(3)); // Only 3 favorite Pokemon
         
-        // Verify sorting: mewtwo (earliest) -> charmander -> pikachu (latest)
-        expect(result[0].id, equals('150')); // mewtwo
-        expect(result[1].id, equals('4'));   // charmander
-        expect(result[2].id, equals('25'));  // pikachu
+        // Verify sorting: pikachu (latest) -> charmander -> mewtwo (earliest)
+        expect(result[0].id, equals('25'));  // pikachu (latest)
+        expect(result[1].id, equals('4'));    // charmander
+        expect(result[2].id, equals('150'));  // mewtwo (earliest)
         
         // Verify all are favorite Pokemon
         for (final pokemon in result) {
