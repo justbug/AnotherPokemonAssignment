@@ -32,7 +32,6 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
       currentStatus[event.pokemonId] = newFavoriteStatus;
       emit(FavoriteSuccess(
         favoriteStatus: currentStatus,
-        toggledPokemonId: event.pokemonId,
         toggledPokemonFavoriteStatus: newFavoriteStatus,
         currentPokemonId: event.pokemonId,
       ));

@@ -25,7 +25,7 @@ class PokemonDetailLoading extends PokemonDetailState {
 /// Success state
 /// State when Pokemon detail loads successfully
 class PokemonDetailSuccess extends PokemonDetailState {
-  final PokemonDetail detail;
+  final Pokemon detail;
 
   const PokemonDetailSuccess({required this.detail});
 

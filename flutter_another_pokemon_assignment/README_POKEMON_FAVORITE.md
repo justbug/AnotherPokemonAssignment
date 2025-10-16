@@ -9,6 +9,7 @@ This document describes the comprehensive favorite functionality implemented by 
 - `FavoriteIconButton` widget provides per-item UI interactions that connect to the global bloc.
 - `FavoritePokemonRepository` provides the persistence operations that the bloc depends on. It delegates storage to `LocalPokemonService`, which wraps `SharedPreferences`.
 - `LocalPokemon` (generated via `freezed`/`json_serializable`) defines the enhanced persisted schema: `id`, `name`, `imageURL`, `isFavorite`, and `created` timestamp.
+- **Model Integration**: Works seamlessly with unified `Pokemon` model that includes `isFavorite` property and optional `detail` information.
 - **Event-Driven Architecture**: Data flow is unidirectional with event propagation: UI ➜ FavoriteBloc event ➜ repository ➜ local service ➜ FavoriteBloc state ➜ BlocListener ➜ other BLoCs ➜ UI.
 - **Enhanced Design**: Complete favorites list management with navigation, focusing on comprehensive favorite functionality with event-driven state synchronization.
 
@@ -37,7 +38,7 @@ Every bloc state carries a `favoriteStatus` map (String -> bool) so the UI can r
 | State | Description |
 | --- | --- |
 | `FavoriteInitial` | Initial state when the bloc is created. |
-| `FavoriteSuccess` | Contains the complete favorite status map for all Pokémon, plus `toggledPokemonId` and `toggledPokemonFavoriteStatus` for tracking changes. |
+| `FavoriteSuccess` | Contains the complete favorite status map for all Pokémon, plus `toggledPokemonFavoriteStatus` for tracking changes. |
 | `FavoriteError` | Reports failures with a message, while preserving the last known favorite status map. |
 
 ### FavoritesListBloc States
@@ -105,7 +106,7 @@ BlocListener<FavoriteBloc, FavoriteState>(
     if (state is FavoriteSuccess) {
       context.read<PokemonListBloc>().add(
         PokemonListFavoriteToggled(
-          pokemonId: state.toggledPokemonId,
+          pokemonId: state.currentPokemonId!,
           isFavorite: state.toggledPokemonFavoriteStatus,
         ),
       );

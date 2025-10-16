@@ -14,7 +14,8 @@ This Flutter application delivers the Pokemon list feature with the BLoC pattern
 ## Architecture
 
 ### 1. Model Layer
-- `Pokemon`: Pokemon data model that includes name and id
+- `Pokemon`: Unified Pokemon data model that includes name, id, imageURL, isFavorite, and optional detail information
+- `PokemonDetailData`: Detailed Pokemon information (weight, height, types) embedded in Pokemon model
 - `ListEntity`: Structure returned from the list API
 - `ResultEntity`: Structure for a single Pokemon entry
 
@@ -29,6 +30,7 @@ This Flutter application delivers the Pokemon list feature with the BLoC pattern
 - `PokemonListState`: Defines UI states with favorite status integration
 - `PokemonListBloc`: Orchestrates state management and business logic with favorite integration
 - `FavoriteBloc`: Global bloc that manages favorite toggle operations and emits events for other BLoCs
+- **Model Integration**: BLoCs now work with unified `Pokemon` model that includes `isFavorite` property and optional `detail` information
 
 ### 4. UI Layer
 - `PokemonListPage` (in `pages/`): Main list page with clean separation from main.dart

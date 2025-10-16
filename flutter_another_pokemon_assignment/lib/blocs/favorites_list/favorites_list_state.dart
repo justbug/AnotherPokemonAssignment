@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../models/local_pokemon.dart';
+import '../../models/pokemon.dart';
 
 /// Favorites List states
 /// Define various states for favorites list page
@@ -25,7 +25,7 @@ class FavoritesListLoading extends FavoritesListState {
 /// Success state
 /// State when favorites list loads successfully
 class FavoritesListSuccess extends FavoritesListState {
-  final List<LocalPokemon> favoritePokemons;
+  final List<Pokemon> favoritePokemons;
 
   const FavoritesListSuccess({
     required this.favoritePokemons,
@@ -36,7 +36,7 @@ class FavoritesListSuccess extends FavoritesListState {
 
   /// Copy and update state
   FavoritesListSuccess copyWith({
-    List<LocalPokemon>? favoritePokemons,
+    List<Pokemon>? favoritePokemons,
   }) {
     return FavoritesListSuccess(
       favoritePokemons: favoritePokemons ?? this.favoritePokemons,
@@ -48,7 +48,7 @@ class FavoritesListSuccess extends FavoritesListState {
 /// State when loading favorites list fails
 class FavoritesListError extends FavoritesListState {
   final String message;
-  final List<LocalPokemon>? previousFavoritePokemons;
+  final List<Pokemon>? previousFavoritePokemons;
 
   const FavoritesListError({
     required this.message,

@@ -39,14 +39,17 @@ void main() {
             .thenAnswer((_) async => mockDetailEntity);
 
         // Act
-        final pokemonDetail = await detailRepository.fetchDetail(testId);
+        final pokemonDetail = await detailRepository.fetchDetail(testId, 'pikachu');
 
         // Assert
-        expect(pokemonDetail.id, equals(25));
-        expect(pokemonDetail.weight, equals(60));
-        expect(pokemonDetail.height, equals(4));
-        expect(pokemonDetail.types, equals(['electric']));
-        expect(pokemonDetail.imageUrl, equals('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'));
+        expect(pokemonDetail.id, equals('25'));
+        expect(pokemonDetail.name, equals('pikachu'));
+        expect(pokemonDetail.imageURL, equals('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'));
+        expect(pokemonDetail.detail, isNotNull);
+        expect(pokemonDetail.detail!.id, equals(25));
+        expect(pokemonDetail.detail!.weight, equals(60));
+        expect(pokemonDetail.detail!.height, equals(4));
+        expect(pokemonDetail.detail!.types, equals(['electric']));
         
         verify(mockDetailService.fetchDetail(testId)).called(1);
       });
@@ -71,12 +74,14 @@ void main() {
             .thenAnswer((_) async => mockDetailEntity);
 
         // Act
-        final pokemonDetail = await detailRepository.fetchDetail(testId);
+        final pokemonDetail = await detailRepository.fetchDetail(testId, 'bulbasaur');
 
         // Assert
-        expect(pokemonDetail.id, equals(1));
-        expect(pokemonDetail.types, equals(['grass', 'poison']));
-        expect(pokemonDetail.types.length, equals(2));
+        expect(pokemonDetail.id, equals('1'));
+        expect(pokemonDetail.name, equals('bulbasaur'));
+        expect(pokemonDetail.detail, isNotNull);
+        expect(pokemonDetail.detail!.types, equals(['grass', 'poison']));
+        expect(pokemonDetail.detail!.types.length, equals(2));
       });
 
       test('should handle Pokemon without sprites', () async {
@@ -96,12 +101,14 @@ void main() {
             .thenAnswer((_) async => mockDetailEntity);
 
         // Act
-        final pokemonDetail = await detailRepository.fetchDetail(testId);
+        final pokemonDetail = await detailRepository.fetchDetail(testId, 'unknown');
 
         // Assert
-        expect(pokemonDetail.id, equals(999));
-        expect(pokemonDetail.imageUrl, isNull);
-        expect(pokemonDetail.types, equals(['unknown']));
+        expect(pokemonDetail.id, equals('999'));
+        expect(pokemonDetail.name, equals('unknown'));
+        expect(pokemonDetail.imageURL, equals('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/999.png'));
+        expect(pokemonDetail.detail, isNotNull);
+        expect(pokemonDetail.detail!.types, equals(['unknown']));
       });
 
       test('should handle Pokemon with empty types list', () async {
@@ -119,12 +126,14 @@ void main() {
             .thenAnswer((_) async => mockDetailEntity);
 
         // Act
-        final pokemonDetail = await detailRepository.fetchDetail(testId);
+        final pokemonDetail = await detailRepository.fetchDetail(testId, 'empty');
 
         // Assert
-        expect(pokemonDetail.id, equals(0));
-        expect(pokemonDetail.types, isEmpty);
-        expect(pokemonDetail.imageUrl, isNull);
+        expect(pokemonDetail.id, equals('0'));
+        expect(pokemonDetail.name, equals('empty'));
+        expect(pokemonDetail.detail, isNotNull);
+        expect(pokemonDetail.detail!.types, isEmpty);
+        expect(pokemonDetail.imageURL, equals('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'));
       });
     });
 
@@ -137,7 +146,7 @@ void main() {
 
         // Act & Assert
         expect(
-          () => detailRepository.fetchDetail(testId),
+          () => detailRepository.fetchDetail(testId, 'test'),
           throwsException,
         );
         
@@ -152,7 +161,7 @@ void main() {
 
         // Act & Assert
         expect(
-          () => detailRepository.fetchDetail(testId),
+          () => detailRepository.fetchDetail(testId, 'test'),
           throwsException,
         );
       });
@@ -178,14 +187,17 @@ void main() {
             .thenAnswer((_) async => mockDetailEntity);
 
         // Act
-        final pokemonDetail = await detailRepository.fetchDetail(testId);
+        final pokemonDetail = await detailRepository.fetchDetail(testId, 'mewtwo');
 
         // Assert
-        expect(pokemonDetail.id, equals(mockDetailEntity.id));
-        expect(pokemonDetail.weight, equals(mockDetailEntity.weight));
-        expect(pokemonDetail.height, equals(mockDetailEntity.height));
-        expect(pokemonDetail.types, equals(['psychic']));
-        expect(pokemonDetail.imageUrl, equals(mockDetailEntity.sprites?.frontDefault));
+        expect(pokemonDetail.id, equals('150'));
+        expect(pokemonDetail.name, equals('mewtwo'));
+        expect(pokemonDetail.detail, isNotNull);
+        expect(pokemonDetail.detail!.id, equals(mockDetailEntity.id));
+        expect(pokemonDetail.detail!.weight, equals(mockDetailEntity.weight));
+        expect(pokemonDetail.detail!.height, equals(mockDetailEntity.height));
+        expect(pokemonDetail.detail!.types, equals(['psychic']));
+        expect(pokemonDetail.imageURL, equals(mockDetailEntity.sprites?.frontDefault));
       });
 
       test('should handle complex type names correctly', () async {
@@ -209,11 +221,13 @@ void main() {
             .thenAnswer((_) async => mockDetailEntity);
 
         // Act
-        final pokemonDetail = await detailRepository.fetchDetail(testId);
+        final pokemonDetail = await detailRepository.fetchDetail(testId, 'complex');
 
         // Assert
-        expect(pokemonDetail.types, equals(['grass', 'poison', 'flying']));
-        expect(pokemonDetail.types.length, equals(3));
+        expect(pokemonDetail.name, equals('complex'));
+        expect(pokemonDetail.detail, isNotNull);
+        expect(pokemonDetail.detail!.types, equals(['grass', 'poison', 'flying']));
+        expect(pokemonDetail.detail!.types.length, equals(3));
       });
     });
   });

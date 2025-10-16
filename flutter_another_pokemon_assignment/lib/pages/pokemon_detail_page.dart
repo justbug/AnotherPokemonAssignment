@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../blocs/blocs.dart';
+import '../models/pokemon.dart';
 import '../widgets/favorite_icon_button.dart';
 
 /// Pokemon detail page
@@ -25,30 +26,31 @@ class PokemonDetailPage extends StatelessWidget {
         title: Text(pokemonName),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
-          BlocBuilder<PokemonDetailBloc, PokemonDetailState>(
-            builder: (context, state) {
-              final isFavorite = state is PokemonDetailSuccess ? state.detail.isFavorite : false;
-              return FavoriteIconButton(
-                pokemonId: pokemonId,
-                pokemonName: pokemonName,
-                imageURL: imageURL,
-                isFavorite: isFavorite,
-              );
+          BlocListener<FavoriteBloc, FavoriteState>(
+            listener: (context, state) {
+              if (state is FavoriteSuccess) {
+                // When favorite status changes, update the PokemonDetailBloc
+                // This ensures the detail page reflects the latest favorite status
+                context.read<PokemonDetailBloc>().add(
+                  PokemonDetailFavoriteToggled(isFavorite: state.isFavorite(pokemonId)),
+                );
+              }
             },
+            child: BlocBuilder<PokemonDetailBloc, PokemonDetailState>(
+              builder: (context, state) {
+                final isFavorite = state is PokemonDetailSuccess ? state.detail.isFavorite : false;
+                return FavoriteIconButton(
+                  pokemonId: pokemonId,
+                  pokemonName: pokemonName,
+                  imageURL: imageURL,
+                  isFavorite: isFavorite,
+                );
+              },
+            ),
           ),
         ],
       ),
-      body: BlocListener<FavoriteBloc, FavoriteState>(
-        listener: (context, state) {
-          if (state is FavoriteSuccess) {
-            // When favorite status changes, update the PokemonDetailBloc
-            // This ensures the detail page reflects the latest favorite status
-            context.read<PokemonDetailBloc>().add(
-              PokemonDetailFavoriteToggled(isFavorite: state.isFavorite(pokemonId)),
-            );
-          }
-        },
-        child: BlocConsumer<PokemonDetailBloc, PokemonDetailState>(
+      body: BlocConsumer<PokemonDetailBloc, PokemonDetailState>(
           listener: (context, state) {
             if (state is PokemonDetailError) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -78,13 +80,12 @@ class PokemonDetailPage extends StatelessWidget {
             child: Text('Unknown state'),
           );
         },
-        ),
       ),
     );
   }
 
   /// Build detail content
-  Widget _buildDetailContent(BuildContext context, detail) {
+  Widget _buildDetailContent(BuildContext context, Pokemon pokemon) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -109,7 +110,7 @@ class PokemonDetailPage extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: CachedNetworkImage(
-                  imageUrl: detail.imageUrl ?? imageURL,
+                  imageUrl: pokemon.imageURL,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => const Center(
                     child: CircularProgressIndicator(),
@@ -127,26 +128,37 @@ class PokemonDetailPage extends StatelessWidget {
           const SizedBox(height: 24),
           
           // Basic information
-          _buildInfoCard(
-            context,
-            'Basic Information',
-            [
-              _buildInfoRow('ID', detail.id.toString()),
-              _buildInfoRow('Weight', '${detail.weight / 10} kg'),
-              _buildInfoRow('Height', '${detail.height / 10} m'),
-            ],
-          ),
-          
-          const SizedBox(height: 16),
-          
-          // Type information
-          _buildInfoCard(
-            context,
-            'Types',
-            [
-              _buildTypeRow(detail.types),
-            ],
-          ),
+          if (pokemon.detail != null) ...[
+            _buildInfoCard(
+              context,
+              'Basic Information',
+              [
+                _buildInfoRow('ID', pokemon.detail!.id.toString()),
+                _buildInfoRow('Weight', '${pokemon.detail!.weight / 10} kg'),
+                _buildInfoRow('Height', '${pokemon.detail!.height / 10} m'),
+              ],
+            ),
+            
+            const SizedBox(height: 16),
+            
+            // Type information
+            _buildInfoCard(
+              context,
+              'Types',
+              [
+                _buildTypeRow(pokemon.detail!.types),
+              ],
+            ),
+          ] else ...[
+            _buildInfoCard(
+              context,
+              'Basic Information',
+              [
+                _buildInfoRow('Name', pokemon.name),
+                _buildInfoRow('ID', pokemon.id),
+              ],
+            ),
+          ],
         ],
       ),
     );
@@ -178,7 +190,10 @@ class PokemonDetailPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 context.read<PokemonDetailBloc>().add(
-                  PokemonDetailLoadRequested(pokemonId: pokemonId),
+                  PokemonDetailLoadRequested(
+                    pokemonId: pokemonId,
+                    pokemonName: pokemonName,
+                  ),
                 );
               },
               child: const Text('Retry'),

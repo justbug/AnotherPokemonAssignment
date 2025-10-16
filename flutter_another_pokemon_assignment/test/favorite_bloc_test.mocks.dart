@@ -5,8 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:flutter_another_pokemon_assignment/models/local_pokemon.dart'
-    as _i4;
+import 'package:flutter_another_pokemon_assignment/models/pokemon.dart' as _i4;
 import 'package:flutter_another_pokemon_assignment/repository/favorite_pokemon_repository.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
@@ -68,12 +67,10 @@ class MockFavoritePokemonRepository extends _i1.Mock
           as _i3.Future<Map<String, bool>>);
 
   @override
-  _i3.Future<List<_i4.LocalPokemon>> getFavoritePokemonList() =>
+  _i3.Future<List<_i4.Pokemon>> getFavoritePokemonList() =>
       (super.noSuchMethod(
             Invocation.method(#getFavoritePokemonList, []),
-            returnValue: _i3.Future<List<_i4.LocalPokemon>>.value(
-              <_i4.LocalPokemon>[],
-            ),
+            returnValue: _i3.Future<List<_i4.Pokemon>>.value(<_i4.Pokemon>[]),
           )
-          as _i3.Future<List<_i4.LocalPokemon>>);
+          as _i3.Future<List<_i4.Pokemon>>);
 }

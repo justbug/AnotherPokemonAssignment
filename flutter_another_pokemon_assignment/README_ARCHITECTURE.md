@@ -17,7 +17,7 @@ This document describes the comprehensive architecture of the Flutter Pokemon ap
 
 ### Domain Layer
 - **Repositories**: `ListRepository`, `FavoritePokemonRepository`, `DetailRepository`
-- **Models**: `Pokemon`, `ListEntity`, `DetailEntity`, `LocalPokemon`, `PokemonDetail`
+- **Models**: `Pokemon`, `PokemonDetailData`, `ListEntity`, `DetailEntity`, `LocalPokemon`
 
 ### Data Layer
 - **Services**: `PokemonService`, `DetailService`, `LocalPokemonService`
@@ -46,7 +46,7 @@ This document describes the comprehensive architecture of the Flutter Pokemon ap
 
 **States**:
 - `FavoriteInitial`: Initial state when the bloc is created
-- `FavoriteSuccess`: Contains favorite status map, plus `toggledPokemonId` and `toggledPokemonFavoriteStatus` for tracking changes
+- `FavoriteSuccess`: Contains favorite status map, plus `toggledPokemonFavoriteStatus` for tracking changes
 - `FavoriteError`: Error state with previous favorite status map
 
 ### FavoritesListBloc
@@ -64,13 +64,13 @@ This document describes the comprehensive architecture of the Flutter Pokemon ap
 ### PokemonDetailBloc
 **Purpose**: Manages Pokemon detail loading and state management with favorite integration
 **Events**:
-- `PokemonDetailLoadRequested`: Load Pokemon detail by ID
+- `PokemonDetailLoadRequested`: Load Pokemon detail by ID and name
 - `PokemonDetailFavoriteToggled`: Update favorite status for the current Pokemon
 
 **States**:
 - `PokemonDetailInitial`: Initial state
 - `PokemonDetailLoading`: Loading state while fetching detail
-- `PokemonDetailSuccess`: Success state with Pokemon detail data (includes `isFavorite` property)
+- `PokemonDetailSuccess`: Success state with Pokemon data (includes `isFavorite` property and `detail` information)
 - `PokemonDetailError`: Error state with error message
 
 ## Data Flow Architecture
@@ -149,25 +149,24 @@ graph LR
 
 ## Enhanced Data Model
 
-### Pokemon Model
+### Pokemon Model (Unified)
 ```dart
 class Pokemon extends Equatable {
   final String name;
   final String id;
   final String imageURL;
-  final bool isFavorite;      // NEW: Favorite status
+  final bool isFavorite;      // Favorite status
+  final PokemonDetailData? detail;  // Optional detail information
 }
 ```
 
-### PokemonDetail Model
+### PokemonDetailData Model
 ```dart
-class PokemonDetail extends Equatable {
+class PokemonDetailData extends Equatable {
   final int id;
   final int weight;
   final int height;
   final List<String> types;
-  final String? imageUrl;
-  final bool isFavorite;      // NEW: Favorite status
 }
 ```
 
@@ -183,12 +182,15 @@ class LocalPokemon {
 ```
 
 **Enhancements**:
-- Added `isFavorite` property to `Pokemon` and `PokemonDetail` models
+- **Model Unification**: Merged `PokemonDetail` into `Pokemon` model with optional `detail` property
+- Added `PokemonDetailData` class for detailed Pokemon information
+- Added `isFavorite` property to `Pokemon` model
 - Added `copyWith` methods for immutable updates
 - Models carry their own favorite status instead of querying global state
 - Added `imageURL` for Pokemon image display
 - Added `created` timestamp for sorting favorites by creation time
 - Maintains backward compatibility with existing data
+- **Simplified Architecture**: Single unified model reduces complexity and improves maintainability
 
 ## Repository Pattern
 
@@ -199,9 +201,10 @@ class LocalPokemon {
 
 ### DetailRepository
 - Handles Pokemon detail fetching and data transformation
-- Maps API responses to PokemonDetail domain model
+- Maps API responses to unified `Pokemon` domain model with `detail` information
 - Manages error handling and data validation
 - Provides abstraction for testing
+- **Updated Interface**: Now returns `Pokemon` model instead of separate `PokemonDetail`
 
 ### FavoritePokemonRepository
 - Manages favorite Pokemon persistence
@@ -271,7 +274,7 @@ BlocListener<FavoriteBloc, FavoriteState>(
     if (state is FavoriteSuccess) {
       context.read<PokemonListBloc>().add(
         PokemonListFavoriteToggled(
-          pokemonId: state.toggledPokemonId,
+          pokemonId: state.currentPokemonId!,
           isFavorite: state.toggledPokemonFavoriteStatus,
         ),
       );

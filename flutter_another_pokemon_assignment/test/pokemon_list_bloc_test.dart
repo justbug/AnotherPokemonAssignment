@@ -31,7 +31,7 @@ void main() {
       blocTest<PokemonListBloc, PokemonListState>(
         'emits (Loading, Success) when fetchList succeeds with full page',
         build: () {
-          final pokemons = TestPokemonFactory.createPokemonList(_pageSize);
+          final pokemons = TestLocalPokemonFactory.createPokemonList(_pageSize);
           when(mockRepository.fetchList(offset: 0))
               .thenAnswer((_) async => pokemons);
           return PokemonListBloc(listRepository: mockRepository);
@@ -52,7 +52,7 @@ void main() {
       blocTest<PokemonListBloc, PokemonListState>(
         'emits (Loading, Success) when fetchList succeeds with partial page',
         build: () {
-          final pokemons = TestPokemonFactory.createPokemonList(_pageSize ~/ 2);
+          final pokemons = TestLocalPokemonFactory.createPokemonList(_pageSize ~/ 2);
           when(mockRepository.fetchList(offset: 0))
               .thenAnswer((_) async => pokemons);
           return PokemonListBloc(listRepository: mockRepository);
@@ -93,7 +93,7 @@ void main() {
       blocTest<PokemonListBloc, PokemonListState>(
         'emits Success when refresh succeeds',
         build: () {
-          final pokemons = TestPokemonFactory.createPokemonList(_pageSize);
+          final pokemons = TestLocalPokemonFactory.createPokemonList(_pageSize);
           when(mockRepository.fetchList(offset: 0))
               .thenAnswer((_) async => pokemons);
           return PokemonListBloc(listRepository: mockRepository);
@@ -127,7 +127,7 @@ void main() {
         },
       );
 
-      final existingPokemons = TestPokemonFactory.createPokemonList(_pageSize);
+      final existingPokemons = TestLocalPokemonFactory.createPokemonList(_pageSize);
       blocTest<PokemonListBloc, PokemonListState>(
         'emits Error with previous data when refresh fails after success',
         build: () {
@@ -156,8 +156,8 @@ void main() {
     });
 
     group('PokemonListLoadMoreRequested', () {
-      final currentPokemons = TestPokemonFactory.createPokemonList(_pageSize);
-      final morePokemons = TestPokemonFactory.createPokemonList(
+      final currentPokemons = TestLocalPokemonFactory.createPokemonList(_pageSize);
+      final morePokemons = TestLocalPokemonFactory.createPokemonList(
         _pageSize,
         startId: _pageSize + 1,
       );
@@ -199,7 +199,7 @@ void main() {
         },
       );
 
-      final failingStatePokemons = TestPokemonFactory.createPokemonList(_pageSize);
+      final failingStatePokemons = TestLocalPokemonFactory.createPokemonList(_pageSize);
       blocTest<PokemonListBloc, PokemonListState>(
         'emits (LoadingMore, Error) when load more fails',
         build: () {
@@ -241,7 +241,7 @@ void main() {
           return PokemonListBloc(listRepository: mockRepository);
         },
         seed: () {
-          final currentPokemons = TestPokemonFactory.createPokemonList(_pageSize ~/ 2);
+          final currentPokemons = TestLocalPokemonFactory.createPokemonList(_pageSize ~/ 2);
           return PokemonListSuccess(
             pokemons: currentPokemons,
             hasMore: false,

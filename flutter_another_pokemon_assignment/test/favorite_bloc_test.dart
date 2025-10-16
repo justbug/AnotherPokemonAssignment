@@ -46,7 +46,6 @@ void main() {
       expect: () => [
         const FavoriteSuccess(
           favoriteStatus: {'1': true},
-          toggledPokemonId: '1',
           toggledPokemonFavoriteStatus: true,
           currentPokemonId: '1',
         ),
@@ -66,7 +65,6 @@ void main() {
       },
       seed: () => const FavoriteSuccess(
         favoriteStatus: {'1': true},
-        toggledPokemonId: '1',
         toggledPokemonFavoriteStatus: true,
         currentPokemonId: '1',
       ),
@@ -74,7 +72,6 @@ void main() {
       expect: () => [
         const FavoriteSuccess(
           favoriteStatus: {'1': false},
-          toggledPokemonId: '1',
           toggledPokemonFavoriteStatus: false,
           currentPokemonId: '1',
         ),

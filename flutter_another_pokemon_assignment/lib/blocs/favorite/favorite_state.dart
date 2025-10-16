@@ -42,7 +42,6 @@ class FavoriteInitial extends FavoriteState {
 class FavoriteSuccess extends FavoriteState {
   @override
   final Map<String, bool> favoriteStatus;
-  final String toggledPokemonId;
   final bool toggledPokemonFavoriteStatus;
   
   @override
@@ -50,13 +49,12 @@ class FavoriteSuccess extends FavoriteState {
 
   const FavoriteSuccess({
     this.favoriteStatus = const {},
-    required this.toggledPokemonId,
     required this.toggledPokemonFavoriteStatus,
     this.currentPokemonId,
   });
 
   @override
-  List<Object?> get props => [favoriteStatus, toggledPokemonId, toggledPokemonFavoriteStatus, currentPokemonId];
+  List<Object?> get props => [favoriteStatus, toggledPokemonFavoriteStatus, currentPokemonId];
 }
 
 /// Error state

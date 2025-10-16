@@ -7,7 +7,7 @@ This document describes the comprehensive Pokemon detail functionality implement
 - `PokemonDetailBloc` manages Pokemon detail loading state and error handling
 - `PokemonDetailPage` provides a comprehensive UI for displaying Pokemon details
 - `DetailRepository` handles API communication for Pokemon detail data
-- `PokemonDetail` model represents the structured Pokemon detail information
+- **Unified Model**: Uses `Pokemon` model with optional `detail` property instead of separate `PokemonDetail`
 - Integration with global `FavoriteBloc` for favorite functionality in detail view
 
 ## BLoC Implementation
@@ -15,20 +15,24 @@ This document describes the comprehensive Pokemon detail functionality implement
 ### PokemonDetailBloc
 **Purpose**: Manages Pokemon detail loading and state management with favorite integration
 **Events**:
-- `PokemonDetailLoadRequested`: Load Pokemon detail by ID
+- `PokemonDetailLoadRequested`: Load Pokemon detail by ID and name
 - `PokemonDetailFavoriteToggled`: Update favorite status for the current Pokemon
 
 **States**:
 - `PokemonDetailInitial`: Initial state
 - `PokemonDetailLoading`: Loading state while fetching detail
-- `PokemonDetailSuccess`: Success state with Pokemon detail data (includes `isFavorite` property)
+- `PokemonDetailSuccess`: Success state with Pokemon data (includes `isFavorite` property and `detail` information)
 - `PokemonDetailError`: Error state with error message
 
 ### Event Structure
 ```dart
 class PokemonDetailLoadRequested extends PokemonDetailEvent {
   final String pokemonId;
-  const PokemonDetailLoadRequested({required this.pokemonId});
+  final String pokemonName;
+  const PokemonDetailLoadRequested({
+    required this.pokemonId,
+    required this.pokemonName,
+  });
 }
 
 class PokemonDetailFavoriteToggled extends PokemonDetailEvent {
@@ -40,7 +44,7 @@ class PokemonDetailFavoriteToggled extends PokemonDetailEvent {
 ### State Structure
 ```dart
 class PokemonDetailSuccess extends PokemonDetailState {
-  final PokemonDetail detail;
+  final Pokemon detail;
   const PokemonDetailSuccess({required this.detail});
 }
 
@@ -52,25 +56,35 @@ class PokemonDetailError extends PokemonDetailState {
 
 ## Data Model
 
-### PokemonDetail Model
+### Unified Pokemon Model
 ```dart
-class PokemonDetail extends Equatable {
+class Pokemon extends Equatable {
+  final String name;
+  final String id;
+  final String imageURL;
+  final bool isFavorite;      // Favorite status
+  final PokemonDetailData? detail;  // Optional detail information
+}
+```
+
+### PokemonDetailData Model
+```dart
+class PokemonDetailData extends Equatable {
   final int id;
   final int weight;        // Weight in hectograms
   final int height;        // Height in decimeters
   final List<String> types; // Pokemon types
-  final String? imageUrl;  // Pokemon image URL
-  final bool isFavorite;  // Favorite status
 }
 ```
 
 **Features**:
-- Immutable model with `Equatable` for value equality
+- **Model Unification**: Single `Pokemon` model with optional `detail` property
+- Immutable models with `Equatable` for value equality
 - Comprehensive Pokemon information including physical attributes
 - Type information for UI display
-- Optional image URL for enhanced visual presentation
 - **NEW**: `isFavorite` property for favorite status integration
 - **NEW**: `copyWith` method for immutable updates
+- **Simplified Architecture**: Reduces model complexity and improves maintainability
 
 ## Repository Layer
 
@@ -82,9 +96,10 @@ class PokemonDetail extends Equatable {
 - Provides abstraction for testing
 
 **Key Methods**:
-- `fetchDetail(String pokemonId)`: Retrieves Pokemon detail by ID
+- `fetchDetail(String pokemonId, String pokemonName)`: Retrieves Pokemon detail by ID and name
 - Error handling with proper exception propagation
-- Data transformation from API entities to domain models
+- Data transformation from API entities to unified `Pokemon` domain model
+- **Updated Interface**: Now returns `Pokemon` model instead of separate `PokemonDetail`
 
 ## UI Implementation
 
@@ -245,7 +260,10 @@ Navigator.push(
 
 // Load detail data
 context.read<PokemonDetailBloc>().add(
-  PokemonDetailLoadRequested(pokemonId: '25'),
+  PokemonDetailLoadRequested(
+    pokemonId: '25',
+    pokemonName: 'Pikachu',
+  ),
 );
 
 // Event-driven favorite updates

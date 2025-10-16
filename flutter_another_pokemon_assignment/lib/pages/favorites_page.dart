@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/blocs.dart';
-import '../models/pokemon.dart';
 import '../widgets/pokemon_list_widget.dart';
 
 /// Favorites list page
@@ -84,13 +83,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
     }
 
     if (state is FavoritesListSuccess) {
-      // Convert LocalPokemon to Pokemon
-      final favoritePokemons = state.favoritePokemons.map((localPokemon) => Pokemon(
-        id: localPokemon.id,
-        name: localPokemon.name,
-        imageURL: localPokemon.imageURL,
-        isFavorite: localPokemon.isFavorite,
-      )).toList();
+      // Use Pokemon directly from state
+      final favoritePokemons = state.favoritePokemons;
 
       if (favoritePokemons.isEmpty) {
         return RefreshIndicator(

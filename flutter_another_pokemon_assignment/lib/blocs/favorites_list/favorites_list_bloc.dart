@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../repository/favorite_pokemon_repository.dart';
-import '../../models/local_pokemon.dart';
+import '../../models/pokemon.dart';
 import 'favorites_list_event.dart';
 import 'favorites_list_state.dart';
 
@@ -54,7 +54,7 @@ class FavoritesListBloc extends Bloc<FavoritesListEvent, FavoritesListState> {
   }
 
   /// Get current favorite Pokemon list
-  List<LocalPokemon> _getCurrentFavoritePokemons() {
+  List<Pokemon> _getCurrentFavoritePokemons() {
     final currentState = state;
     if (currentState is FavoritesListSuccess) {
       return currentState.favoritePokemons;
