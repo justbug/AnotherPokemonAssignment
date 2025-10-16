@@ -20,18 +20,28 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     FavoriteToggled event,
     Emitter<FavoriteState> emit,
   ) async {
-    final currentStatus = Map<String, bool>.from(state.favoriteStatus);
-    final currentFavorite = currentStatus[event.pokemonId] ?? false;
+    final currentFavorites = state.favoritePokemonIds;
+    final updatedFavorites = Set<String>.from(currentFavorites);
+    final currentFavorite = currentFavorites.contains(event.pokemonId);
     final newFavoriteStatus = !currentFavorite;
     
     try {
-      // Use Repository to toggle favorite state
-      await _favoriteRepository.toggleFavorite(event.pokemonId, event.pokemonName, event.imageURL);
+      // Persist requested favorite state via repository
+      await _favoriteRepository.updateFavorite(
+        event.pokemonId,
+        newFavoriteStatus,
+        event.pokemonName,
+        event.imageURL,
+      );
       
       // Update state
-      currentStatus[event.pokemonId] = newFavoriteStatus;
+      if (newFavoriteStatus) {
+        updatedFavorites.add(event.pokemonId);
+      } else {
+        updatedFavorites.remove(event.pokemonId);
+      }
       emit(FavoriteSuccess(
-        favoriteStatus: currentStatus,
+        favoritePokemonIds: updatedFavorites,
         toggledPokemonFavoriteStatus: newFavoriteStatus,
         currentPokemonId: event.pokemonId,
       ));
@@ -41,7 +51,7 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     } catch (e) {
       emit(FavoriteError(
         message: 'Failed to update favorite state: $e',
-        favoriteStatus: currentStatus,
+        favoritePokemonIds: currentFavorites,
         currentPokemonId: event.pokemonId,
       ));
     }

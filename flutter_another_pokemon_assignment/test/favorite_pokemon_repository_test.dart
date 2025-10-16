@@ -101,8 +101,8 @@ void main() {
       });
     });
 
-    group('toggleFavorite Tests', () {
-      test('should add Pokemon to favorites when not currently favorite', () async {
+    group('updateFavorite Tests', () {
+      test('should add Pokemon to favorites when marking as favorite', () async {
         // Arrange
         const pokemonId = '25';
         const pokemonName = 'pikachu';
@@ -115,7 +115,7 @@ void main() {
             .thenAnswer((_) async {});
 
         // Act
-        await favoritePokemonRepository.toggleFavorite(pokemonId, pokemonName, imageURL);
+        await favoritePokemonRepository.updateFavorite(pokemonId, true, pokemonName, imageURL);
 
         // Assert
         verify(mockLocalPokemonService.getById(pokemonId)).called(1);
@@ -123,32 +123,21 @@ void main() {
         verifyNever(mockLocalPokemonService.delete(any));
       });
 
-      test('should remove Pokemon from favorites when currently favorite', () async {
+      test('should remove Pokemon from favorites when marking as not favorite', () async {
         // Arrange
         const pokemonId = '25';
         const pokemonName = 'pikachu';
         const imageURL = 'https://example.com/pikachu.png';
-        final mockPokemon = LocalPokemon(
-          id: pokemonId,
-          name: pokemonName,
-          imageURL: imageURL,
-          isFavorite: true,
-          created: DateTime.now().millisecondsSinceEpoch,
-        );
-
-        when(mockLocalPokemonService.getById(pokemonId))
-            .thenAnswer((_) async => mockPokemon);
-
         when(mockLocalPokemonService.delete(pokemonId))
             .thenAnswer((_) async {});
 
         // Act
-        await favoritePokemonRepository.toggleFavorite(pokemonId, pokemonName, imageURL);
+        await favoritePokemonRepository.updateFavorite(pokemonId, false, pokemonName, imageURL);
 
         // Assert
-        verify(mockLocalPokemonService.getById(pokemonId)).called(1);
         verify(mockLocalPokemonService.delete(pokemonId)).called(1);
         verifyNever(mockLocalPokemonService.insertOrUpdate(any));
+        verifyNever(mockLocalPokemonService.getById(any));
       });
 
       test('should create LocalPokemon with correct properties when adding to favorites', () async {
@@ -164,7 +153,7 @@ void main() {
             .thenAnswer((_) async {});
 
         // Act
-        await favoritePokemonRepository.toggleFavorite(pokemonId, pokemonName, imageURL);
+        await favoritePokemonRepository.updateFavorite(pokemonId, true, pokemonName, imageURL);
 
         // Assert
         final capturedPokemon = verify(mockLocalPokemonService.insertOrUpdate(captureAny)).captured.first as LocalPokemon;
@@ -176,7 +165,7 @@ void main() {
         expect(capturedPokemon.created, greaterThan(0));
       });
 
-      test('should rethrow error when service throws exception', () async {
+      test('should rethrow error when service throws exception during favorite save', () async {
         // Arrange
         const pokemonId = '25';
         const pokemonName = 'pikachu';
@@ -187,15 +176,15 @@ void main() {
 
         // Act & Assert
         expect(
-          () => favoritePokemonRepository.toggleFavorite(pokemonId, pokemonName, imageURL),
+          () => favoritePokemonRepository.updateFavorite(pokemonId, true, pokemonName, imageURL),
           throwsA(isA<Exception>()),
         );
         verify(mockLocalPokemonService.getById(pokemonId)).called(1);
       });
     });
 
-    group('getAllFavoriteStatus Tests', () {
-      test('should return favorite status map for all Pokemon', () async {
+    group('getFavoritePokemonIds Tests', () {
+      test('should return favorite id set for favorite Pokemon', () async {
         // Arrange
         final mockPokemonList = [
           LocalPokemon(
@@ -225,36 +214,36 @@ void main() {
             .thenAnswer((_) async => mockPokemonList);
 
         // Act
-        final result = await favoritePokemonRepository.getAllFavoriteStatus();
+        final result = await favoritePokemonRepository.getFavoritePokemonIds();
 
         // Assert
-        expect(result, hasLength(3));
-        expect(result['1'], isTrue);
-        expect(result['25'], isFalse);
-        expect(result['150'], isTrue);
+        expect(result, hasLength(2));
+        expect(result.contains('1'), isTrue);
+        expect(result.contains('150'), isTrue);
+        expect(result.contains('25'), isFalse);
         verify(mockLocalPokemonService.getAll()).called(1);
       });
 
-      test('should return empty map when no Pokemon exist', () async {
+      test('should return empty set when no Pokemon exist', () async {
         // Arrange
         when(mockLocalPokemonService.getAll())
             .thenAnswer((_) async => <LocalPokemon>[]);
 
         // Act
-        final result = await favoritePokemonRepository.getAllFavoriteStatus();
+        final result = await favoritePokemonRepository.getFavoritePokemonIds();
 
         // Assert
         expect(result, isEmpty);
         verify(mockLocalPokemonService.getAll()).called(1);
       });
 
-      test('should return empty map when error occurs', () async {
+      test('should return empty set when error occurs', () async {
         // Arrange
         when(mockLocalPokemonService.getAll())
             .thenThrow(Exception('Database error'));
 
         // Act
-        final result = await favoritePokemonRepository.getAllFavoriteStatus();
+        final result = await favoritePokemonRepository.getFavoritePokemonIds();
 
         // Assert
         expect(result, isEmpty);

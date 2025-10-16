@@ -208,7 +208,7 @@ class LocalPokemon {
 
 ### FavoritePokemonRepository
 - Manages favorite Pokemon persistence
-- Provides operations: `isFavorite`, `toggleFavorite`, `getFavoritePokemonList`, `getAllFavoriteStatus`
+- Provides operations: `isFavorite`, `updateFavorite`, `getFavoritePokemonList`, `getFavoritePokemonIds`
 - Handles data filtering and sorting
 - Implements conservative error handling
 
