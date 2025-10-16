@@ -1,4 +1,5 @@
 import '../models/local_pokemon.dart';
+import '../models/pokemon.dart';
 import '../services/local_pokemon_service.dart';
 import '../services/local_pokemon_service_spec.dart';
 
@@ -66,15 +67,25 @@ class FavoritePokemonRepository {
   }
 
   /// Get favorite Pokemon list sorted by creation time (earliest first)
-  Future<List<LocalPokemon>> getFavoritePokemonList() async {
+  Future<List<Pokemon>> getFavoritePokemonList() async {
     try {
       final allPokemon = await _localPokemonService.getAll();
       final favorites = allPokemon.where((p) => p.isFavorite).toList();
       // Sort by created time in descending order (latest first)
       favorites.sort((a, b) => b.created.compareTo(a.created));
-      return favorites;
+      return favorites.map((localPokemon) => _mapToModel(localPokemon)).toList();
     } catch (e) {
       return [];
     }
+  }
+
+  /// Convert LocalPokemon to Pokemon model
+  Pokemon _mapToModel(LocalPokemon localPokemon) {
+    return Pokemon(
+      name: localPokemon.name,
+      id: localPokemon.id,
+      imageURL: localPokemon.imageURL,
+      isFavorite: localPokemon.isFavorite,
+    );
   }
 }

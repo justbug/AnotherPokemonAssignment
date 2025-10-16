@@ -13,11 +13,15 @@ abstract class PokemonDetailEvent extends Equatable {
 /// Corresponds to loading behavior when entering Pokemon detail page
 class PokemonDetailLoadRequested extends PokemonDetailEvent {
   final String pokemonId;
+  final String pokemonName;
 
-  const PokemonDetailLoadRequested({required this.pokemonId});
+  const PokemonDetailLoadRequested({
+    required this.pokemonId,
+    required this.pokemonName,
+  });
 
   @override
-  List<Object> get props => [pokemonId];
+  List<Object> get props => [pokemonId, pokemonName];
 }
 
 /// Pokemon detail favorite toggle event

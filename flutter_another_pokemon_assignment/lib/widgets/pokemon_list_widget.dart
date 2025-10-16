@@ -82,7 +82,10 @@ class PokemonListWidget extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => BlocProvider(
               create: (context) => PokemonDetailBloc()
-                ..add(PokemonDetailLoadRequested(pokemonId: pokemon.id)),
+                ..add(PokemonDetailLoadRequested(
+                  pokemonId: pokemon.id,
+                  pokemonName: pokemon.name,
+                )),
               child: PokemonDetailPage(
                 pokemonId: pokemon.id,
                 pokemonName: pokemon.name,

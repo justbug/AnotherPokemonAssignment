@@ -29,7 +29,7 @@ void main() {
       blocTest<FavoritesListBloc, FavoritesListState>(
         'emits (Loading, Success) when getFavoritePokemonList succeeds',
         build: () {
-          final favoritePokemons = TestLocalPokemonFactory.createLocalPokemonList(3);
+          final favoritePokemons = TestLocalPokemonFactory.createPokemonList(3);
           when(mockRepository.getFavoritePokemonList())
               .thenAnswer((_) async => favoritePokemons);
           return FavoritesListBloc(favoriteRepository: mockRepository);
@@ -71,7 +71,7 @@ void main() {
       blocTest<FavoritesListBloc, FavoritesListState>(
         'emits Success when refresh succeeds without previous data',
         build: () {
-          final favoritePokemons = TestLocalPokemonFactory.createLocalPokemonList(2);
+          final favoritePokemons = TestLocalPokemonFactory.createPokemonList(2);
           when(mockRepository.getFavoritePokemonList())
               .thenAnswer((_) async => favoritePokemons);
           return FavoritesListBloc(favoriteRepository: mockRepository);
@@ -105,7 +105,7 @@ void main() {
         },
       );
 
-      final existingFavoritePokemons = TestLocalPokemonFactory.createLocalPokemonList(3);
+      final existingFavoritePokemons = TestLocalPokemonFactory.createPokemonList(3);
       blocTest<FavoritesListBloc, FavoritesListState>(
         'emits Error with previous data when refresh fails after success',
         build: () {

@@ -28,7 +28,10 @@ class PokemonDetailBloc extends Bloc<PokemonDetailEvent, PokemonDetailState> {
     emit(const PokemonDetailLoading());
     
     try {
-      final detail = await _detailRepository.fetchDetail(event.pokemonId);
+      final detail = await _detailRepository.fetchDetail(
+        event.pokemonId,
+        event.pokemonName,
+      );
       
       // Load favorite status and set isFavorite
       final isFavorite = await _favoriteRepository.isFavorite(event.pokemonId);
