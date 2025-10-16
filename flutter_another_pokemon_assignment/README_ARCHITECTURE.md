@@ -46,7 +46,7 @@ This document describes the comprehensive architecture of the Flutter Pokemon ap
 
 **States**:
 - `FavoriteInitial`: Initial state when the bloc is created
-- `FavoriteSuccess`: Contains favorite status map, plus `toggledPokemonId` and `toggledPokemonFavoriteStatus` for tracking changes
+- `FavoriteSuccess`: Contains favorite status map, plus `toggledPokemonFavoriteStatus` for tracking changes
 - `FavoriteError`: Error state with previous favorite status map
 
 ### FavoritesListBloc
@@ -271,7 +271,7 @@ BlocListener<FavoriteBloc, FavoriteState>(
     if (state is FavoriteSuccess) {
       context.read<PokemonListBloc>().add(
         PokemonListFavoriteToggled(
-          pokemonId: state.toggledPokemonId,
+          pokemonId: state.currentPokemonId!,
           isFavorite: state.toggledPokemonFavoriteStatus,
         ),
       );

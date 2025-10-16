@@ -37,7 +37,7 @@ Every bloc state carries a `favoriteStatus` map (String -> bool) so the UI can r
 | State | Description |
 | --- | --- |
 | `FavoriteInitial` | Initial state when the bloc is created. |
-| `FavoriteSuccess` | Contains the complete favorite status map for all Pokémon, plus `toggledPokemonId` and `toggledPokemonFavoriteStatus` for tracking changes. |
+| `FavoriteSuccess` | Contains the complete favorite status map for all Pokémon, plus `toggledPokemonFavoriteStatus` for tracking changes. |
 | `FavoriteError` | Reports failures with a message, while preserving the last known favorite status map. |
 
 ### FavoritesListBloc States
@@ -105,7 +105,7 @@ BlocListener<FavoriteBloc, FavoriteState>(
     if (state is FavoriteSuccess) {
       context.read<PokemonListBloc>().add(
         PokemonListFavoriteToggled(
-          pokemonId: state.toggledPokemonId,
+          pokemonId: state.currentPokemonId!,
           isFavorite: state.toggledPokemonFavoriteStatus,
         ),
       );

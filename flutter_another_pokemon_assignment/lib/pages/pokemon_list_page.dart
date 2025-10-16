@@ -51,12 +51,12 @@ class _PokemonListPageState extends State<PokemonListPage> {
       ),
       body: BlocListener<FavoriteBloc, FavoriteState>(
         listener: (context, state) {
-          if (state is FavoriteSuccess) {
+          if (state is FavoriteSuccess && state.currentPokemonId != null) {
             // When favorite status changes, update the PokemonListBloc with toggle request
             // This ensures the list reflects the latest favorite status efficiently
             context.read<PokemonListBloc>().add(
               PokemonListFavoriteToggled(
-                pokemonId: state.toggledPokemonId,
+                pokemonId: state.currentPokemonId!,
                 isFavorite: state.toggledPokemonFavoriteStatus,
               ),
             );

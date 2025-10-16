@@ -54,7 +54,7 @@ class PokemonDetailBloc extends Bloc<PokemonDetailEvent, PokemonDetailState> {
     if (currentState is! PokemonDetailSuccess) {
       return;
     }
-
+    
     final updatedDetail = currentState.detail.copyWith(
       isFavorite: event.isFavorite,
     );
