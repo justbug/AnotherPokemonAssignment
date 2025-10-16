@@ -26,30 +26,31 @@ class PokemonDetailPage extends StatelessWidget {
         title: Text(pokemonName),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
-          BlocBuilder<PokemonDetailBloc, PokemonDetailState>(
-            builder: (context, state) {
-              final isFavorite = state is PokemonDetailSuccess ? state.detail.isFavorite : false;
-              return FavoriteIconButton(
-                pokemonId: pokemonId,
-                pokemonName: pokemonName,
-                imageURL: imageURL,
-                isFavorite: isFavorite,
-              );
+          BlocListener<FavoriteBloc, FavoriteState>(
+            listener: (context, state) {
+              if (state is FavoriteSuccess) {
+                // When favorite status changes, update the PokemonDetailBloc
+                // This ensures the detail page reflects the latest favorite status
+                context.read<PokemonDetailBloc>().add(
+                  PokemonDetailFavoriteToggled(isFavorite: state.isFavorite(pokemonId)),
+                );
+              }
             },
+            child: BlocBuilder<PokemonDetailBloc, PokemonDetailState>(
+              builder: (context, state) {
+                final isFavorite = state is PokemonDetailSuccess ? state.detail.isFavorite : false;
+                return FavoriteIconButton(
+                  pokemonId: pokemonId,
+                  pokemonName: pokemonName,
+                  imageURL: imageURL,
+                  isFavorite: isFavorite,
+                );
+              },
+            ),
           ),
         ],
       ),
-      body: BlocListener<FavoriteBloc, FavoriteState>(
-        listener: (context, state) {
-          if (state is FavoriteSuccess) {
-            // When favorite status changes, update the PokemonDetailBloc
-            // This ensures the detail page reflects the latest favorite status
-            context.read<PokemonDetailBloc>().add(
-              PokemonDetailFavoriteToggled(isFavorite: state.isFavorite(pokemonId)),
-            );
-          }
-        },
-        child: BlocConsumer<PokemonDetailBloc, PokemonDetailState>(
+      body: BlocConsumer<PokemonDetailBloc, PokemonDetailState>(
           listener: (context, state) {
             if (state is PokemonDetailError) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -79,7 +80,6 @@ class PokemonDetailPage extends StatelessWidget {
             child: Text('Unknown state'),
           );
         },
-        ),
       ),
     );
   }
