@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'pokemon_list_page.dart';
 import 'favorites_page.dart';
 
-/// 主導航頁面
-/// 使用 BottomNavigationBar 切換 Pokemon 列表和收藏列表
+/// Main navigation page
+/// Uses BottomNavigationBar to switch between Pokemon list and favorites list
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
 
@@ -37,11 +37,11 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
-            label: '列表',
+            label: 'List',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
-            label: '收藏',
+            label: 'Favorites',
           ),
         ],
       ),

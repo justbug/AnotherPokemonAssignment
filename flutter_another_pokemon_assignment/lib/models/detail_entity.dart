@@ -3,8 +3,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'detail_entity.freezed.dart';
 part 'detail_entity.g.dart';
 
-/// Pokemon 詳細資訊實體
-/// 對應 iOS 的 DetailEntity struct
+/// Pokemon detail entity
+/// Corresponds to iOS DetailEntity struct
 @freezed
 class DetailEntity with _$DetailEntity {
   const factory DetailEntity({
@@ -19,8 +19,8 @@ class DetailEntity with _$DetailEntity {
       _$DetailEntityFromJson(json);
 }
 
-/// Pokemon 類型實體
-/// 對應 iOS 的 TypesEntity struct
+/// Pokemon type entity
+/// Corresponds to iOS TypesEntity struct
 @freezed
 class TypesEntity with _$TypesEntity {
   const factory TypesEntity({
@@ -31,8 +31,8 @@ class TypesEntity with _$TypesEntity {
       _$TypesEntityFromJson(json);
 }
 
-/// 類型實體
-/// 對應 iOS 的 TypesEntity.TypeEntity struct
+/// Type entity
+/// Corresponds to iOS TypesEntity.TypeEntity struct
 @freezed
 class TypeEntity with _$TypeEntity {
   const factory TypeEntity({
@@ -43,8 +43,8 @@ class TypeEntity with _$TypeEntity {
       _$TypeEntityFromJson(json);
 }
 
-/// Pokemon 精靈圖實體
-/// 對應 iOS 的 SpriteEntity struct
+/// Pokemon sprite entity
+/// Corresponds to iOS SpriteEntity struct
 @freezed
 class SpriteEntity with _$SpriteEntity {
   const factory SpriteEntity({

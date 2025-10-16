@@ -70,8 +70,8 @@ class FavoritePokemonRepository {
     try {
       final allPokemon = await _localPokemonService.getAll();
       final favorites = allPokemon.where((p) => p.isFavorite).toList();
-      // 按照 created 時間升序排序(越早越前面)
-      favorites.sort((a, b) => a.created.compareTo(b.created));
+      // Sort by created time in descending order (latest first)
+      favorites.sort((a, b) => b.created.compareTo(a.created));
       return favorites;
     } catch (e) {
       return [];

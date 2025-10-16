@@ -3,8 +3,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'local_pokemon.freezed.dart';
 part 'local_pokemon.g.dart';
 
-/// 本地 Pokemon 模型
-/// 用於儲存在本地資料庫中的 Pokemon 資料
+/// Local Pokemon model
+/// Used for storing Pokemon data in local database
 @freezed
 class LocalPokemon with _$LocalPokemon {
   const factory LocalPokemon({
@@ -15,7 +15,7 @@ class LocalPokemon with _$LocalPokemon {
     @Default(0) int created,
   }) = _LocalPokemon;
 
-  /// 從 JSON Map 建立物件
+  /// Create object from JSON Map
   factory LocalPokemon.fromJson(Map<String, dynamic> json) =>
       _$LocalPokemonFromJson(json);
 }

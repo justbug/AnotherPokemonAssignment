@@ -278,7 +278,7 @@ void main() {
             id: '1',
             name: 'bulbasaur',
             imageURL: 'https://example.com/bulbasaur.png',
-            isFavorite: false, // 非最愛，應該被過濾掉
+            isFavorite: false, // Not favorite, should be filtered out
             created: now.millisecondsSinceEpoch,
           ),
           LocalPokemon(
@@ -286,7 +286,7 @@ void main() {
             name: 'mewtwo',
             imageURL: 'https://example.com/mewtwo.png',
             isFavorite: true,
-            created: now.millisecondsSinceEpoch, // 較早建立
+            created: now.millisecondsSinceEpoch, // Created earlier
           ),
           LocalPokemon(
             id: '4',
@@ -304,14 +304,14 @@ void main() {
         final result = await favoritePokemonRepository.getFavoritePokemonList();
 
         // Assert
-        expect(result, hasLength(3)); // 只有 3 個最愛的 Pokemon
+        expect(result, hasLength(3)); // Only 3 favorite Pokemon
         
-        // 驗證排序：mewtwo (最早) -> charmander -> pikachu (最晚)
-        expect(result[0].id, equals('150')); // mewtwo
-        expect(result[1].id, equals('4'));   // charmander
-        expect(result[2].id, equals('25'));  // pikachu
+        // Verify sorting: pikachu (latest) -> charmander -> mewtwo (earliest)
+        expect(result[0].id, equals('25'));  // pikachu (latest)
+        expect(result[1].id, equals('4'));    // charmander
+        expect(result[2].id, equals('150'));  // mewtwo (earliest)
         
-        // 驗證都是最愛的 Pokemon
+        // Verify all are favorite Pokemon
         for (final pokemon in result) {
           expect(pokemon.isFavorite, isTrue);
         }

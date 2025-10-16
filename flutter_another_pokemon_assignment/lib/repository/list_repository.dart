@@ -4,14 +4,14 @@ import '../services/core/pokemon_service.dart';
 import '../services/core/service_helper.dart';
 import 'package:flutter/foundation.dart';
 
-/// Pokemon 列表倉庫規格介面
-/// 對應 iOS 的 ListUseCaseSpec protocol
+/// Pokemon list repository specification interface
+/// Corresponds to iOS ListUseCaseSpec protocol
 abstract class ListRepositorySpec {
   Future<List<Pokemon>> fetchList({int offset = 0});
 }
 
-/// Pokemon 列表倉庫
-/// 對應 iOS 的 ListUseCase struct
+/// Pokemon list repository
+/// Corresponds to iOS ListUseCase struct
 class ListRepository implements ListRepositorySpec {
   static const int _limit = 30;
   static const String _path = 'pokemon';
@@ -20,10 +20,10 @@ class ListRepository implements ListRepositorySpec {
   ListRepository({PokemonService? pokemonService}) 
       : _pokemonService = pokemonService ?? PokemonService.instance;
 
-  /// 取得 Pokemon 列表
-  /// 對應 iOS 的 fetchList(offset: Int) 方法
+  /// Get Pokemon list
+  /// Corresponds to iOS fetchList(offset: Int) method
   /// 
-  /// [offset] 偏移量，預設為 0
+  /// [offset] Offset, defaults to 0
   @override
   Future<List<Pokemon>> fetchList({int offset = 0}) async {
     try {
@@ -31,19 +31,19 @@ class ListRepository implements ListRepositorySpec {
       final models = _mapToModel(entity);
       return models;
     } catch (e) {
-      // 重新拋出錯誤，保持錯誤類型
+      // Re-throw error to preserve error type
       rethrow;
     }
   }
 
-  /// 取得 Pokemon 列表實體
-  /// 整合原 ListService 的邏輯
+  /// Get Pokemon list entity
+  /// Integrates original ListService logic
   /// 
-  /// [limit] 限制回傳數量
-  /// [offset] 偏移量
+  /// [limit] Limit return count
+  /// [offset] Offset
   Future<ListEntity> _fetchListEntity({int? limit, int? offset}) async {
     try {
-      // 建構查詢參數，對應 iOS 的 query 建構邏輯
+      // Build query parameters, corresponds to iOS query construction logic
       final query = <String, String?>{
         if (limit != null) 'limit': limit.toStringOrNull,
         if (offset != null) 'offset': offset.toStringOrNull,
@@ -66,13 +66,13 @@ class ListRepository implements ListRepositorySpec {
         throw JsonParseException('JSON structure error: $e');
       }
     } catch (e) {
-      // 重新拋出錯誤，保持錯誤類型
+      // Re-throw error to preserve error type
       rethrow;
     }
   }
 
-  /// 將 ListEntity 轉換為 Pokemon 模型列表
-  /// 對應 iOS 的 mapToModel(_ entity: ListEntity) 方法
+  /// Convert ListEntity to Pokemon model list
+  /// Corresponds to iOS mapToModel(_ entity: ListEntity) method
   List<Pokemon> _mapToModel(ListEntity entity) {
     return entity.results
         .map((result) => _createPokemonFromResult(result))
@@ -81,8 +81,8 @@ class ListRepository implements ListRepositorySpec {
         .toList();
   }
 
-  /// 從 ResultEntity 創建 Pokemon 模型
-  /// 對應 iOS 的 getID(urlString: String) 方法
+  /// Create Pokemon model from ResultEntity
+  /// Corresponds to iOS getID(urlString: String) method
   Pokemon? _createPokemonFromResult(ResultEntity result) {
     final id = _extractIdFromUrl(result.url);
     if (id == null) return null;
@@ -94,8 +94,8 @@ class ListRepository implements ListRepositorySpec {
     );
   }
 
-  /// 從 URL 中提取 Pokemon ID
-  /// 對應 iOS 的 getID(urlString: String) 方法
+  /// Extract Pokemon ID from URL
+  /// Corresponds to iOS getID(urlString: String) method
   String? _extractIdFromUrl(String urlString) {
     try {
       final uri = Uri.parse(urlString);
@@ -105,12 +105,12 @@ class ListRepository implements ListRepositorySpec {
         return null;
       }
       
-      // Pokemon API URL 格式: /api/v2/pokemon/1/ 或 /api/v2/pokemon/1
-      // 我們需要找到包含數字的 segment
+      // Pokemon API URL format: /api/v2/pokemon/1/ or /api/v2/pokemon/1
+      // We need to find the segment containing numbers
       for (int i = pathSegments.length - 1; i >= 0; i--) {
         final segment = pathSegments[i];
         
-        // 移除尾部斜線
+        // Remove trailing slash
         final cleanSegment = segment.endsWith('/') ? segment.substring(0, segment.length - 1) : segment;
         
         if (cleanSegment.isNotEmpty) {

@@ -5,8 +5,8 @@ import '../../repository/list_repository.dart';
 import 'pokemon_list_event.dart';
 import 'pokemon_list_state.dart';
 
-/// Pokemon 列表 BLoC
-/// 處理 Pokemon 列表的業務邏輯
+/// Pokemon list BLoC
+/// Handles Pokemon list business logic
 class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
   final ListRepositorySpec _listRepository;
   static const int _limit = 30;
@@ -19,7 +19,7 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
     on<PokemonListLoadMoreRequested>(_onLoadMoreRequested);
   }
 
-  /// 處理初始載入事件
+  /// Handle initial load event
   Future<void> _onLoadRequested(
     PokemonListLoadRequested event,
     Emitter<PokemonListState> emit,
@@ -35,12 +35,12 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
       ));
     } catch (e) {
       emit(PokemonListError(
-        message: '載入 Pokemon 列表失敗: $e',
+        message: 'Failed to load Pokemon list: $e',
       ));
     }
   }
 
-  /// 處理下拉刷新事件
+  /// Handle pull-to-refresh event
   Future<void> _onRefreshRequested(
     PokemonListRefreshRequested event,
     Emitter<PokemonListState> emit,
@@ -54,13 +54,13 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
       ));
     } catch (e) {
       emit(PokemonListError(
-        message: '刷新 Pokemon 列表失敗: $e',
+        message: 'Failed to refresh Pokemon list: $e',
         previousPokemons: _getCurrentPokemons(),
       ));
     }
   }
 
-  /// 處理載入更多事件
+  /// Handle load more event
   Future<void> _onLoadMoreRequested(
     PokemonListLoadMoreRequested event,
     Emitter<PokemonListState> emit,
@@ -93,13 +93,13 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
       ));
     } catch (e) {
       emit(PokemonListError(
-        message: '載入更多 Pokemon 失敗: $e',
+        message: 'Failed to load more Pokemon: $e',
         previousPokemons: currentState.pokemons,
       ));
     }
   }
 
-  /// 取得當前 Pokemon 列表
+  /// Get current Pokemon list
   List<Pokemon> _getCurrentPokemons() {
     final currentState = state;
     if (currentState is PokemonListSuccess) {

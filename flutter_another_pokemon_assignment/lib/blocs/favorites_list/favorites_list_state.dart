@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import '../../models/local_pokemon.dart';
 
-/// Favorites List 狀態
-/// 定義收藏列表頁面的各種狀態
+/// Favorites List states
+/// Define various states for favorites list page
 abstract class FavoritesListState extends Equatable {
   const FavoritesListState();
 
@@ -10,20 +10,20 @@ abstract class FavoritesListState extends Equatable {
   List<Object> get props => [];
 }
 
-/// 初始狀態
-/// 頁面剛載入時的狀態
+/// Initial state
+/// State when page first loads
 class FavoritesListInitial extends FavoritesListState {
   const FavoritesListInitial();
 }
 
-/// 載入中狀態
-/// 載入收藏列表資料時的狀態
+/// Loading state
+/// State when loading favorites list data
 class FavoritesListLoading extends FavoritesListState {
   const FavoritesListLoading();
 }
 
-/// 成功狀態
-/// 收藏列表載入成功時的狀態
+/// Success state
+/// State when favorites list loads successfully
 class FavoritesListSuccess extends FavoritesListState {
   final List<LocalPokemon> favoritePokemons;
 
@@ -34,7 +34,7 @@ class FavoritesListSuccess extends FavoritesListState {
   @override
   List<Object> get props => [favoritePokemons];
 
-  /// 複製並更新狀態
+  /// Copy and update state
   FavoritesListSuccess copyWith({
     List<LocalPokemon>? favoritePokemons,
   }) {
@@ -44,8 +44,8 @@ class FavoritesListSuccess extends FavoritesListState {
   }
 }
 
-/// 錯誤狀態
-/// 載入收藏列表失敗時的狀態
+/// Error state
+/// State when loading favorites list fails
 class FavoritesListError extends FavoritesListState {
   final String message;
   final List<LocalPokemon>? previousFavoritePokemons;

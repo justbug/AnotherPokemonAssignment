@@ -1,5 +1,5 @@
 // Pokemon List Widget Test
-// 測試 Pokemon 列表頁面的基本功能
+// Test basic functionality of Pokemon list page
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,7 +28,7 @@ void main() {
     );
 
     // Verify that the app bar title is displayed.
-    expect(find.text('Pokemon 列表'), findsOneWidget);
+    expect(find.text('Pokemon List'), findsOneWidget);
 
     // Verify that loading indicator is shown initially.
     expect(find.byType(CircularProgressIndicator), findsOneWidget);

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/// Favorite 事件
+/// Favorite events
 abstract class FavoriteEvent extends Equatable {
   const FavoriteEvent();
 
@@ -8,13 +8,13 @@ abstract class FavoriteEvent extends Equatable {
   List<Object> get props => [];
 }
 
-/// 載入所有最愛狀態事件
+/// Load all favorite states event
 class FavoriteLoadAllRequested extends FavoriteEvent {
   const FavoriteLoadAllRequested();
 }
 
 
-/// 切換最愛狀態事件
+/// Toggle favorite state event
 class FavoriteToggled extends FavoriteEvent {
   final String pokemonId;
   final String pokemonName;

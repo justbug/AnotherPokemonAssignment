@@ -4,8 +4,8 @@ import '../blocs/favorite/favorite_bloc.dart';
 import '../blocs/favorite/favorite_state.dart';
 import '../blocs/favorite/favorite_event.dart';
 
-/// 最愛按鈕元件
-/// 獨立的最愛按鈕，自動綁定 FavoriteBloc 狀態
+/// Favorite icon button widget
+/// Independent favorite button, automatically binds to FavoriteBloc state
 class FavoriteIconButton extends StatelessWidget {
   final String pokemonId;
   final String pokemonName;
@@ -22,7 +22,7 @@ class FavoriteIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FavoriteBloc, FavoriteState>(
       buildWhen: (previous, current) {
-        // 只有當此 Pokemon 的最愛狀態改變時才重建
+        // Only rebuild when this Pokemon's favorite state changes
         return previous.isFavorite(pokemonId) != current.isFavorite(pokemonId);
       },
       builder: (context, state) {

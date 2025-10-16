@@ -5,7 +5,7 @@ import 'favorites_list_event.dart';
 import 'favorites_list_state.dart';
 
 /// Favorites List BLoC
-/// 處理收藏列表的業務邏輯
+/// Handles favorites list business logic
 class FavoritesListBloc extends Bloc<FavoritesListEvent, FavoritesListState> {
   final FavoritePokemonRepository _favoriteRepository;
 
@@ -17,7 +17,7 @@ class FavoritesListBloc extends Bloc<FavoritesListEvent, FavoritesListState> {
     on<FavoritesListRefreshRequested>(_onRefreshRequested);
   }
 
-  /// 處理載入收藏列表事件
+  /// Handle load favorites list event
   Future<void> _onLoadRequested(
     FavoritesListLoadRequested event,
     Emitter<FavoritesListState> emit,
@@ -25,7 +25,7 @@ class FavoritesListBloc extends Bloc<FavoritesListEvent, FavoritesListState> {
     await _loadFavoritePokemons(emit, showLoading: true);
   }
 
-  /// 處理下拉刷新事件
+  /// Handle pull-to-refresh event
   Future<void> _onRefreshRequested(
     FavoritesListRefreshRequested event,
     Emitter<FavoritesListState> emit,
@@ -33,7 +33,7 @@ class FavoritesListBloc extends Bloc<FavoritesListEvent, FavoritesListState> {
     await _loadFavoritePokemons(emit, showLoading: false);
   }
 
-  /// 載入收藏 Pokemon 列表的共用方法
+  /// Common method to load favorite Pokemon list
   Future<void> _loadFavoritePokemons(
     Emitter<FavoritesListState> emit, {
     required bool showLoading,
@@ -47,13 +47,13 @@ class FavoritesListBloc extends Bloc<FavoritesListEvent, FavoritesListState> {
       emit(FavoritesListSuccess(favoritePokemons: favoritePokemons));
     } catch (e) {
       emit(FavoritesListError(
-        message: showLoading ? '載入收藏列表失敗: $e' : '刷新收藏列表失敗: $e',
+        message: showLoading ? 'Failed to load favorites list: $e' : 'Failed to refresh favorites list: $e',
         previousFavoritePokemons: _getCurrentFavoritePokemons(),
       ));
     }
   }
 
-  /// 取得當前收藏 Pokemon 列表
+  /// Get current favorite Pokemon list
   List<LocalPokemon> _getCurrentFavoritePokemons() {
     final currentState = state;
     if (currentState is FavoritesListSuccess) {

@@ -4,7 +4,7 @@ import 'favorite_event.dart';
 import 'favorite_state.dart';
 
 /// Favorite BLoC
-/// 管理所有 Pokemon 最愛狀態的業務邏輯
+/// Manages business logic for all Pokemon favorite states
 class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
   final FavoritePokemonRepository _favoriteRepository;
 
@@ -16,7 +16,7 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     on<FavoriteLoadAllRequested>(_onLoadAllRequested);
   }
 
-  /// 載入所有最愛狀態
+  /// Load all favorite states
   Future<void> _onLoadAllRequested(
     FavoriteLoadAllRequested event,
     Emitter<FavoriteState> emit,
@@ -26,14 +26,14 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
       emit(FavoriteSuccess(favoriteStatus: favoriteStatus));
     } catch (e) {
       emit(FavoriteError(
-        message: '載入最愛狀態失敗: $e',
+        message: 'Failed to load favorite states: $e',
         favoriteStatus: const {},
       ));
     }
   }
 
 
-  /// 處理切換最愛狀態事件
+  /// Handle toggle favorite state event
   Future<void> _onFavoriteToggled(
     FavoriteToggled event,
     Emitter<FavoriteState> emit,
@@ -42,15 +42,15 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     final currentFavorite = currentStatus[event.pokemonId] ?? false;
     
     try {
-      // 使用 Repository 切換最愛狀態
+      // Use Repository to toggle favorite state
       await _favoriteRepository.toggleFavorite(event.pokemonId, event.pokemonName, event.imageURL);
       
-      // 更新狀態
+      // Update state
       currentStatus[event.pokemonId] = !currentFavorite;
       emit(FavoriteSuccess(favoriteStatus: currentStatus));
     } catch (e) {
       emit(FavoriteError(
-        message: '更新最愛狀態失敗: $e',
+        message: 'Failed to update favorite state: $e',
         favoriteStatus: currentStatus,
       ));
     }

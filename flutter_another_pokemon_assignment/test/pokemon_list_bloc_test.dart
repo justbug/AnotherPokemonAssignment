@@ -222,7 +222,7 @@ void main() {
               .having(
                 (s) => s.message,
                 'message',
-                '載入更多 Pokemon 失敗: Exception: Load more error',
+                'Failed to load more Pokemon: Exception: Load more error',
               )
               .having(
                 (s) => s.previousPokemons,

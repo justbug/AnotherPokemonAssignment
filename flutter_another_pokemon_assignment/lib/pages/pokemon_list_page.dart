@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/blocs.dart';
 import '../widgets/pokemon_list_widget.dart';
 
-/// Pokemon 列表頁面
-/// 使用 BLoC 模式管理狀態，支援下拉刷新和上拉載入更多
+/// Pokemon list page
+/// Uses BLoC pattern to manage state, supports pull-to-refresh and load more on scroll
 class PokemonListPage extends StatefulWidget {
   const PokemonListPage({super.key});
 
@@ -21,7 +21,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
     
-    // 載入所有最愛狀態
+    // Load all favorite states
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<FavoriteBloc>().add(const FavoriteLoadAllRequested());
     });
@@ -33,7 +33,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
     super.dispose();
   }
 
-  /// 監聽滾動事件，當接近底部時載入更多資料
+  /// Listen to scroll events, load more data when near bottom
   void _onScroll() {
     if (_scrollController.position.pixels >= 
         _scrollController.position.maxScrollExtent - 200) {
@@ -41,7 +41,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
     }
   }
 
-  /// 處理下拉刷新
+  /// Handle pull-to-refresh
   Future<void> _onRefresh() async {
     context.read<PokemonListBloc>().add(const PokemonListRefreshRequested());
   }
@@ -50,7 +50,7 @@ class _PokemonListPageState extends State<PokemonListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pokemon 列表'),
+        title: const Text('Pokemon List'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: BlocConsumer<PokemonListBloc, PokemonListState>(
@@ -100,13 +100,13 @@ class _PokemonListPageState extends State<PokemonListPage> {
                 pokemons: state.previousPokemons ?? [],
                 scrollController: _scrollController,
                 showError: true,
-                errorMessage: '載入失敗，請下拉刷新重試',
+                errorMessage: 'Load failed, please pull to refresh',
               ),
             );
           }
 
           return const Center(
-            child: Text('未知狀態'),
+            child: Text('Unknown state'),
           );
         },
       ),
