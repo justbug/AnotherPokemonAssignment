@@ -9,6 +9,7 @@ This document describes the comprehensive favorite functionality implemented by 
 - `FavoriteIconButton` widget provides per-item UI interactions that connect to the global bloc.
 - `FavoritePokemonRepository` provides the persistence operations that the bloc depends on. It delegates storage to `LocalPokemonService`, which wraps `SharedPreferences`.
 - `LocalPokemon` (generated via `freezed`/`json_serializable`) defines the enhanced persisted schema: `id`, `name`, `imageURL`, `isFavorite`, and `created` timestamp.
+- **Model Integration**: Works seamlessly with unified `Pokemon` model that includes `isFavorite` property and optional `detail` information.
 - **Event-Driven Architecture**: Data flow is unidirectional with event propagation: UI ➜ FavoriteBloc event ➜ repository ➜ local service ➜ FavoriteBloc state ➜ BlocListener ➜ other BLoCs ➜ UI.
 - **Enhanced Design**: Complete favorites list management with navigation, focusing on comprehensive favorite functionality with event-driven state synchronization.
 
