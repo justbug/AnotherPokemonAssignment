@@ -25,18 +25,19 @@ This Flutter application delivers the Pokemon list feature with the BLoC pattern
 - `FavoritePokemonRepository`: Used by each tile to persist favorite choices alongside list data
 
 ### 3. BLoC Layer
-- `PokemonListEvent`: Defines user-driven events
-- `PokemonListState`: Defines UI states
-- `PokemonListBloc`: Orchestrates state management and business logic
-- `FavoriteBloc`: Global bloc that manages all Pokemon favorite states centrally
+- `PokemonListEvent`: Defines user-driven events including `PokemonListFavoriteToggled`
+- `PokemonListState`: Defines UI states with favorite status integration
+- `PokemonListBloc`: Orchestrates state management and business logic with favorite integration
+- `FavoriteBloc`: Global bloc that manages favorite toggle operations and emits events for other BLoCs
 
 ### 4. UI Layer
 - `PokemonListPage` (in `pages/`): Main list page with clean separation from main.dart
 - Uses `BlocConsumer` to listen for state updates
+- Uses `BlocListener<FavoriteBloc>` to listen for favorite changes and propagate updates
 - Uses `RefreshIndicator` to support pull-to-refresh
 - Uses `ScrollController` to observe scroll events
 - Delegates rendering to `PokemonListWidget`, which exposes extension points for custom tiles and wraps loading/error rows
-- Integrates with global `FavoriteBloc` for favorite state management
+- Integrates with global `FavoriteBloc` for favorite state management through event-driven updates
 
 ## Key Behaviors
 
@@ -62,8 +63,9 @@ This Flutter application delivers the Pokemon list feature with the BLoC pattern
 
 ### Favorite Integration
 - Each item renders a `FavoriteIconButton` that connects to the global `FavoriteBloc` for state management.
-- Favorite status is loaded globally on app startup via `FavoriteLoadAllRequested` event.
-- The global `FavoriteBloc` manages all Pokemon favorite states in a centralized map.
+- Favorite status is loaded when PokemonListBloc loads data through `FavoritePokemonRepository`.
+- The global `FavoriteBloc` manages favorite toggle operations and emits events for other BLoCs to react.
+- **Event-Driven Updates**: Page-level `BlocListener<FavoriteBloc>` listens for favorite changes and propagates updates to `PokemonListBloc`.
 - Errors encountered while toggling emit `FavoriteError` but preserve the previous favorite status, avoiding visual flicker.
 
 ## How to Use

@@ -13,14 +13,15 @@ This document describes the comprehensive Pokemon detail functionality implement
 ## BLoC Implementation
 
 ### PokemonDetailBloc
-**Purpose**: Manages Pokemon detail loading and state management
+**Purpose**: Manages Pokemon detail loading and state management with favorite integration
 **Events**:
 - `PokemonDetailLoadRequested`: Load Pokemon detail by ID
+- `PokemonDetailFavoriteToggled`: Update favorite status for the current Pokemon
 
 **States**:
 - `PokemonDetailInitial`: Initial state
 - `PokemonDetailLoading`: Loading state while fetching detail
-- `PokemonDetailSuccess`: Success state with Pokemon detail data
+- `PokemonDetailSuccess`: Success state with Pokemon detail data (includes `isFavorite` property)
 - `PokemonDetailError`: Error state with error message
 
 ### Event Structure
@@ -28,6 +29,11 @@ This document describes the comprehensive Pokemon detail functionality implement
 class PokemonDetailLoadRequested extends PokemonDetailEvent {
   final String pokemonId;
   const PokemonDetailLoadRequested({required this.pokemonId});
+}
+
+class PokemonDetailFavoriteToggled extends PokemonDetailEvent {
+  final bool isFavorite;
+  const PokemonDetailFavoriteToggled({required this.isFavorite});
 }
 ```
 
@@ -54,6 +60,7 @@ class PokemonDetail extends Equatable {
   final int height;        // Height in decimeters
   final List<String> types; // Pokemon types
   final String? imageUrl;  // Pokemon image URL
+  final bool isFavorite;  // Favorite status
 }
 ```
 
@@ -62,6 +69,8 @@ class PokemonDetail extends Equatable {
 - Comprehensive Pokemon information including physical attributes
 - Type information for UI display
 - Optional image URL for enhanced visual presentation
+- **NEW**: `isFavorite` property for favorite status integration
+- **NEW**: `copyWith` method for immutable updates
 
 ## Repository Layer
 
@@ -85,7 +94,7 @@ class PokemonDetail extends Equatable {
 - Image display with caching support via `CachedNetworkImage`
 - Physical attributes (weight, height) with proper unit conversion
 - Type display with color-coded chips
-- Integration with global `FavoriteBloc` for favorite functionality
+- **Event-Driven Favorite Integration**: Uses `BlocListener<FavoriteBloc>` to listen for favorite changes and propagate updates
 - Error handling with retry mechanism
 - Loading states with progress indicators
 
@@ -206,8 +215,9 @@ Navigator.push(
 ## Integration with Existing Features
 
 ### Favorite Integration
-- `FavoriteIconButton` in detail page app bar
-- Global favorite state management
+- `FavoriteIconButton` in detail page app bar with `isFavorite` prop
+- **Event-Driven Updates**: `BlocListener<FavoriteBloc>` listens for favorite changes and propagates updates to `PokemonDetailBloc`
+- Global favorite state management through event-driven synchronization
 - Consistent favorite functionality across pages
 - Optimistic updates for better UX
 
@@ -237,6 +247,20 @@ Navigator.push(
 context.read<PokemonDetailBloc>().add(
   PokemonDetailLoadRequested(pokemonId: '25'),
 );
+
+// Event-driven favorite updates
+BlocListener<FavoriteBloc, FavoriteState>(
+  listener: (context, state) {
+    if (state is FavoriteSuccess) {
+      context.read<PokemonDetailBloc>().add(
+        PokemonDetailFavoriteToggled(
+          isFavorite: state.isFavorite('25'),
+        ),
+      );
+    }
+  },
+  child: // PokemonDetailPage
+)
 ```
 
 ### BLoC Provider Setup

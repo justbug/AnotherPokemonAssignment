@@ -19,3 +19,14 @@ class PokemonDetailLoadRequested extends PokemonDetailEvent {
   @override
   List<Object> get props => [pokemonId];
 }
+
+/// Pokemon detail favorite toggle event
+/// Corresponds to favorite status change without reloading detail
+class PokemonDetailFavoriteToggled extends PokemonDetailEvent {
+  final bool isFavorite;
+
+  const PokemonDetailFavoriteToggled({required this.isFavorite});
+
+  @override
+  List<Object> get props => [isFavorite];
+}

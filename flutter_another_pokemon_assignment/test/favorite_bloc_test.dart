@@ -26,28 +26,11 @@ void main() {
       favoriteBloc.close();
     });
 
-    test('Initial state should be FavoriteSuccess with empty favoriteStatus', () {
-      expect(favoriteBloc.state, isA<FavoriteSuccess>());
-      expect((favoriteBloc.state as FavoriteSuccess).favoriteStatus, isEmpty);
+    test('Initial state should be FavoriteInitial with empty favoriteStatus', () {
+      expect(favoriteBloc.state, isA<FavoriteInitial>());
+      expect((favoriteBloc.state as FavoriteInitial).favoriteStatus, isEmpty);
     });
 
-    blocTest<FavoriteBloc, FavoriteState>(
-      'When loading all favorite states, should correctly load all states',
-      build: () {
-        when(mockFavoriteRepository.getAllFavoriteStatus()).thenAnswer((_) async => {
-          '1': false,
-          '2': true,
-          '3': false,
-        });
-        return FavoriteBloc(
-          favoriteRepository: mockFavoriteRepository,
-        );
-      },
-      act: (bloc) => bloc.add(const FavoriteLoadAllRequested()),
-      expect: () => [
-        const FavoriteSuccess(favoriteStatus: {'1': false, '2': true, '3': false}),
-      ],
-    );
 
 
 
@@ -61,7 +44,12 @@ void main() {
       },
       act: (bloc) => bloc.add(const FavoriteToggled(pokemonId: '1', pokemonName: 'Pikachu', imageURL: 'https://example.com/pikachu.png')),
       expect: () => [
-        const FavoriteSuccess(favoriteStatus: {'1': true}),
+        const FavoriteSuccess(
+          favoriteStatus: {'1': true},
+          toggledPokemonId: '1',
+          toggledPokemonFavoriteStatus: true,
+          currentPokemonId: '1',
+        ),
       ],
       verify: (_) {
         verify(mockFavoriteRepository.toggleFavorite('1', 'Pikachu', 'https://example.com/pikachu.png')).called(1);
@@ -76,10 +64,20 @@ void main() {
           favoriteRepository: mockFavoriteRepository,
         );
       },
-      seed: () => const FavoriteSuccess(favoriteStatus: {'1': true}),
+      seed: () => const FavoriteSuccess(
+        favoriteStatus: {'1': true},
+        toggledPokemonId: '1',
+        toggledPokemonFavoriteStatus: true,
+        currentPokemonId: '1',
+      ),
       act: (bloc) => bloc.add(const FavoriteToggled(pokemonId: '1', pokemonName: 'Pikachu', imageURL: 'https://example.com/pikachu.png')),
       expect: () => [
-        const FavoriteSuccess(favoriteStatus: {'1': false}),
+        const FavoriteSuccess(
+          favoriteStatus: {'1': false},
+          toggledPokemonId: '1',
+          toggledPokemonFavoriteStatus: false,
+          currentPokemonId: '1',
+        ),
       ],
       verify: (_) {
         verify(mockFavoriteRepository.toggleFavorite('1', 'Pikachu', 'https://example.com/pikachu.png')).called(1);
@@ -99,7 +97,8 @@ void main() {
       expect: () => [
         isA<FavoriteError>()
             .having((s) => s.message, 'message', contains('Repository error'))
-            .having((s) => s.favoriteStatus, 'favoriteStatus', isEmpty),
+            .having((s) => s.favoriteStatus, 'favoriteStatus', isEmpty)
+            .having((s) => s.currentPokemonId, 'currentPokemonId', '1'),
       ],
     );
   });

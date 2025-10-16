@@ -21,10 +21,6 @@ class _PokemonListPageState extends State<PokemonListPage> {
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
     
-    // Load all favorite states
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<FavoriteBloc>().add(const FavoriteLoadAllRequested());
-    });
   }
 
   @override
@@ -53,18 +49,31 @@ class _PokemonListPageState extends State<PokemonListPage> {
         title: const Text('Pokemon List'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: BlocConsumer<PokemonListBloc, PokemonListState>(
+      body: BlocListener<FavoriteBloc, FavoriteState>(
         listener: (context, state) {
-          if (state is PokemonListError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
+          if (state is FavoriteSuccess) {
+            // When favorite status changes, update the PokemonListBloc with toggle request
+            // This ensures the list reflects the latest favorite status efficiently
+            context.read<PokemonListBloc>().add(
+              PokemonListFavoriteToggled(
+                pokemonId: state.toggledPokemonId,
+                isFavorite: state.toggledPokemonFavoriteStatus,
               ),
             );
           }
         },
-        builder: (context, state) {
+        child: BlocConsumer<PokemonListBloc, PokemonListState>(
+          listener: (context, state) {
+            if (state is PokemonListError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
           if (state is PokemonListInitial || state is PokemonListLoading) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -105,10 +114,11 @@ class _PokemonListPageState extends State<PokemonListPage> {
             );
           }
 
-          return const Center(
-            child: Text('Unknown state'),
-          );
-        },
+            return const Center(
+              child: Text('Unknown state'),
+            );
+          },
+        ),
       ),
     );
   }

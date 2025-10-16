@@ -23,8 +23,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
   /// Handle pull-to-refresh
   Future<void> _onRefresh() async {
-    // Reload favorite states
-    context.read<FavoriteBloc>().add(const FavoriteLoadAllRequested());
     // Reload favorites list
     context.read<FavoritesListBloc>().add(const FavoritesListRefreshRequested());
   }
@@ -91,6 +89,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
         id: localPokemon.id,
         name: localPokemon.name,
         imageURL: localPokemon.imageURL,
+        isFavorite: localPokemon.isFavorite,
       )).toList();
 
       if (favoritePokemons.isEmpty) {

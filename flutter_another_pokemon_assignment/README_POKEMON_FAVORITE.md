@@ -4,20 +4,19 @@ This document describes the comprehensive favorite functionality implemented by 
 
 ## Architecture
 
-- `FavoriteBloc` is a global bloc that manages favorite status for all Pokémon in a centralized map.
+- `FavoriteBloc` is a global bloc that manages favorite toggle operations and emits events for other BLoCs to react.
 - `FavoritesListBloc` handles the favorites list page display, loading, and refresh functionality.
 - `FavoriteIconButton` widget provides per-item UI interactions that connect to the global bloc.
 - `FavoritePokemonRepository` provides the persistence operations that the bloc depends on. It delegates storage to `LocalPokemonService`, which wraps `SharedPreferences`.
 - `LocalPokemon` (generated via `freezed`/`json_serializable`) defines the enhanced persisted schema: `id`, `name`, `imageURL`, `isFavorite`, and `created` timestamp.
-- Data flow is unidirectional: UI ➜ bloc event ➜ repository ➜ local service ➜ bloc state ➜ UI.
-- **Enhanced Design**: Complete favorites list management with navigation, focusing on comprehensive favorite functionality.
+- **Event-Driven Architecture**: Data flow is unidirectional with event propagation: UI ➜ FavoriteBloc event ➜ repository ➜ local service ➜ FavoriteBloc state ➜ BlocListener ➜ other BLoCs ➜ UI.
+- **Enhanced Design**: Complete favorites list management with navigation, focusing on comprehensive favorite functionality with event-driven state synchronization.
 
 ## Events
 
 ### FavoriteBloc Events
 | Event | Purpose |
 | --- | --- |
-| `FavoriteLoadAllRequested` | Load all favorite statuses from persistence during app initialization. |
 | `FavoriteToggled` | Flip the favorite flag for a specific Pokémon (includes pokemonId, pokemonName, and imageURL). |
 
 ### FavoritesListBloc Events
@@ -26,7 +25,7 @@ This document describes the comprehensive favorite functionality implemented by 
 | `FavoritesListLoadRequested` | Load favorites list on initial page load. |
 | `FavoritesListRefreshRequested` | Refresh favorites list on pull-to-refresh. |
 
-The global bloc is initialized in `main.dart` and `FavoriteLoadAllRequested` is dispatched from `PokemonListPage` to load all favorite states at startup.
+The global bloc is initialized in `main.dart` and favorite states are loaded when PokemonListBloc or PokemonDetailBloc loads data through their respective repositories.
 
 **Enhanced Event Structure**: `FavoriteToggled` event now includes `imageURL` parameter for comprehensive favorite management with image support.
 
@@ -37,7 +36,8 @@ Every bloc state carries a `favoriteStatus` map (String -> bool) so the UI can r
 
 | State | Description |
 | --- | --- |
-| `FavoriteSuccess` | Contains the complete favorite status map for all Pokémon. |
+| `FavoriteInitial` | Initial state when the bloc is created. |
+| `FavoriteSuccess` | Contains the complete favorite status map for all Pokémon, plus `toggledPokemonId` and `toggledPokemonFavoriteStatus` for tracking changes. |
 | `FavoriteError` | Reports failures with a message, while preserving the last known favorite status map. |
 
 ### FavoritesListBloc States
@@ -67,23 +67,25 @@ Exception handling is conservative: read operations swallow errors and return sa
 
 - The global `FavoriteBloc` and `FavoritesListBloc` are provided at the app level in `main.dart` using `BlocProvider`.
 - `MainNavigationPage` provides bottom navigation between `PokemonListPage` and `FavoritesPage`.
-- `PokemonListPage` dispatches `FavoriteLoadAllRequested` on initialization to load all favorite states.
+- Favorite states are loaded when PokemonListBloc or PokemonDetailBloc loads data through their respective repositories.
 - `PokemonDetailPage` integrates with global `FavoriteBloc` for favorite functionality in the detail view.
 - `FavoritesPage` uses `FavoritesListBloc` to display and manage the favorites list with pull-to-refresh support.
-- `FavoriteIconButton` widgets in each list tile and detail page connect to the global bloc and use `buildWhen` to optimize rebuilds.
-- Tapping the heart emits `FavoriteToggled` with the specific Pokemon ID, name, and imageURL, which updates the global state map.
+- `FavoriteIconButton` widgets in each list tile and detail page connect to the global bloc and receive `isFavorite` as a prop.
+- **Event-Driven Updates**: Page-level `BlocListener<FavoriteBloc>` components listen for favorite changes and propagate updates to other BLoCs.
+- Tapping the heart emits `FavoriteToggled` with the specific Pokemon ID, name, and imageURL, which triggers the event-driven update flow.
 - When an error occurs, the bloc emits `FavoriteError` with the previous favorite status map so the UI keeps the last known state.
 
-**Enhanced Integration**: Complete favorites list page with navigation and detail page integration, focusing on comprehensive favorite management with full UI support across all pages.
+**Enhanced Integration**: Complete favorites list page with navigation and detail page integration, focusing on comprehensive favorite management with event-driven state synchronization across all pages.
 
 ## Typical Usage
 
 1. Provide the global `FavoriteBloc` and `FavoritesListBloc` at the app level using `BlocProvider`.
 2. Use `MainNavigationPage` as the main entry point with bottom navigation.
-3. Use `FavoriteIconButton` in list tiles and detail pages, passing the Pokemon ID, name, and imageURL.
+3. Use `FavoriteIconButton` in list tiles and detail pages, passing the Pokemon ID, name, imageURL, and current `isFavorite` status.
 4. The button automatically connects to the global bloc and handles state updates.
-5. Dispatch `FavoriteLoadAllRequested` on app startup to load all favorite states.
-6. Navigate to `PokemonDetailPage` to view comprehensive Pokemon information with favorite functionality.
+5. Use `BlocListener<FavoriteBloc>` at the page level to listen for favorite changes and propagate updates to other BLoCs.
+6. Favorite states are loaded when PokemonListBloc or PokemonDetailBloc loads data through their respective repositories.
+7. Navigate to `PokemonDetailPage` to view comprehensive Pokemon information with favorite functionality.
 
 ```dart
 // In main.dart
@@ -97,22 +99,33 @@ BlocProvider(
   ),
 )
 
-// In PokemonListPage
-WidgetsBinding.instance.addPostFrameCallback((_) {
-  context.read<FavoriteBloc>().add(const FavoriteLoadAllRequested());
-});
+// In PokemonListPage - Event-driven updates
+BlocListener<FavoriteBloc, FavoriteState>(
+  listener: (context, state) {
+    if (state is FavoriteSuccess) {
+      context.read<PokemonListBloc>().add(
+        PokemonListFavoriteToggled(
+          pokemonId: state.toggledPokemonId,
+          isFavorite: state.toggledPokemonFavoriteStatus,
+        ),
+      );
+    }
+  },
+  child: // PokemonListWidget
+)
 
 // In list tiles and detail pages
 FavoriteIconButton(
   pokemonId: pokemon.id,
   pokemonName: pokemon.name,
   imageURL: pokemon.imageURL,
+  isFavorite: pokemon.isFavorite,
 )
 ```
 
-The global bloc loads all favorite states on startup, so all buttons immediately reflect the correct favorite status. The favorites page provides a dedicated view of all saved favorites with pull-to-refresh support. The detail page provides comprehensive Pokemon information with integrated favorite functionality.
+The global bloc manages favorite toggle operations and emits events for other BLoCs to react. The favorites page provides a dedicated view of all saved favorites with pull-to-refresh support. The detail page provides comprehensive Pokemon information with integrated favorite functionality.
 
-**Enhanced Usage**: Complete navigation system with dedicated favorites page and detail page integration, focusing on comprehensive favorite management with full UI support across all pages.
+**Enhanced Usage**: Complete navigation system with dedicated favorites page and detail page integration, focusing on comprehensive favorite management with event-driven state synchronization across all pages.
 
 ## Testing Notes
 

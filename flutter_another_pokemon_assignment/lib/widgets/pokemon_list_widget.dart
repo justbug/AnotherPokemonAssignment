@@ -74,6 +74,7 @@ class PokemonListWidget extends StatelessWidget {
         pokemonId: pokemon.id,
         pokemonName: pokemon.name,
         imageURL: pokemon.imageURL,
+        isFavorite: pokemon.isFavorite,
       ),
       onTap: () {
         Navigator.push(

@@ -25,24 +25,40 @@ class PokemonDetailPage extends StatelessWidget {
         title: Text(pokemonName),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
-          FavoriteIconButton(
-            pokemonId: pokemonId,
-            pokemonName: pokemonName,
-            imageURL: imageURL,
+          BlocBuilder<PokemonDetailBloc, PokemonDetailState>(
+            builder: (context, state) {
+              final isFavorite = state is PokemonDetailSuccess ? state.detail.isFavorite : false;
+              return FavoriteIconButton(
+                pokemonId: pokemonId,
+                pokemonName: pokemonName,
+                imageURL: imageURL,
+                isFavorite: isFavorite,
+              );
+            },
           ),
         ],
       ),
-      body: BlocConsumer<PokemonDetailBloc, PokemonDetailState>(
+      body: BlocListener<FavoriteBloc, FavoriteState>(
         listener: (context, state) {
-          if (state is PokemonDetailError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-              ),
+          if (state is FavoriteSuccess) {
+            // When favorite status changes, update the PokemonDetailBloc
+            // This ensures the detail page reflects the latest favorite status
+            context.read<PokemonDetailBloc>().add(
+              PokemonDetailFavoriteToggled(isFavorite: state.isFavorite(pokemonId)),
             );
           }
         },
+        child: BlocConsumer<PokemonDetailBloc, PokemonDetailState>(
+          listener: (context, state) {
+            if (state is PokemonDetailError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
         builder: (context, state) {
           if (state is PokemonDetailInitial || state is PokemonDetailLoading) {
             return const Center(
@@ -62,6 +78,7 @@ class PokemonDetailPage extends StatelessWidget {
             child: Text('Unknown state'),
           );
         },
+        ),
       ),
     );
   }
