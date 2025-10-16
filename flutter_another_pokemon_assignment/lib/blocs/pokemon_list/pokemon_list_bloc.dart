@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/models.dart';
 import '../../services/services.dart';
-import '../../repository/list_repository.dart';
 import 'pokemon_list_event.dart';
 import 'pokemon_list_state.dart';
 
@@ -9,14 +8,19 @@ import 'pokemon_list_state.dart';
 /// Handles Pokemon list business logic
 class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
   final ListRepositorySpec _listRepository;
+  final FavoritePokemonRepository _favoriteRepository;
   static const int _limit = 30;
 
-  PokemonListBloc({ListRepositorySpec? listRepository}) 
-      : _listRepository = listRepository ?? ListRepository(),
+  PokemonListBloc({
+    ListRepositorySpec? listRepository,
+    FavoritePokemonRepository? favoriteRepository,
+  }) : _listRepository = listRepository ?? ListRepository(),
+       _favoriteRepository = favoriteRepository ?? FavoritePokemonRepository(),
         super(const PokemonListInitial()) {
     on<PokemonListLoadRequested>(_onLoadRequested);
     on<PokemonListRefreshRequested>(_onRefreshRequested);
     on<PokemonListLoadMoreRequested>(_onLoadMoreRequested);
+    on<PokemonListFavoriteToggled>(_onFavoriteToggled);
   }
 
   /// Handle initial load event
@@ -28,10 +32,12 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
     
     try {
       final pokemons = await _listRepository.fetchList(offset: 0);
+      final pokemonsWithFavorite = await _loadPokemonsWithFavoriteStatus(pokemons);
+      
       emit(PokemonListSuccess(
-        pokemons: pokemons,
-        hasMore: pokemons.length == _limit,
-        currentOffset: pokemons.length,
+        pokemons: pokemonsWithFavorite,
+        hasMore: pokemonsWithFavorite.length == _limit,
+        currentOffset: pokemonsWithFavorite.length,
       ));
     } catch (e) {
       emit(PokemonListError(
@@ -47,9 +53,11 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
   ) async {
     try {
       final pokemons = await _listRepository.fetchList(offset: 0);
+      final pokemonsWithFavorite = await _loadPokemonsWithFavoriteStatus(pokemons);
+      
       emit(PokemonListSuccess(
-        pokemons: pokemons,
-        hasMore: pokemons.length == _limit,
+        pokemons: pokemonsWithFavorite,
+        hasMore: pokemonsWithFavorite.length == _limit,
         currentOffset: _limit,
       ));
     } catch (e) {
@@ -81,14 +89,16 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
         offset: currentState.currentOffset,
       );
       
+      final newPokemonsWithFavorite = await _loadPokemonsWithFavoriteStatus(newPokemons);
+      
       final updatedPokemons = [
         ...currentState.pokemons,
-        ...newPokemons,
+        ...newPokemonsWithFavorite,
       ];
       
       emit(PokemonListSuccess(
         pokemons: updatedPokemons,
-        hasMore: newPokemons.length == _limit,
+        hasMore: newPokemonsWithFavorite.length == _limit,
         currentOffset: currentState.currentOffset + _limit,
       ));
     } catch (e) {
@@ -97,6 +107,40 @@ class PokemonListBloc extends Bloc<PokemonListEvent, PokemonListState> {
         previousPokemons: currentState.pokemons,
       ));
     }
+  }
+
+  /// Handle favorite toggle event
+  Future<void> _onFavoriteToggled(
+    PokemonListFavoriteToggled event,
+    Emitter<PokemonListState> emit,
+  ) async {
+    final currentState = state;
+    if (currentState is! PokemonListSuccess) {
+      return;
+    }
+
+    final updatedPokemons = currentState.pokemons.map((pokemon) {
+      if (pokemon.id == event.pokemonId) {
+        return pokemon.copyWith(isFavorite: event.isFavorite);
+      }
+      return pokemon;
+    }).toList();
+
+    emit(PokemonListSuccess(
+      pokemons: updatedPokemons,
+      hasMore: currentState.hasMore,
+      currentOffset: currentState.currentOffset,
+    ));
+  }
+
+  /// Load favorite status and set isFavorite for Pokemon list
+  Future<List<Pokemon>> _loadPokemonsWithFavoriteStatus(List<Pokemon> pokemons) async {
+    final favoriteStatus = await _favoriteRepository.getAllFavoriteStatus();
+    return pokemons.map((pokemon) {
+      return pokemon.copyWith(
+        isFavorite: favoriteStatus[pokemon.id] ?? false,
+      );
+    }).toList();
   }
 
   /// Get current Pokemon list

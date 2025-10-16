@@ -26,3 +26,17 @@ class PokemonListRefreshRequested extends PokemonListEvent {
 class PokemonListLoadMoreRequested extends PokemonListEvent {
   const PokemonListLoadMoreRequested();
 }
+
+/// Update favorite status for a specific Pokemon
+class PokemonListFavoriteToggled extends PokemonListEvent {
+  final String pokemonId;
+  final bool isFavorite;
+
+  const PokemonListFavoriteToggled({
+    required this.pokemonId,
+    required this.isFavorite,
+  });
+
+  @override
+  List<Object> get props => [pokemonId, isFavorite];
+}

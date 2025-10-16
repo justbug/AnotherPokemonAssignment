@@ -8,6 +8,7 @@ class PokemonDetail extends Equatable {
   final int height;
   final List<String> types;
   final String? imageUrl;
+  final bool isFavorite;
 
   const PokemonDetail({
     required this.id,
@@ -15,11 +16,31 @@ class PokemonDetail extends Equatable {
     required this.height,
     required this.types,
     this.imageUrl,
+    this.isFavorite = false,
   });
 
   @override
-  List<Object?> get props => [id, weight, height, types, imageUrl];
+  List<Object?> get props => [id, weight, height, types, imageUrl, isFavorite];
 
   @override
-  String toString() => 'PokemonDetail(id: $id, weight: $weight, height: $height, types: $types, imageUrl: $imageUrl)';
+  String toString() => 'PokemonDetail(id: $id, weight: $weight, height: $height, types: $types, imageUrl: $imageUrl, isFavorite: $isFavorite)';
+
+  /// Create a copy with updated fields
+  PokemonDetail copyWith({
+    int? id,
+    int? weight,
+    int? height,
+    List<String>? types,
+    String? imageUrl,
+    bool? isFavorite,
+  }) {
+    return PokemonDetail(
+      id: id ?? this.id,
+      weight: weight ?? this.weight,
+      height: height ?? this.height,
+      types: types ?? this.types,
+      imageUrl: imageUrl ?? this.imageUrl,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
 }

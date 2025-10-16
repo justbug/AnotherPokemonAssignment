@@ -41,7 +41,7 @@ This document describes the comprehensive architecture of the Flutter Pokemon ap
 ### FavoriteBloc (Global)
 **Purpose**: Manages favorite states across all pages
 **Events**:
-- `FavoriteLoadAllRequested`: Load all favorite statuses on app startup
+- Favorite states are automatically loaded when PokemonListBloc or PokemonDetailBloc loads data
 - `FavoriteToggled`: Toggle favorite status for a specific Pokemon
 
 **States**:

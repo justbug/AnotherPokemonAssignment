@@ -11,27 +11,9 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
   FavoriteBloc({
     FavoritePokemonRepository? favoriteRepository,
   }) : _favoriteRepository = favoriteRepository ?? FavoritePokemonRepository(),
-       super(const FavoriteSuccess()) {
+       super(const FavoriteInitial()) {
     on<FavoriteToggled>(_onFavoriteToggled);
-    on<FavoriteLoadAllRequested>(_onLoadAllRequested);
   }
-
-  /// Load all favorite states
-  Future<void> _onLoadAllRequested(
-    FavoriteLoadAllRequested event,
-    Emitter<FavoriteState> emit,
-  ) async {
-    try {
-      final favoriteStatus = await _favoriteRepository.getAllFavoriteStatus();
-      emit(FavoriteSuccess(favoriteStatus: favoriteStatus));
-    } catch (e) {
-      emit(FavoriteError(
-        message: 'Failed to load favorite states: $e',
-        favoriteStatus: const {},
-      ));
-    }
-  }
-
 
   /// Handle toggle favorite state event
   Future<void> _onFavoriteToggled(
@@ -40,18 +22,28 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
   ) async {
     final currentStatus = Map<String, bool>.from(state.favoriteStatus);
     final currentFavorite = currentStatus[event.pokemonId] ?? false;
+    final newFavoriteStatus = !currentFavorite;
     
     try {
       // Use Repository to toggle favorite state
       await _favoriteRepository.toggleFavorite(event.pokemonId, event.pokemonName, event.imageURL);
       
       // Update state
-      currentStatus[event.pokemonId] = !currentFavorite;
-      emit(FavoriteSuccess(favoriteStatus: currentStatus));
+      currentStatus[event.pokemonId] = newFavoriteStatus;
+      emit(FavoriteSuccess(
+        favoriteStatus: currentStatus,
+        toggledPokemonId: event.pokemonId,
+        toggledPokemonFavoriteStatus: newFavoriteStatus,
+        currentPokemonId: event.pokemonId,
+      ));
+      
+      // Emit a custom event to notify other BLoCs
+      // This will be handled by the UI layer to update PokemonListBloc and PokemonDetailBloc
     } catch (e) {
       emit(FavoriteError(
         message: 'Failed to update favorite state: $e',
         favoriteStatus: currentStatus,
+        currentPokemonId: event.pokemonId,
       ));
     }
   }

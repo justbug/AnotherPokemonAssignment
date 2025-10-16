@@ -8,12 +8,6 @@ abstract class FavoriteEvent extends Equatable {
   List<Object> get props => [];
 }
 
-/// Load all favorite states event
-class FavoriteLoadAllRequested extends FavoriteEvent {
-  const FavoriteLoadAllRequested();
-}
-
-
 /// Toggle favorite state event
 class FavoriteToggled extends FavoriteEvent {
   final String pokemonId;

@@ -62,7 +62,7 @@ This Flutter application delivers the Pokemon list feature with the BLoC pattern
 
 ### Favorite Integration
 - Each item renders a `FavoriteIconButton` that connects to the global `FavoriteBloc` for state management.
-- Favorite status is loaded globally on app startup via `FavoriteLoadAllRequested` event.
+- Favorite status is automatically loaded when PokemonListBloc loads data.
 - The global `FavoriteBloc` manages all Pokemon favorite states in a centralized map.
 - Errors encountered while toggling emit `FavoriteError` but preserve the previous favorite status, avoiding visual flicker.
 
