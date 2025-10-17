@@ -62,6 +62,8 @@ The `favoritePokemonIds` set allows the `FavoriteIconButton` to efficiently chec
 
 **Enhanced Data Model**: The repository now works with an enhanced `LocalPokemon` model that includes `id`, `name`, `imageURL`, `isFavorite`, and `created` timestamp for comprehensive favorite management.
 
+**Data Consistency Enhancement**: The `FavoriteBloc` now always reads from persistence before toggling favorites to ensure data consistency. This prevents race conditions and ensures the UI always reflects the latest stored state.
+
 Exception handling is conservative: read operations swallow errors and return safe defaults, while toggle operations rethrow to let the bloc decide how to surface the problem.
 
 ## Integration with the Navigation System

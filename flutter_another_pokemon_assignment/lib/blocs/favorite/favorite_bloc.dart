@@ -20,7 +20,8 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     FavoriteToggled event,
     Emitter<FavoriteState> emit,
   ) async {
-    final currentFavorites = state.favoritePokemonIds;
+    // Always read from persistence to ensure we toggle against the latest data.
+    final currentFavorites = await _favoriteRepository.getFavoritePokemonIds();
     final updatedFavorites = Set<String>.from(currentFavorites);
     final currentFavorite = currentFavorites.contains(event.pokemonId);
     final newFavoriteStatus = !currentFavorite;

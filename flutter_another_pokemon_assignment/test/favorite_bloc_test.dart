@@ -37,6 +37,7 @@ void main() {
     blocTest<FavoriteBloc, FavoriteState>(
       'Clicking favorite button should toggle state and save to Repository',
       build: () {
+        when(mockFavoriteRepository.getFavoritePokemonIds()).thenAnswer((_) async => <String>{});
         when(mockFavoriteRepository.updateFavorite('1', true, 'Pikachu', 'https://example.com/pikachu.png')).thenAnswer((_) async {});
         return FavoriteBloc(
           favoriteRepository: mockFavoriteRepository,
@@ -51,6 +52,7 @@ void main() {
         ),
       ],
       verify: (_) {
+        verify(mockFavoriteRepository.getFavoritePokemonIds()).called(1);
         verify(mockFavoriteRepository.updateFavorite('1', true, 'Pikachu', 'https://example.com/pikachu.png')).called(1);
       },
     );
@@ -58,6 +60,7 @@ void main() {
     blocTest<FavoriteBloc, FavoriteState>(
       'When Pokemon is already favorite, clicking should remove favorite state',
       build: () {
+        when(mockFavoriteRepository.getFavoritePokemonIds()).thenAnswer((_) async => <String>{'1'});
         when(mockFavoriteRepository.updateFavorite('1', false, 'Pikachu', 'https://example.com/pikachu.png')).thenAnswer((_) async {});
         return FavoriteBloc(
           favoriteRepository: mockFavoriteRepository,
@@ -77,6 +80,7 @@ void main() {
         ),
       ],
       verify: (_) {
+        verify(mockFavoriteRepository.getFavoritePokemonIds()).called(1);
         verify(mockFavoriteRepository.updateFavorite('1', false, 'Pikachu', 'https://example.com/pikachu.png')).called(1);
       },
     );
@@ -84,6 +88,7 @@ void main() {
     blocTest<FavoriteBloc, FavoriteState>(
       'When Repository operation fails, should show error state',
       build: () {
+        when(mockFavoriteRepository.getFavoritePokemonIds()).thenAnswer((_) async => <String>{});
         when(mockFavoriteRepository.updateFavorite('1', true, 'Pikachu', 'https://example.com/pikachu.png'))
             .thenThrow(Exception('Repository error'));
         return FavoriteBloc(
@@ -97,6 +102,9 @@ void main() {
             .having((s) => s.favoritePokemonIds, 'favoritePokemonIds', isEmpty)
             .having((s) => s.currentPokemonId, 'currentPokemonId', '1'),
       ],
+      verify: (_) {
+        verify(mockFavoriteRepository.getFavoritePokemonIds()).called(1);
+      },
     );
   });
 }
