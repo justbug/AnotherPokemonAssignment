@@ -250,6 +250,12 @@ class LocalPokemon {
 - Tests success/error branches for all BLoCs including PokemonDetailBloc
 - Mocks dependencies using `mockito`
 - Tests detail loading, error handling, and state transitions
+- **Enhanced PokemonDetailBloc Testing**: Complete test coverage including:
+  - Successful detail loading with favorite status integration
+  - Error handling for both detail fetching and favorite status checking
+  - Favorite toggle functionality in different states (Initial, Loading, Success, Error)
+  - State validation and proper event handling
+  - Mock repository integration with proper verification
 
 ### Repository Testing
 - Tests data transformation and error handling
@@ -262,6 +268,11 @@ class LocalPokemon {
 - Verifies state consistency across BLoCs
 - Tests user interaction flows including detail page interactions
 - Tests favorite functionality integration in detail page
+
+### Data Consistency Testing
+- **FavoriteBloc Enhancement**: Tests now verify that the bloc always reads from persistence before toggling favorites
+- **Race Condition Prevention**: Ensures data consistency by always fetching latest state from storage
+- **Mock Verification**: Tests verify proper repository method calls including `getFavoritePokemonIds()`
 
 ## Event-Driven State Synchronization
 
