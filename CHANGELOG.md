@@ -27,6 +27,17 @@ All notable changes to this project will be documented in this file.
 - Error handling pattern implementation
 - Dependency management best practices
 
+### Changed
+- Migrated Flutter favorites persistence to SQLite (fresh store, no legacy SharedPreferences migration) with telemetry and schema audit tracking.
+- Updated `FavoritePokemonRepository` ordering logic to rely on `updatedAt` timestamps for parity with the Swift client.
+
+### Diagnostics
+- Added structured telemetry events for persistence operations to aid support analysis.
+
+### Testing
+- Introduced sqflite-backed service tests covering CRUD, concurrency, and durability flows.
+- Extended FavoriteBloc and repository test suites to validate diagnostics workflows and telemetry-triggering scenarios.
+
 ## Features
 - Pokemon list with pagination (30 items per page)
 - Pull-to-refresh functionality
