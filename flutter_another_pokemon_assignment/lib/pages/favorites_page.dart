@@ -5,25 +5,16 @@ import '../widgets/pokemon_list_widget.dart';
 
 /// Favorites list page
 /// Shows user's favorite Pokemon list, sorted by favorite time
-class FavoritesPage extends StatefulWidget {
+class FavoritesPage extends StatelessWidget {
   const FavoritesPage({super.key});
 
-  @override
-  State<FavoritesPage> createState() => _FavoritesPageState();
-}
-
-class _FavoritesPageState extends State<FavoritesPage> {
-  @override
-  void initState() {
-    super.initState();
-    // Trigger initial load
-    context.read<FavoritesListBloc>().add(const FavoritesListLoadRequested());
+  /// Handle pull-to-refresh
+  Future<void> _onRefresh(BuildContext context) async {
+    context.read<FavoritesListBloc>().add(const FavoritesListRefreshRequested());
   }
 
-  /// Handle pull-to-refresh
-  Future<void> _onRefresh() async {
-    // Reload favorites list
-    context.read<FavoritesListBloc>().add(const FavoritesListRefreshRequested());
+  void _onRetry(BuildContext context) {
+    context.read<FavoritesListBloc>().add(const FavoritesListLoadRequested());
   }
 
   @override
@@ -41,13 +32,13 @@ class _FavoritesPageState extends State<FavoritesPage> {
           }
         },
         child: BlocBuilder<FavoritesListBloc, FavoritesListState>(
-          builder: (context, state) => _buildBody(state),
+          builder: (context, state) => _buildBody(context, state),
         ),
       ),
     );
   }
 
-  Widget _buildBody(FavoritesListState state) {
+  Widget _buildBody(BuildContext context, FavoritesListState state) {
     if (state is FavoritesListLoading) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -72,9 +63,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () {
-                context.read<FavoritesListBloc>().add(const FavoritesListLoadRequested());
-              },
+              onPressed: () => _onRetry(context),
               child: const Text('Retry'),
             ),
           ],
@@ -88,7 +77,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
       if (favoritePokemons.isEmpty) {
         return RefreshIndicator(
-          onRefresh: _onRefresh,
+          onRefresh: () => _onRefresh(context),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: SizedBox(
@@ -119,7 +108,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
       }
 
       return RefreshIndicator(
-        onRefresh: _onRefresh,
+        onRefresh: () => _onRefresh(context),
         child: PokemonListWidget(
           pokemons: favoritePokemons,
           showLoadingIndicator: false,

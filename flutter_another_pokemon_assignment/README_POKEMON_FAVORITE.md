@@ -96,7 +96,8 @@ Exception handling is conservative: read operations swallow errors and return sa
 BlocProvider(
   create: (context) => FavoriteBloc(),
   child: BlocProvider(
-    create: (context) => FavoritesListBloc(),
+    create: (context) => FavoritesListBloc()
+      ..add(const FavoritesListLoadRequested()),
     child: MaterialApp(
       home: const MainNavigationPage(),
     ),
