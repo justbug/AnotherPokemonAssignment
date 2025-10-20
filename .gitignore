@@ -91,3 +91,12 @@ iOSInjectionProject/
 .DS_Store
 .vscode
 buildServer.json
+
+# Flutter / Dart
+flutter_another_pokemon_assignment/.dart_tool/
+flutter_another_pokemon_assignment/.flutter-plugins
+flutter_another_pokemon_assignment/.flutter-plugins-dependencies
+flutter_another_pokemon_assignment/.packages
+flutter_another_pokemon_assignment/build/
+flutter_another_pokemon_assignment/coverage/
+pubspec_overrides.yaml

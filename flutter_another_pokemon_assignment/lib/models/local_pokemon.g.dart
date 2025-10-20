@@ -13,6 +13,7 @@ _$LocalPokemonImpl _$$LocalPokemonImplFromJson(Map<String, dynamic> json) =>
       imageURL: json['imageURL'] as String,
       isFavorite: json['isFavorite'] as bool,
       created: (json['created'] as num?)?.toInt() ?? 0,
+      updatedAt: (json['updatedAt'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$LocalPokemonImplToJson(_$LocalPokemonImpl instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$$LocalPokemonImplToJson(_$LocalPokemonImpl instance) =>
       'imageURL': instance.imageURL,
       'isFavorite': instance.isFavorite,
       'created': instance.created,
+      'updatedAt': instance.updatedAt,
     };

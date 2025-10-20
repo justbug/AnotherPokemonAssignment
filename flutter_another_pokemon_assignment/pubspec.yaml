@@ -40,6 +40,10 @@ dependencies:
   flutter_bloc: ^9.1.1
   equatable: ^2.0.5
   shared_preferences: ^2.3.2
+  sqflite: ^2.3.3
+  path: ^1.9.0
+  path_provider: ^2.1.4
+  synchronized: ^3.1.0
   cached_network_image: ^3.4.1
 
 dev_dependencies:
@@ -57,6 +61,7 @@ dev_dependencies:
   json_serializable: ^6.7.1
   bloc_test: ^10.0.0
   mockito: ^5.4.2
+  sqflite_common_ffi: ^2.3.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -6,6 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:flutter_another_pokemon_assignment/blocs/pokemon_list/pokemon_list_bloc.dart';
 import 'package:flutter_another_pokemon_assignment/blocs/pokemon_list/pokemon_list_event.dart';
 import 'package:flutter_another_pokemon_assignment/blocs/pokemon_list/pokemon_list_state.dart';
+import 'package:flutter_another_pokemon_assignment/repository/favorite_pokemon_repository.dart';
 import 'package:flutter_another_pokemon_assignment/repository/list_repository.dart';
 
 import 'helpers/test_helpers.dart';
@@ -22,8 +23,17 @@ void main() {
       mockRepository = MockListRepositorySpec();
     });
 
+    PokemonListBloc createBloc() {
+      return PokemonListBloc(
+        listRepository: mockRepository,
+        favoriteRepository: FavoritePokemonRepository(
+          localPokemonService: InMemoryLocalPokemonService(),
+        ),
+      );
+    }
+
     test('has initial state', () {
-      final bloc = PokemonListBloc(listRepository: mockRepository);
+      final bloc = createBloc();
       expect(bloc.state, const PokemonListInitial());
     });
 
@@ -32,9 +42,10 @@ void main() {
         'emits (Loading, Success) when fetchList succeeds with full page',
         build: () {
           final pokemons = TestLocalPokemonFactory.createPokemonList(_pageSize);
-          when(mockRepository.fetchList(offset: 0))
-              .thenAnswer((_) async => pokemons);
-          return PokemonListBloc(listRepository: mockRepository);
+          when(
+            mockRepository.fetchList(offset: 0),
+          ).thenAnswer((_) async => pokemons);
+          return createBloc();
         },
         act: (bloc) => bloc.add(const PokemonListLoadRequested()),
         expect: () => [
@@ -52,16 +63,23 @@ void main() {
       blocTest<PokemonListBloc, PokemonListState>(
         'emits (Loading, Success) when fetchList succeeds with partial page',
         build: () {
-          final pokemons = TestLocalPokemonFactory.createPokemonList(_pageSize ~/ 2);
-          when(mockRepository.fetchList(offset: 0))
-              .thenAnswer((_) async => pokemons);
-          return PokemonListBloc(listRepository: mockRepository);
+          final pokemons = TestLocalPokemonFactory.createPokemonList(
+            _pageSize ~/ 2,
+          );
+          when(
+            mockRepository.fetchList(offset: 0),
+          ).thenAnswer((_) async => pokemons);
+          return createBloc();
         },
         act: (bloc) => bloc.add(const PokemonListLoadRequested()),
         expect: () => [
           const PokemonListLoading(),
           isA<PokemonListSuccess>()
-              .having((s) => s.pokemons.length, 'pokemons length', _pageSize ~/ 2)
+              .having(
+                (s) => s.pokemons.length,
+                'pokemons length',
+                _pageSize ~/ 2,
+              )
               .having((s) => s.hasMore, 'hasMore', false)
               .having((s) => s.currentOffset, 'currentOffset', _pageSize ~/ 2),
         ],
@@ -73,15 +91,19 @@ void main() {
       blocTest<PokemonListBloc, PokemonListState>(
         'emits (Loading, Error) when fetchList fails',
         build: () {
-          when(mockRepository.fetchList(offset: 0))
-              .thenThrow(Exception('Network error'));
-          return PokemonListBloc(listRepository: mockRepository);
+          when(
+            mockRepository.fetchList(offset: 0),
+          ).thenThrow(Exception('Network error'));
+          return createBloc();
         },
         act: (bloc) => bloc.add(const PokemonListLoadRequested()),
         expect: () => [
           const PokemonListLoading(),
-          isA<PokemonListError>()
-              .having((s) => s.previousPokemons, 'previousPokemons', null),
+          isA<PokemonListError>().having(
+            (s) => s.previousPokemons,
+            'previousPokemons',
+            null,
+          ),
         ],
         verify: (_) {
           verify(mockRepository.fetchList(offset: 0)).called(1);
@@ -94,9 +116,10 @@ void main() {
         'emits Success when refresh succeeds',
         build: () {
           final pokemons = TestLocalPokemonFactory.createPokemonList(_pageSize);
-          when(mockRepository.fetchList(offset: 0))
-              .thenAnswer((_) async => pokemons);
-          return PokemonListBloc(listRepository: mockRepository);
+          when(
+            mockRepository.fetchList(offset: 0),
+          ).thenAnswer((_) async => pokemons);
+          return createBloc();
         },
         act: (bloc) => bloc.add(const PokemonListRefreshRequested()),
         expect: () => [
@@ -113,27 +136,34 @@ void main() {
       blocTest<PokemonListBloc, PokemonListState>(
         'emits Error when refresh fails without previous data',
         build: () {
-          when(mockRepository.fetchList(offset: 0))
-              .thenThrow(Exception('Refresh error'));
-          return PokemonListBloc(listRepository: mockRepository);
+          when(
+            mockRepository.fetchList(offset: 0),
+          ).thenThrow(Exception('Refresh error'));
+          return createBloc();
         },
         act: (bloc) => bloc.add(const PokemonListRefreshRequested()),
         expect: () => [
-          isA<PokemonListError>()
-              .having((s) => s.previousPokemons, 'previousPokemons', isEmpty),
+          isA<PokemonListError>().having(
+            (s) => s.previousPokemons,
+            'previousPokemons',
+            isEmpty,
+          ),
         ],
         verify: (_) {
           verify(mockRepository.fetchList(offset: 0)).called(1);
         },
       );
 
-      final existingPokemons = TestLocalPokemonFactory.createPokemonList(_pageSize);
+      final existingPokemons = TestLocalPokemonFactory.createPokemonList(
+        _pageSize,
+      );
       blocTest<PokemonListBloc, PokemonListState>(
         'emits Error with previous data when refresh fails after success',
         build: () {
-          when(mockRepository.fetchList(offset: 0))
-              .thenThrow(Exception('Refresh error'));
-          return PokemonListBloc(listRepository: mockRepository);
+          when(
+            mockRepository.fetchList(offset: 0),
+          ).thenThrow(Exception('Refresh error'));
+          return createBloc();
         },
         seed: () => PokemonListSuccess(
           pokemons: existingPokemons,
@@ -142,12 +172,11 @@ void main() {
         ),
         act: (bloc) => bloc.add(const PokemonListRefreshRequested()),
         expect: () => [
-          isA<PokemonListError>()
-              .having(
-                (s) => s.previousPokemons,
-                'previousPokemons',
-                equals(existingPokemons),
-              ),
+          isA<PokemonListError>().having(
+            (s) => s.previousPokemons,
+            'previousPokemons',
+            equals(existingPokemons),
+          ),
         ],
         verify: (_) {
           verify(mockRepository.fetchList(offset: 0)).called(1);
@@ -156,7 +185,9 @@ void main() {
     });
 
     group('PokemonListLoadMoreRequested', () {
-      final currentPokemons = TestLocalPokemonFactory.createPokemonList(_pageSize);
+      final currentPokemons = TestLocalPokemonFactory.createPokemonList(
+        _pageSize,
+      );
       final morePokemons = TestLocalPokemonFactory.createPokemonList(
         _pageSize,
         startId: _pageSize + 1,
@@ -164,9 +195,10 @@ void main() {
       blocTest<PokemonListBloc, PokemonListState>(
         'emits (LoadingMore, Success) when load more succeeds',
         build: () {
-          when(mockRepository.fetchList(offset: _pageSize))
-              .thenAnswer((_) async => morePokemons);
-          return PokemonListBloc(listRepository: mockRepository);
+          when(
+            mockRepository.fetchList(offset: _pageSize),
+          ).thenAnswer((_) async => morePokemons);
+          return createBloc();
         },
         seed: () => PokemonListSuccess(
           pokemons: currentPokemons,
@@ -180,7 +212,11 @@ void main() {
               .having((s) => s.hasMore, 'hasMore', true)
               .having((s) => s.currentOffset, 'currentOffset', _pageSize),
           isA<PokemonListSuccess>()
-              .having((s) => s.pokemons.length, 'pokemons length', _pageSize * 2)
+              .having(
+                (s) => s.pokemons.length,
+                'pokemons length',
+                _pageSize * 2,
+              )
               .having((s) => s.hasMore, 'hasMore', true)
               .having((s) => s.currentOffset, 'currentOffset', _pageSize * 2)
               .having(
@@ -199,13 +235,16 @@ void main() {
         },
       );
 
-      final failingStatePokemons = TestLocalPokemonFactory.createPokemonList(_pageSize);
+      final failingStatePokemons = TestLocalPokemonFactory.createPokemonList(
+        _pageSize,
+      );
       blocTest<PokemonListBloc, PokemonListState>(
         'emits (LoadingMore, Error) when load more fails',
         build: () {
-          when(mockRepository.fetchList(offset: _pageSize))
-              .thenThrow(Exception('Load more error'));
-          return PokemonListBloc(listRepository: mockRepository);
+          when(
+            mockRepository.fetchList(offset: _pageSize),
+          ).thenThrow(Exception('Load more error'));
+          return createBloc();
         },
         seed: () => PokemonListSuccess(
           pokemons: failingStatePokemons,
@@ -215,7 +254,11 @@ void main() {
         act: (bloc) => bloc.add(const PokemonListLoadMoreRequested()),
         expect: () => [
           isA<PokemonListLoadingMore>()
-              .having((s) => s.pokemons, 'pokemons', equals(failingStatePokemons))
+              .having(
+                (s) => s.pokemons,
+                'pokemons',
+                equals(failingStatePokemons),
+              )
               .having((s) => s.hasMore, 'hasMore', true)
               .having((s) => s.currentOffset, 'currentOffset', _pageSize),
           isA<PokemonListError>()
@@ -238,10 +281,12 @@ void main() {
       blocTest<PokemonListBloc, PokemonListState>(
         'does not emit when hasMore is false',
         build: () {
-          return PokemonListBloc(listRepository: mockRepository);
+          return createBloc();
         },
         seed: () {
-          final currentPokemons = TestLocalPokemonFactory.createPokemonList(_pageSize ~/ 2);
+          final currentPokemons = TestLocalPokemonFactory.createPokemonList(
+            _pageSize ~/ 2,
+          );
           return PokemonListSuccess(
             pokemons: currentPokemons,
             hasMore: false,
@@ -258,7 +303,7 @@ void main() {
       blocTest<PokemonListBloc, PokemonListState>(
         'does not emit when not in Success state',
         build: () {
-          return PokemonListBloc(listRepository: mockRepository);
+          return createBloc();
         },
         act: (bloc) => bloc.add(const PokemonListLoadMoreRequested()),
         expect: () => [],

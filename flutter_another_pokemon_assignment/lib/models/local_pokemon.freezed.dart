@@ -26,6 +26,7 @@ mixin _$LocalPokemon {
   String get imageURL => throw _privateConstructorUsedError;
   bool get isFavorite => throw _privateConstructorUsedError;
   int get created => throw _privateConstructorUsedError;
+  int get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this LocalPokemon to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -50,6 +51,7 @@ abstract class $LocalPokemonCopyWith<$Res> {
     String imageURL,
     bool isFavorite,
     int created,
+    int updatedAt,
   });
 }
 
@@ -73,6 +75,7 @@ class _$LocalPokemonCopyWithImpl<$Res, $Val extends LocalPokemon>
     Object? imageURL = null,
     Object? isFavorite = null,
     Object? created = null,
+    Object? updatedAt = null,
   }) {
     return _then(
       _value.copyWith(
@@ -96,6 +99,10 @@ class _$LocalPokemonCopyWithImpl<$Res, $Val extends LocalPokemon>
                 ? _value.created
                 : created // ignore: cast_nullable_to_non_nullable
                       as int,
+            updatedAt: null == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -117,6 +124,7 @@ abstract class _$$LocalPokemonImplCopyWith<$Res>
     String imageURL,
     bool isFavorite,
     int created,
+    int updatedAt,
   });
 }
 
@@ -139,6 +147,7 @@ class __$$LocalPokemonImplCopyWithImpl<$Res>
     Object? imageURL = null,
     Object? isFavorite = null,
     Object? created = null,
+    Object? updatedAt = null,
   }) {
     return _then(
       _$LocalPokemonImpl(
@@ -162,6 +171,10 @@ class __$$LocalPokemonImplCopyWithImpl<$Res>
             ? _value.created
             : created // ignore: cast_nullable_to_non_nullable
                   as int,
+        updatedAt: null == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -176,6 +189,7 @@ class _$LocalPokemonImpl implements _LocalPokemon {
     required this.imageURL,
     required this.isFavorite,
     this.created = 0,
+    this.updatedAt = 0,
   });
 
   factory _$LocalPokemonImpl.fromJson(Map<String, dynamic> json) =>
@@ -192,10 +206,13 @@ class _$LocalPokemonImpl implements _LocalPokemon {
   @override
   @JsonKey()
   final int created;
+  @override
+  @JsonKey()
+  final int updatedAt;
 
   @override
   String toString() {
-    return 'LocalPokemon(id: $id, name: $name, imageURL: $imageURL, isFavorite: $isFavorite, created: $created)';
+    return 'LocalPokemon(id: $id, name: $name, imageURL: $imageURL, isFavorite: $isFavorite, created: $created, updatedAt: $updatedAt)';
   }
 
   @override
@@ -209,13 +226,22 @@ class _$LocalPokemonImpl implements _LocalPokemon {
                 other.imageURL == imageURL) &&
             (identical(other.isFavorite, isFavorite) ||
                 other.isFavorite == isFavorite) &&
-            (identical(other.created, created) || other.created == created));
+            (identical(other.created, created) || other.created == created) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, imageURL, isFavorite, created);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    name,
+    imageURL,
+    isFavorite,
+    created,
+    updatedAt,
+  );
 
   /// Create a copy of LocalPokemon
   /// with the given fields replaced by the non-null parameter values.
@@ -238,6 +264,7 @@ abstract class _LocalPokemon implements LocalPokemon {
     required final String imageURL,
     required final bool isFavorite,
     final int created,
+    final int updatedAt,
   }) = _$LocalPokemonImpl;
 
   factory _LocalPokemon.fromJson(Map<String, dynamic> json) =
@@ -253,6 +280,8 @@ abstract class _LocalPokemon implements LocalPokemon {
   bool get isFavorite;
   @override
   int get created;
+  @override
+  int get updatedAt;
 
   /// Create a copy of LocalPokemon
   /// with the given fields replaced by the non-null parameter values.

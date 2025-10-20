@@ -1,102 +1,185 @@
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+
+import 'package:sqflite/sqflite.dart';
+import 'package:synchronized/synchronized.dart';
+
 import '../models/local_pokemon.dart';
+import 'local_pokemon_database.dart';
 import 'local_pokemon_service_spec.dart';
+import 'local_pokemon_telemetry.dart';
 
-/// LocalPokemon service implementation
-/// 
-/// Uses SharedPreferences to store Pokemon local data
-/// 
-/// **Note**: This implementation uses SharedPreferences for demo purposes.
-/// For production environments, it's recommended to use SQLite or other more suitable database solutions.
-/// This class implements the LocalPokemonServiceSpec interface for easy future replacement.
-class LocalPokemonService implements LocalPokemonServiceSpec {
-  static const String _pokemonKey = 'pokemon_data';
-  static SharedPreferences? _prefs;
+/// Exception thrown when local persistence fails.
+class LocalPokemonPersistenceException implements Exception {
+  LocalPokemonPersistenceException(this.message, {this.cause});
 
-  /// Get SharedPreferences instance
-  Future<SharedPreferences> get prefs async {
-    _prefs ??= await SharedPreferences.getInstance();
-    return _prefs!;
+  final String message;
+  final Object? cause;
+
+  @override
+  String toString() {
+    if (cause == null) {
+      return 'LocalPokemonPersistenceException: $message';
+    }
+    return 'LocalPokemonPersistenceException: $message ($cause)';
   }
+}
 
-  /// Insert or update Pokemon data
+/// SQLite-backed implementation of [LocalPokemonServiceSpec].
+class LocalPokemonService implements LocalPokemonServiceSpec {
+  LocalPokemonService({
+    LocalPokemonDatabase? database,
+    LocalPokemonTelemetry? telemetry,
+  }) : _database = database ?? LocalPokemonDatabase.instance,
+       _telemetry = telemetry ?? LocalPokemonTelemetry();
+
+  final LocalPokemonDatabase _database;
+  final LocalPokemonTelemetry _telemetry;
+
+  final Lock _operationLock = Lock();
+
+  Future<Database> _db() => _database.database;
+
   @override
   Future<void> insertOrUpdate(LocalPokemon pokemon) async {
-    final prefs = await this.prefs;
-    final pokemonData = await _getPokemonMap();
-    
-    pokemonData[pokemon.id] = pokemon.toJson();
-    await prefs.setString(_pokemonKey, _mapToString(pokemonData));
+    await _operationLock.synchronized(() async {
+      final db = await _db();
+      final now = DateTime.now().millisecondsSinceEpoch;
+      try {
+        final existing = await db.query(
+          LocalPokemonDatabase.favoritesTable,
+          columns: <String>[LocalPokemonDatabase.favoritesColumnCreated],
+          where: '${LocalPokemonDatabase.favoritesColumnId} = ?',
+          whereArgs: <Object?>[pokemon.id],
+          limit: 1,
+        );
+
+        final created = existing.isNotEmpty
+            ? (existing.first[LocalPokemonDatabase.favoritesColumnCreated]
+                  as int)
+            : (pokemon.created == 0 ? now : pokemon.created);
+
+        final upserted = pokemon.copyWith(created: created, updatedAt: now);
+
+        await db.insert(
+          LocalPokemonDatabase.favoritesTable,
+          _toRow(upserted),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+
+        await _telemetry.recordPersistence(
+          operation: 'upsert',
+          success: true,
+          pokemonId: pokemon.id,
+        );
+      } catch (error) {
+        await _telemetry.recordPersistence(
+          operation: 'upsert',
+          success: false,
+          pokemonId: pokemon.id,
+          error: error,
+        );
+        throw LocalPokemonPersistenceException(
+          'Failed to persist favorite ${pokemon.id}',
+          cause: error,
+        );
+      }
+    });
   }
 
-  /// Delete Pokemon data
   @override
   Future<void> delete(String id) async {
-    final prefs = await this.prefs;
-    final pokemonData = await _getPokemonMap();
-    
-    pokemonData.remove(id);
-    await prefs.setString(_pokemonKey, _mapToString(pokemonData));
+    await _operationLock.synchronized(() async {
+      final db = await _db();
+      try {
+        await db.delete(
+          LocalPokemonDatabase.favoritesTable,
+          where: '${LocalPokemonDatabase.favoritesColumnId} = ?',
+          whereArgs: <Object?>[id],
+        );
+        await _telemetry.recordPersistence(
+          operation: 'delete',
+          success: true,
+          pokemonId: id,
+        );
+      } catch (error) {
+        await _telemetry.recordPersistence(
+          operation: 'delete',
+          success: false,
+          pokemonId: id,
+          error: error,
+        );
+        throw LocalPokemonPersistenceException(
+          'Failed to delete favorite $id',
+          cause: error,
+        );
+      }
+    });
   }
 
-  /// Get Pokemon data by ID
   @override
   Future<LocalPokemon?> getById(String id) async {
-    final pokemonData = await _getPokemonMap();
-    final data = pokemonData[id];
-    
-    if (data != null) {
-      return LocalPokemon.fromJson(data);
+    final db = await _db();
+    final results = await db.query(
+      LocalPokemonDatabase.favoritesTable,
+      where: '${LocalPokemonDatabase.favoritesColumnId} = ?',
+      whereArgs: <Object?>[id],
+      limit: 1,
+    );
+    if (results.isEmpty) {
+      return null;
     }
-    return null;
+    return _fromRow(results.first);
   }
 
-  /// Get all Pokemon data
   @override
   Future<List<LocalPokemon>> getAll() async {
-    final pokemonData = await _getPokemonMap();
-    final pokemonList = <LocalPokemon>[];
-    
-    for (final entry in pokemonData.entries) {
-      final data = entry.value;
-      pokemonList.add(LocalPokemon.fromJson(data));
-    }
-    
-    return pokemonList;
+    final db = await _db();
+    final results = await db.query(
+      LocalPokemonDatabase.favoritesTable,
+      orderBy: '${LocalPokemonDatabase.favoritesColumnUpdatedAt} DESC',
+    );
+    return results.map(_fromRow).toList();
   }
 
-  /// Get Pokemon data Map
-  Future<Map<String, Map<String, dynamic>>> _getPokemonMap() async {
-    final prefs = await this.prefs;
-    final pokemonString = prefs.getString(_pokemonKey);
-    
-    if (pokemonString == null || pokemonString.isEmpty) {
-      return <String, Map<String, dynamic>>{};
-    }
-    
-    return _stringToMap(pokemonString);
-  }
-
-  /// Convert Map to JSON string
-  String _mapToString(Map<String, Map<String, dynamic>> map) {
-    return jsonEncode(map);
-  }
-
-  /// Convert JSON string to Map
-  Map<String, Map<String, dynamic>> _stringToMap(String jsonString) {
-    try {
-      final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-      return jsonMap.cast<String, Map<String, dynamic>>();
-    } catch (e) {
-      return <String, Map<String, dynamic>>{};
-    }
-  }
-
-  /// Clear all data
   @override
   Future<void> clear() async {
-    final prefs = await this.prefs;
-    await prefs.remove(_pokemonKey);
+    await _operationLock.synchronized(() async {
+      final db = await _db();
+      try {
+        final cleared = await db.delete(LocalPokemonDatabase.favoritesTable);
+        await _telemetry.recordClear(success: true, clearedCount: cleared);
+      } catch (error) {
+        await _telemetry.recordClear(success: false, error: error);
+        throw LocalPokemonPersistenceException(
+          'Failed to clear local favorites',
+          cause: error,
+        );
+      }
+    });
+  }
+
+  Map<String, Object?> _toRow(LocalPokemon pokemon) {
+    return <String, Object?>{
+      LocalPokemonDatabase.favoritesColumnId: pokemon.id,
+      LocalPokemonDatabase.favoritesColumnName: pokemon.name,
+      LocalPokemonDatabase.favoritesColumnImageUrl: pokemon.imageURL,
+      LocalPokemonDatabase.favoritesColumnIsFavorite: pokemon.isFavorite
+          ? 1
+          : 0,
+      LocalPokemonDatabase.favoritesColumnCreated: pokemon.created,
+      LocalPokemonDatabase.favoritesColumnUpdatedAt: pokemon.updatedAt,
+    };
+  }
+
+  LocalPokemon _fromRow(Map<String, Object?> row) {
+    return LocalPokemon(
+      id: row[LocalPokemonDatabase.favoritesColumnId]! as String,
+      name: row[LocalPokemonDatabase.favoritesColumnName]! as String,
+      imageURL: row[LocalPokemonDatabase.favoritesColumnImageUrl]! as String,
+      isFavorite:
+          (row[LocalPokemonDatabase.favoritesColumnIsFavorite]! as int) == 1,
+      created: row[LocalPokemonDatabase.favoritesColumnCreated]! as int,
+      updatedAt: row[LocalPokemonDatabase.favoritesColumnUpdatedAt]! as int,
+    );
   }
 }

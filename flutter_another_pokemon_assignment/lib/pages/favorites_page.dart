@@ -10,7 +10,9 @@ class FavoritesPage extends StatelessWidget {
 
   /// Handle pull-to-refresh
   Future<void> _onRefresh(BuildContext context) async {
-    context.read<FavoritesListBloc>().add(const FavoritesListRefreshRequested());
+    context.read<FavoritesListBloc>().add(
+      const FavoritesListRefreshRequested(),
+    );
   }
 
   void _onRetry(BuildContext context) {
@@ -26,9 +28,10 @@ class FavoritesPage extends StatelessWidget {
       ),
       body: BlocListener<FavoriteBloc, FavoriteState>(
         listener: (context, state) {
-          // When favorite state changes, reload favorites list
           if (state is FavoriteSuccess) {
-            context.read<FavoritesListBloc>().add(const FavoritesListRefreshRequested());
+            context.read<FavoritesListBloc>().add(
+              const FavoritesListRefreshRequested(),
+            );
           }
         },
         child: BlocBuilder<FavoritesListBloc, FavoritesListState>(
@@ -40,9 +43,7 @@ class FavoritesPage extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, FavoritesListState state) {
     if (state is FavoritesListLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (state is FavoritesListError) {
@@ -50,11 +51,7 @@ class FavoritesPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
-            ),
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text(
               state.message,
@@ -86,18 +83,11 @@ class FavoritesPage extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.favorite_border,
-                      size: 64,
-                      color: Colors.grey,
-                    ),
+                    Icon(Icons.favorite_border, size: 64, color: Colors.grey),
                     SizedBox(height: 16),
                     Text(
                       'No favorite Pokemon yet',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -117,8 +107,6 @@ class FavoritesPage extends StatelessWidget {
     }
 
     // Initial state
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
+    return const Center(child: CircularProgressIndicator());
   }
 }

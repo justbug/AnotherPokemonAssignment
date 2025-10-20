@@ -17,13 +17,11 @@ abstract class FavoriteState extends Equatable {
   List<Object?> get props => [favoritePokemonIds, currentPokemonId];
 }
 
-
-
 /// Initial state
 class FavoriteInitial extends FavoriteState {
   @override
   final Set<String> favoritePokemonIds;
-  
+
   @override
   final String? currentPokemonId;
 
@@ -41,7 +39,7 @@ class FavoriteSuccess extends FavoriteState {
   @override
   final Set<String> favoritePokemonIds;
   final bool toggledPokemonFavoriteStatus;
-  
+
   @override
   final String? currentPokemonId;
 
@@ -52,7 +50,11 @@ class FavoriteSuccess extends FavoriteState {
   });
 
   @override
-  List<Object?> get props => [favoritePokemonIds, toggledPokemonFavoriteStatus, currentPokemonId];
+  List<Object?> get props => [
+    favoritePokemonIds,
+    toggledPokemonFavoriteStatus,
+    currentPokemonId,
+  ];
 }
 
 /// Error state
@@ -60,7 +62,7 @@ class FavoriteError extends FavoriteState {
   final String message;
   @override
   final Set<String> favoritePokemonIds;
-  
+
   @override
   final String? currentPokemonId;
 

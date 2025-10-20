@@ -27,16 +27,19 @@ void main() {
         const pokemonId = '25';
         const pokemonName = 'pikachu';
         const imageURL = 'https://example.com/pikachu.png';
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
         final mockPokemon = LocalPokemon(
           id: pokemonId,
           name: pokemonName,
           imageURL: imageURL,
           isFavorite: true,
-          created: DateTime.now().millisecondsSinceEpoch,
+          created: timestamp,
+          updatedAt: timestamp,
         );
 
-        when(mockLocalPokemonService.getById(pokemonId))
-            .thenAnswer((_) async => mockPokemon);
+        when(
+          mockLocalPokemonService.getById(pokemonId),
+        ).thenAnswer((_) async => mockPokemon);
 
         // Act
         final result = await favoritePokemonRepository.isFavorite(pokemonId);
@@ -51,16 +54,19 @@ void main() {
         const pokemonId = '25';
         const pokemonName = 'pikachu';
         const imageURL = 'https://example.com/pikachu.png';
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
         final mockPokemon = LocalPokemon(
           id: pokemonId,
           name: pokemonName,
           imageURL: imageURL,
           isFavorite: false,
-          created: DateTime.now().millisecondsSinceEpoch,
+          created: timestamp,
+          updatedAt: timestamp,
         );
 
-        when(mockLocalPokemonService.getById(pokemonId))
-            .thenAnswer((_) async => mockPokemon);
+        when(
+          mockLocalPokemonService.getById(pokemonId),
+        ).thenAnswer((_) async => mockPokemon);
 
         // Act
         final result = await favoritePokemonRepository.isFavorite(pokemonId);
@@ -74,8 +80,9 @@ void main() {
         // Arrange
         const pokemonId = '999';
 
-        when(mockLocalPokemonService.getById(pokemonId))
-            .thenAnswer((_) async => null);
+        when(
+          mockLocalPokemonService.getById(pokemonId),
+        ).thenAnswer((_) async => null);
 
         // Act
         final result = await favoritePokemonRepository.isFavorite(pokemonId);
@@ -89,8 +96,9 @@ void main() {
         // Arrange
         const pokemonId = '25';
 
-        when(mockLocalPokemonService.getById(pokemonId))
-            .thenThrow(Exception('Database error'));
+        when(
+          mockLocalPokemonService.getById(pokemonId),
+        ).thenThrow(Exception('Database error'));
 
         // Act
         final result = await favoritePokemonRepository.isFavorite(pokemonId);
@@ -102,116 +110,168 @@ void main() {
     });
 
     group('updateFavorite Tests', () {
-      test('should add Pokemon to favorites when marking as favorite', () async {
-        // Arrange
-        const pokemonId = '25';
-        const pokemonName = 'pikachu';
-        const imageURL = 'https://example.com/pikachu.png';
+      test(
+        'should add Pokemon to favorites when marking as favorite',
+        () async {
+          // Arrange
+          const pokemonId = '25';
+          const pokemonName = 'pikachu';
+          const imageURL = 'https://example.com/pikachu.png';
 
-        when(mockLocalPokemonService.getById(pokemonId))
-            .thenAnswer((_) async => null);
+          when(
+            mockLocalPokemonService.getById(pokemonId),
+          ).thenAnswer((_) async => null);
 
-        when(mockLocalPokemonService.insertOrUpdate(any))
-            .thenAnswer((_) async {});
+          when(
+            mockLocalPokemonService.insertOrUpdate(any),
+          ).thenAnswer((_) async {});
 
-        // Act
-        await favoritePokemonRepository.updateFavorite(pokemonId, true, pokemonName, imageURL);
+          // Act
+          await favoritePokemonRepository.updateFavorite(
+            pokemonId,
+            true,
+            pokemonName,
+            imageURL,
+          );
 
-        // Assert
-        verify(mockLocalPokemonService.getById(pokemonId)).called(1);
-        verify(mockLocalPokemonService.insertOrUpdate(any)).called(1);
-        verifyNever(mockLocalPokemonService.delete(any));
-      });
+          // Assert
+          verify(mockLocalPokemonService.getById(pokemonId)).called(1);
+          verify(mockLocalPokemonService.insertOrUpdate(any)).called(1);
+          verifyNever(mockLocalPokemonService.delete(any));
+        },
+      );
 
-      test('should remove Pokemon from favorites when marking as not favorite', () async {
-        // Arrange
-        const pokemonId = '25';
-        const pokemonName = 'pikachu';
-        const imageURL = 'https://example.com/pikachu.png';
-        when(mockLocalPokemonService.delete(pokemonId))
-            .thenAnswer((_) async {});
+      test(
+        'should remove Pokemon from favorites when marking as not favorite',
+        () async {
+          // Arrange
+          const pokemonId = '25';
+          const pokemonName = 'pikachu';
+          const imageURL = 'https://example.com/pikachu.png';
+          when(
+            mockLocalPokemonService.delete(pokemonId),
+          ).thenAnswer((_) async {});
 
-        // Act
-        await favoritePokemonRepository.updateFavorite(pokemonId, false, pokemonName, imageURL);
+          // Act
+          await favoritePokemonRepository.updateFavorite(
+            pokemonId,
+            false,
+            pokemonName,
+            imageURL,
+          );
 
-        // Assert
-        verify(mockLocalPokemonService.delete(pokemonId)).called(1);
-        verifyNever(mockLocalPokemonService.insertOrUpdate(any));
-        verifyNever(mockLocalPokemonService.getById(any));
-      });
+          // Assert
+          verify(mockLocalPokemonService.delete(pokemonId)).called(1);
+          verifyNever(mockLocalPokemonService.insertOrUpdate(any));
+          verifyNever(mockLocalPokemonService.getById(any));
+        },
+      );
 
-      test('should create LocalPokemon with correct properties when adding to favorites', () async {
-        // Arrange
-        const pokemonId = '25';
-        const pokemonName = 'pikachu';
-        const imageURL = 'https://example.com/pikachu.png';
+      test(
+        'should create LocalPokemon with correct properties when adding to favorites',
+        () async {
+          // Arrange
+          const pokemonId = '25';
+          const pokemonName = 'pikachu';
+          const imageURL = 'https://example.com/pikachu.png';
 
-        when(mockLocalPokemonService.getById(pokemonId))
-            .thenAnswer((_) async => null);
+          when(
+            mockLocalPokemonService.getById(pokemonId),
+          ).thenAnswer((_) async => null);
 
-        when(mockLocalPokemonService.insertOrUpdate(any))
-            .thenAnswer((_) async {});
+          when(
+            mockLocalPokemonService.insertOrUpdate(any),
+          ).thenAnswer((_) async {});
 
-        // Act
-        await favoritePokemonRepository.updateFavorite(pokemonId, true, pokemonName, imageURL);
+          // Act
+          await favoritePokemonRepository.updateFavorite(
+            pokemonId,
+            true,
+            pokemonName,
+            imageURL,
+          );
 
-        // Assert
-        final capturedPokemon = verify(mockLocalPokemonService.insertOrUpdate(captureAny)).captured.first as LocalPokemon;
-        expect(capturedPokemon.id, equals(pokemonId));
-        expect(capturedPokemon.name, equals(pokemonName));
-        expect(capturedPokemon.imageURL, equals(imageURL));
-        expect(capturedPokemon.isFavorite, isTrue);
-        expect(capturedPokemon.created, isA<int>());
-        expect(capturedPokemon.created, greaterThan(0));
-      });
+          // Assert
+          final capturedPokemon =
+              verify(
+                    mockLocalPokemonService.insertOrUpdate(captureAny),
+                  ).captured.first
+                  as LocalPokemon;
+          expect(capturedPokemon.id, equals(pokemonId));
+          expect(capturedPokemon.name, equals(pokemonName));
+          expect(capturedPokemon.imageURL, equals(imageURL));
+          expect(capturedPokemon.isFavorite, isTrue);
+          expect(capturedPokemon.created, isA<int>());
+          expect(capturedPokemon.created, greaterThan(0));
+          expect(capturedPokemon.updatedAt, isA<int>());
+          expect(
+            capturedPokemon.updatedAt,
+            greaterThanOrEqualTo(capturedPokemon.created),
+          );
+        },
+      );
 
-      test('should rethrow error when service throws exception during favorite save', () async {
-        // Arrange
-        const pokemonId = '25';
-        const pokemonName = 'pikachu';
-        const imageURL = 'https://example.com/pikachu.png';
+      test(
+        'should rethrow error when service throws exception during favorite save',
+        () async {
+          // Arrange
+          const pokemonId = '25';
+          const pokemonName = 'pikachu';
+          const imageURL = 'https://example.com/pikachu.png';
 
-        when(mockLocalPokemonService.getById(pokemonId))
-            .thenThrow(Exception('Database error'));
+          when(
+            mockLocalPokemonService.getById(pokemonId),
+          ).thenThrow(Exception('Database error'));
 
-        // Act & Assert
-        expect(
-          () => favoritePokemonRepository.updateFavorite(pokemonId, true, pokemonName, imageURL),
-          throwsA(isA<Exception>()),
-        );
-        verify(mockLocalPokemonService.getById(pokemonId)).called(1);
-      });
+          // Act & Assert
+          expect(
+            () => favoritePokemonRepository.updateFavorite(
+              pokemonId,
+              true,
+              pokemonName,
+              imageURL,
+            ),
+            throwsA(isA<Exception>()),
+          );
+          verify(mockLocalPokemonService.getById(pokemonId)).called(1);
+        },
+      );
     });
 
     group('getFavoritePokemonIds Tests', () {
       test('should return favorite id set for favorite Pokemon', () async {
         // Arrange
+        final now = DateTime.now().millisecondsSinceEpoch;
         final mockPokemonList = [
           LocalPokemon(
             id: '1',
             name: 'bulbasaur',
             imageURL: 'https://example.com/bulbasaur.png',
             isFavorite: true,
-            created: DateTime.now().millisecondsSinceEpoch,
+            created: now,
+            updatedAt: now,
           ),
           LocalPokemon(
             id: '25',
             name: 'pikachu',
             imageURL: 'https://example.com/pikachu.png',
             isFavorite: false,
-            created: DateTime.now().millisecondsSinceEpoch,
+            created: now,
+            updatedAt: now,
           ),
           LocalPokemon(
             id: '150',
             name: 'mewtwo',
             imageURL: 'https://example.com/mewtwo.png',
             isFavorite: true,
-            created: DateTime.now().millisecondsSinceEpoch,
+            created: now,
+            updatedAt: now,
           ),
         ];
 
-        when(mockLocalPokemonService.getAll())
-            .thenAnswer((_) async => mockPokemonList);
+        when(
+          mockLocalPokemonService.getAll(),
+        ).thenAnswer((_) async => mockPokemonList);
 
         // Act
         final result = await favoritePokemonRepository.getFavoritePokemonIds();
@@ -226,8 +286,9 @@ void main() {
 
       test('should return empty set when no Pokemon exist', () async {
         // Arrange
-        when(mockLocalPokemonService.getAll())
-            .thenAnswer((_) async => <LocalPokemon>[]);
+        when(
+          mockLocalPokemonService.getAll(),
+        ).thenAnswer((_) async => <LocalPokemon>[]);
 
         // Act
         final result = await favoritePokemonRepository.getFavoritePokemonIds();
@@ -239,8 +300,9 @@ void main() {
 
       test('should return empty set when error occurs', () async {
         // Arrange
-        when(mockLocalPokemonService.getAll())
-            .thenThrow(Exception('Database error'));
+        when(
+          mockLocalPokemonService.getAll(),
+        ).thenThrow(Exception('Database error'));
 
         // Act
         final result = await favoritePokemonRepository.getFavoritePokemonIds();
@@ -252,66 +314,84 @@ void main() {
     });
 
     group('getFavoritePokemonList Tests', () {
-      test('should return only favorite Pokemon sorted by creation time', () async {
-        // Arrange
-        final now = DateTime.now();
-        final mockPokemonList = [
-          LocalPokemon(
-            id: '25',
-            name: 'pikachu',
-            imageURL: 'https://example.com/pikachu.png',
-            isFavorite: true,
-            created: now.add(Duration(minutes: 10)).millisecondsSinceEpoch,
-          ),
-          LocalPokemon(
-            id: '1',
-            name: 'bulbasaur',
-            imageURL: 'https://example.com/bulbasaur.png',
-            isFavorite: false, // Not favorite, should be filtered out
-            created: now.millisecondsSinceEpoch,
-          ),
-          LocalPokemon(
-            id: '150',
-            name: 'mewtwo',
-            imageURL: 'https://example.com/mewtwo.png',
-            isFavorite: true,
-            created: now.millisecondsSinceEpoch, // Created earlier
-          ),
-          LocalPokemon(
-            id: '4',
-            name: 'charmander',
-            imageURL: 'https://example.com/charmander.png',
-            isFavorite: true,
-            created: now.add(Duration(minutes: 5)).millisecondsSinceEpoch,
-          ),
-        ];
+      test(
+        'should return only favorite Pokemon sorted by updated time',
+        () async {
+          // Arrange
+          final now = DateTime.now();
+          final mockPokemonList = [
+            LocalPokemon(
+              id: '25',
+              name: 'pikachu',
+              imageURL: 'https://example.com/pikachu.png',
+              isFavorite: true,
+              created: now
+                  .add(const Duration(minutes: 10))
+                  .millisecondsSinceEpoch,
+              updatedAt: now
+                  .add(const Duration(minutes: 10))
+                  .millisecondsSinceEpoch,
+            ),
+            LocalPokemon(
+              id: '1',
+              name: 'bulbasaur',
+              imageURL: 'https://example.com/bulbasaur.png',
+              isFavorite: false, // Not favorite, should be filtered out
+              created: now.millisecondsSinceEpoch,
+              updatedAt: now.millisecondsSinceEpoch,
+            ),
+            LocalPokemon(
+              id: '150',
+              name: 'mewtwo',
+              imageURL: 'https://example.com/mewtwo.png',
+              isFavorite: true,
+              created: now.millisecondsSinceEpoch, // Created earlier
+              updatedAt: now.millisecondsSinceEpoch,
+            ),
+            LocalPokemon(
+              id: '4',
+              name: 'charmander',
+              imageURL: 'https://example.com/charmander.png',
+              isFavorite: true,
+              created: now
+                  .add(const Duration(minutes: 5))
+                  .millisecondsSinceEpoch,
+              updatedAt: now
+                  .add(const Duration(minutes: 5))
+                  .millisecondsSinceEpoch,
+            ),
+          ];
 
-        when(mockLocalPokemonService.getAll())
-            .thenAnswer((_) async => mockPokemonList);
+          when(
+            mockLocalPokemonService.getAll(),
+          ).thenAnswer((_) async => mockPokemonList);
 
-        // Act
-        final result = await favoritePokemonRepository.getFavoritePokemonList();
+          // Act
+          final result = await favoritePokemonRepository
+              .getFavoritePokemonList();
 
-        // Assert
-        expect(result, hasLength(3)); // Only 3 favorite Pokemon
-        
-        // Verify sorting: pikachu (latest) -> charmander -> mewtwo (earliest)
-        expect(result[0].id, equals('25'));  // pikachu (latest)
-        expect(result[1].id, equals('4'));    // charmander
-        expect(result[2].id, equals('150'));  // mewtwo (earliest)
-        
-        // Verify all are favorite Pokemon
-        for (final pokemon in result) {
-          expect(pokemon.isFavorite, isTrue);
-        }
-        
-        verify(mockLocalPokemonService.getAll()).called(1);
-      });
+          // Assert
+          expect(result, hasLength(3)); // Only 3 favorite Pokemon
+
+          // Verify sorting: pikachu (latest) -> charmander -> mewtwo (earliest)
+          expect(result[0].id, equals('25')); // pikachu (latest)
+          expect(result[1].id, equals('4')); // charmander
+          expect(result[2].id, equals('150')); // mewtwo (earliest)
+
+          // Verify all are favorite Pokemon
+          for (final pokemon in result) {
+            expect(pokemon.isFavorite, isTrue);
+          }
+
+          verify(mockLocalPokemonService.getAll()).called(1);
+        },
+      );
 
       test('should return empty list when no Pokemon exist', () async {
         // Arrange
-        when(mockLocalPokemonService.getAll())
-            .thenAnswer((_) async => <LocalPokemon>[]);
+        when(
+          mockLocalPokemonService.getAll(),
+        ).thenAnswer((_) async => <LocalPokemon>[]);
 
         // Act
         final result = await favoritePokemonRepository.getFavoritePokemonList();
@@ -340,8 +420,9 @@ void main() {
           ),
         ];
 
-        when(mockLocalPokemonService.getAll())
-            .thenAnswer((_) async => mockPokemonList);
+        when(
+          mockLocalPokemonService.getAll(),
+        ).thenAnswer((_) async => mockPokemonList);
 
         // Act
         final result = await favoritePokemonRepository.getFavoritePokemonList();
@@ -353,8 +434,9 @@ void main() {
 
       test('should return empty list when error occurs', () async {
         // Arrange
-        when(mockLocalPokemonService.getAll())
-            .thenThrow(Exception('Database error'));
+        when(
+          mockLocalPokemonService.getAll(),
+        ).thenThrow(Exception('Database error'));
 
         // Act
         final result = await favoritePokemonRepository.getFavoritePokemonList();
@@ -374,25 +456,35 @@ void main() {
             imageURL: 'https://example.com/bulbasaur.png',
             isFavorite: false,
             created: now.millisecondsSinceEpoch,
+            updatedAt: now.millisecondsSinceEpoch,
           ),
           LocalPokemon(
             id: '25',
             name: 'pikachu',
             imageURL: 'https://example.com/pikachu.png',
             isFavorite: true,
-            created: now.add(Duration(minutes: 5)).millisecondsSinceEpoch,
+            created: now.add(const Duration(minutes: 5)).millisecondsSinceEpoch,
+            updatedAt: now
+                .add(const Duration(minutes: 5))
+                .millisecondsSinceEpoch,
           ),
           LocalPokemon(
             id: '4',
             name: 'charmander',
             imageURL: 'https://example.com/charmander.png',
             isFavorite: false,
-            created: now.add(Duration(minutes: 10)).millisecondsSinceEpoch,
+            created: now
+                .add(const Duration(minutes: 10))
+                .millisecondsSinceEpoch,
+            updatedAt: now
+                .add(const Duration(minutes: 10))
+                .millisecondsSinceEpoch,
           ),
         ];
 
-        when(mockLocalPokemonService.getAll())
-            .thenAnswer((_) async => mockPokemonList);
+        when(
+          mockLocalPokemonService.getAll(),
+        ).thenAnswer((_) async => mockPokemonList);
 
         // Act
         final result = await favoritePokemonRepository.getFavoritePokemonList();
