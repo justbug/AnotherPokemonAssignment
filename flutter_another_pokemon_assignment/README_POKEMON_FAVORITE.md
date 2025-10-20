@@ -1,13 +1,13 @@
 # Favorite Feature Overview
 
-This document describes the comprehensive favorite functionality implemented by the global `FavoriteBloc`, `FavoritesListBloc`, the `FavoritePokemonRepository`, and the local persistence stack.
+This document describes the comprehensive favorite functionality implemented by the global `FavoriteBloc`, `FavoritesListBloc`, the `FavoritePokemonRepository`, and the local persistence stack (now backed by SQLite via `LocalPokemonDatabase`).
 
 ## Architecture
 
 - `FavoriteBloc` is a global bloc that manages favorite toggle operations and emits events for other BLoCs to react.
 - `FavoritesListBloc` handles the favorites list page display, loading, and refresh functionality.
 - `FavoriteIconButton` widget provides per-item UI interactions that connect to the global bloc.
-- `FavoritePokemonRepository` provides the persistence operations that the bloc depends on. It delegates storage to `LocalPokemonService`, which now writes to a SQLite-backed `LocalPokemonDatabase`.
+- `FavoritePokemonRepository` provides the persistence operations that the bloc depends on. It delegates storage to `LocalPokemonService`, which now writes to a SQLite-backed `LocalPokemonDatabase` and emits telemetry via `LocalPokemonTelemetry`.
 - `LocalPokemon` (generated via `freezed`/`json_serializable`) defines the enhanced persisted schema: `id`, `name`, `imageURL`, `isFavorite`, `created`, and `updatedAt` timestamps (the latter drives ordering and diagnostics).
 - **Model Integration**: Works seamlessly with unified `Pokemon` model that includes `isFavorite` property and optional `detail` information.
 - **Event-Driven Architecture**: Data flow is unidirectional with event propagation: UI ➜ FavoriteBloc event ➜ repository ➜ local service ➜ FavoriteBloc state ➜ BlocListener ➜ other BLoCs ➜ UI.
@@ -60,7 +60,7 @@ The `favoritePokemonIds` set allows the `FavoriteIconButton` to efficiently chec
 - `getFavoritePokemonList()`: Fetches all locally stored Pokémon, filters those marked as favorite, and sorts by the most recent `updatedAt` timestamp.
 - `getFavoritePokemonIds()`: Returns a set of favorite Pokémon IDs for efficient UI updates.
 
-**Enhanced Data Model**: The repository now works with an enhanced `LocalPokemon` model that includes `id`, `name`, `imageURL`, `isFavorite`, `created`, and `updatedAt` timestamps for comprehensive favorite management.
+**Enhanced Data Model**: The repository now works with an enhanced `LocalPokemon` model that includes `id`, `name`, `imageURL`, `isFavorite`, `created`, and `updatedAt` timestamps for comprehensive favorite management and deterministic ordering.
 
 **Data Consistency Enhancement**: The `FavoriteBloc` now always reads from persistence before toggling favorites to ensure data consistency. This prevents race conditions and ensures the UI always reflects the latest stored state.
 
@@ -68,7 +68,7 @@ Exception handling is conservative: read operations swallow errors and return sa
 
 ## Diagnostics & Support Workflow
 
-- `LocalPokemonService` emits structured telemetry for persistence operations via `LocalPokemonTelemetry`. Each event captures status, record counts, duration, and any surfaced errors for support triage.
+- `LocalPokemonService` emits structured telemetry for persistence operations via `LocalPokemonTelemetry`. Each event captures status, record counts, duration, and any surfaced errors for support triage. See `lib/services/local_pokemon_telemetry.dart` for event schema.
 
 ## Integration with the Navigation System
 
@@ -84,6 +84,12 @@ Exception handling is conservative: read operations swallow errors and return sa
 - When an error occurs, the bloc emits `FavoriteError` with the previous favorite id set so the UI keeps the last known state.
 
 **Enhanced Integration**: Complete favorites list page with navigation and detail page integration, focusing on comprehensive favorite management with event-driven state synchronization across all pages.
+
+## Dependency Notes
+
+- Ensure the following are present in `pubspec.yaml`:
+  - `sqflite`, `path`, `path_provider`, `synchronized`
+  - For tests: `sqflite_common_ffi`
 
 ## Typical Usage
 

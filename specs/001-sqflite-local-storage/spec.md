@@ -4,6 +4,7 @@
 **Created**: 2025-10-20  
 **Status**: Draft  
 **Input**: User description: "替換 @LocalPokemonService 的 SharedPreferences 實作，改由 sqflite 實作，必須維持 LocalPokemonServiceSpec 介面"
+**New Services**: `LocalPokemonDatabase`, `LocalPokemonTelemetry`
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -83,8 +84,7 @@ state while audit logs capture the action.
 ### Key Entities *(include if feature involves data)*
 
 - **Local Pokemon Record**: Represents one locally stored Pokémon with fields
-  `id`, `name`, `imageURL`, `isFavorite`, `created` timestamp, plus any future
-  metadata; remains consistent between Flutter and Swift clients.
+  `id`, `name`, `imageURL`, `isFavorite`, `created`, `updatedAt` timestamps; remains consistent between Flutter and Swift clients and enables deterministic ordering by `updatedAt`.
 - **Diagnostics Event**: Structured log or analytics payload capturing
   persistence outcomes, database version, and error codes for observability.
 
@@ -113,6 +113,8 @@ state while audit logs capture the action.
 
 ## Dependencies
 
+- Runtime: `sqflite`, `path`, `path_provider`, `synchronized`
+- Tests: `sqflite_common_ffi`
 - Alignment with backend contract to ensure favorite-related payloads remain
   unchanged while the new persistence layer rolls out.
 - Coordination with release management to schedule user communications if

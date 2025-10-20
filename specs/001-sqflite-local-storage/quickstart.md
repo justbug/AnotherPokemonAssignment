@@ -14,6 +14,10 @@
    flutter pub add sqflite path path_provider synchronized
    flutter pub get
    ```
+   For tests, also add:
+   ```bash
+   flutter pub add --dev sqflite_common_ffi
+   ```
 2. **Regenerate Code Artifacts**
    ```bash
    flutter pub run build_runner build --delete-conflicting-outputs
@@ -24,6 +28,10 @@
 4. **Run Service Smoke Tests**
    ```bash
    flutter test test/services/local_pokemon_service_test.dart
+   ```
+   Or run the full test suite:
+   ```bash
+   flutter test
    ```
 5. **Manual Validation**
    - Build and run on an emulator/device.

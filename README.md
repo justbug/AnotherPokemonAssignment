@@ -27,10 +27,10 @@ The Flutter client lives in `flutter_another_pokemon_assignment/` and now implem
 - **Complete Features**: Implements the Pokémon list experience with pull-to-refresh, infinite scroll (30 items per page), error surfacing, per-row favorite toggles, and a dedicated favorites list page with navigation.
 - **Enhanced State Management**: Uses `flutter_bloc` with `PokemonListBloc`, global `FavoriteBloc`, and `FavoritesListBloc` to manage all states centrally, keeping UI concerns isolated from data fetching and persistence.
 - **Navigation Architecture**: Features `MainNavigationPage` with bottom navigation between Pokemon list and favorites list, using `IndexedStack` for state preservation.
-- **Data layer**: `ListRepository` consolidates pagination, JSON decoding, and mapping into the `Pokemon` domain model, while `FavoritePokemonRepository` persists favorite selections through `LocalPokemonService` (`SharedPreferences`).
+- **Data layer**: `ListRepository` consolidates pagination, JSON decoding, and mapping into the `Pokemon` domain model, while `FavoritePokemonRepository` persists favorite selections through `LocalPokemonService` (now backed by SQLite via `sqflite`).
 - **Networking**: `APIClient` and `RequestBuilder` wrap `http` to provide typed errors and shared request assembly that matches the iOS stack.
 - **Tooling**: Introduces `freezed`, `json_serializable`, `equatable`, `mockito`, and `bloc_test` for model generation and testability.
-- **Enhanced Data Model**: `LocalPokemon` model includes `id`, `name`, `imageURL`, `isFavorite`, and `created` timestamp for comprehensive favorite management.
+- **Enhanced Data Model**: `LocalPokemon` model includes `id`, `name`, `imageURL`, `isFavorite`, `created`, and `updatedAt` timestamps for comprehensive favorite management and deterministic ordering.
 - **Documentation**: See the dedicated walkthroughs in [`flutter_another_pokemon_assignment/README_POKEMON_LIST.md`](flutter_another_pokemon_assignment/README_POKEMON_LIST.md) and [`flutter_another_pokemon_assignment/README_POKEMON_FAVORITE.md`](flutter_another_pokemon_assignment/README_POKEMON_FAVORITE.md) for deeper dives into the features.
 
 ## Development Guidelines
