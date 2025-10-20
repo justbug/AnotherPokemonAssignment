@@ -13,6 +13,7 @@ class LocalPokemon with _$LocalPokemon {
     required String imageURL,
     required bool isFavorite,
     @Default(0) int created,
+    @Default(0) int updatedAt,
   }) = _LocalPokemon;
 
   /// Create object from JSON Map

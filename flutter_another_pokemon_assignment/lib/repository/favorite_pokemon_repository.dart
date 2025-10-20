@@ -5,15 +5,14 @@ import '../services/local_pokemon_service_spec.dart';
 
 /// Pokemon favorite repository
 /// Handles business logic for Pokemon favorite status
-/// 
+///
 /// Uses LocalPokemonServiceSpec interface with dependency injection support
 /// Easy to replace with different storage implementations (e.g., SQLite)
 class FavoritePokemonRepository {
   final LocalPokemonServiceSpec _localPokemonService;
 
-  FavoritePokemonRepository({
-    LocalPokemonServiceSpec? localPokemonService,
-  }) : _localPokemonService = localPokemonService ?? LocalPokemonService();
+  FavoritePokemonRepository({LocalPokemonServiceSpec? localPokemonService})
+    : _localPokemonService = localPokemonService ?? LocalPokemonService();
 
   /// Check if Pokemon is favorite
   Future<bool> isFavorite(String pokemonId) async {
@@ -42,7 +41,9 @@ class FavoritePokemonRepository {
       final existingPokemon = await _localPokemonService.getById(pokemonId);
 
       // Preserve original created timestamp when available
-      final createdTimestamp = existingPokemon?.created ?? DateTime.now().millisecondsSinceEpoch;
+      final createdTimestamp =
+          existingPokemon?.created ?? DateTime.now().millisecondsSinceEpoch;
+      final updatedTimestamp = DateTime.now().millisecondsSinceEpoch;
 
       final newPokemon = LocalPokemon(
         id: pokemonId,
@@ -50,6 +51,7 @@ class FavoritePokemonRepository {
         imageURL: imageURL,
         isFavorite: true,
         created: createdTimestamp,
+        updatedAt: updatedTimestamp,
       );
 
       await _localPokemonService.insertOrUpdate(newPokemon);
@@ -79,9 +81,11 @@ class FavoritePokemonRepository {
     try {
       final allPokemon = await _localPokemonService.getAll();
       final favorites = allPokemon.where((p) => p.isFavorite).toList();
-      // Sort by created time in descending order (latest first)
-      favorites.sort((a, b) => b.created.compareTo(a.created));
-      return favorites.map((localPokemon) => _mapToModel(localPokemon)).toList();
+      // Sort by updated time in descending order (latest first)
+      favorites.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+      return favorites
+          .map((localPokemon) => _mapToModel(localPokemon))
+          .toList();
     } catch (e) {
       return [];
     }
