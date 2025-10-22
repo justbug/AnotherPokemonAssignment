@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'pokemon_list_page.dart';
 import 'favorites_page.dart';
+import 'quiz_page.dart';
 
 /// Main navigation page
 /// Uses BottomNavigationBar to switch between Pokemon list and favorites list
@@ -14,9 +15,10 @@ class MainNavigationPage extends StatefulWidget {
 class _MainNavigationPageState extends State<MainNavigationPage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    const PokemonListPage(),
-    const FavoritesPage(),
+  final List<Widget> _pages = const [
+    PokemonListPage(),
+    FavoritesPage(),
+    QuizPage(),
   ];
 
   @override
@@ -42,6 +44,10 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.quiz),
+            label: 'Quiz',
           ),
         ],
       ),
