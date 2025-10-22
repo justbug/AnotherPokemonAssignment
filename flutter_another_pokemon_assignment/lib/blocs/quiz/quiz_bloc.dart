@@ -10,7 +10,7 @@ import 'quiz_state.dart';
 class QuizBloc extends Bloc<QuizEvent, QuizState> {
   QuizBloc({
     QuizRepository? repository,
-    int countdownSeconds = 3,
+    int countdownSeconds = 5,
   })  : _repository = repository ?? QuizRepository(),
         _countdownSeconds = countdownSeconds,
         super(const QuizLoading()) {

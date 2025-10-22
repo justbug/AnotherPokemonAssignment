@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
             ..add(const FavoritesListLoadRequested()),
         ),
         BlocProvider(
-          create: (context) => QuizBloc(),
+          create: (context) => QuizBloc(countdownSeconds: 5),
         ),
       ],
       child: MaterialApp(

@@ -61,25 +61,40 @@ void main() {
           }
           return nextRound;
         });
-        return QuizBloc(repository: repository, countdownSeconds: 2);
+        return QuizBloc(repository: repository, countdownSeconds: 5);
       },
       act: (bloc) async {
         bloc.add(const QuizStarted());
         await Future<void>.delayed(Duration.zero);
         bloc.add(const QuizOptionSelected(4));
       },
-      wait: const Duration(seconds: 3),
+      wait: const Duration(seconds: 6),
       expect: () => [
         const QuizLoading(),
         isA<QuizReady>(),
         isA<QuizReveal>().having(
           (state) => state.round.countdownRemaining,
           'countdown start',
+          5,
+        ),
+        isA<QuizReveal>().having(
+          (state) => state.round.countdownRemaining,
+          'countdown tick 4',
+          4,
+        ),
+        isA<QuizReveal>().having(
+          (state) => state.round.countdownRemaining,
+          'countdown tick 3',
+          3,
+        ),
+        isA<QuizReveal>().having(
+          (state) => state.round.countdownRemaining,
+          'countdown tick 2',
           2,
         ),
         isA<QuizReveal>().having(
           (state) => state.round.countdownRemaining,
-          'countdown tick',
+          'countdown tick 1',
           1,
         ),
         const QuizLoading(),

@@ -109,8 +109,10 @@ class _QuizReadyView extends StatelessWidget {
       children: [
         Expanded(
           child: _QuizImageCard(
-            imageUrl: round.correct.silhouetteUrl.toString(),
+            silhouetteUrl: round.correct.silhouetteUrl.toString(),
+            originalUrl: round.correct.officialUrl.toString(),
             description: 'Guess the Pokémon',
+            isRevealed: false,
           ),
         ),
         const SizedBox(height: 24),
@@ -143,8 +145,10 @@ class _QuizRevealView extends StatelessWidget {
       children: [
         Expanded(
           child: _QuizImageCard(
-            imageUrl: round.correct.officialUrl.toString(),
+            silhouetteUrl: round.correct.silhouetteUrl.toString(),
+            originalUrl: round.correct.officialUrl.toString(),
             description: "It's ${round.correct.displayName}",
+            isRevealed: true,
           ),
         ),
         const SizedBox(height: 16),
@@ -172,12 +176,16 @@ class _QuizRevealView extends StatelessWidget {
 
 class _QuizImageCard extends StatelessWidget {
   const _QuizImageCard({
-    required this.imageUrl,
+    required this.silhouetteUrl,
+    required this.originalUrl,
     required this.description,
+    required this.isRevealed,
   });
 
-  final String imageUrl;
+  final String silhouetteUrl;
+  final String originalUrl;
   final String description;
+  final bool isRevealed;
 
   @override
   Widget build(BuildContext context) {
@@ -186,15 +194,35 @@ class _QuizImageCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
+          // Original image (back layer) - visible when revealed
           Positioned.fill(
-            child: CachedNetworkImage(
-              imageUrl: imageUrl,
-              fit: BoxFit.contain,
-              placeholder: (context, _) => const Center(
-                child: CircularProgressIndicator(),
+            child: Visibility(
+              visible: isRevealed,
+              child: CachedNetworkImage(
+                imageUrl: originalUrl,
+                fit: BoxFit.contain,
+                placeholder: (context, _) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, _, __) => const Center(
+                  child: Icon(Icons.broken_image, size: 48),
+                ),
               ),
-              errorWidget: (context, _, __) => const Center(
-                child: Icon(Icons.broken_image, size: 48),
+            ),
+          ),
+          // Silhouette image (front layer) - visible when NOT revealed
+          Positioned.fill(
+            child: Visibility(
+              visible: !isRevealed,
+              child: CachedNetworkImage(
+                imageUrl: silhouetteUrl,
+                fit: BoxFit.contain,
+                placeholder: (context, _) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, _, __) => const Center(
+                  child: Icon(Icons.broken_image, size: 48),
+                ),
               ),
             ),
           ),
