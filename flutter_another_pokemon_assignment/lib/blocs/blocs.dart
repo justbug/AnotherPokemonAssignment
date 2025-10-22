@@ -16,3 +16,7 @@ export 'favorites_list/favorites_list_state.dart';
 export 'pokemon_detail/pokemon_detail_bloc.dart';
 export 'pokemon_detail/pokemon_detail_event.dart';
 export 'pokemon_detail/pokemon_detail_state.dart';
+
+export 'quiz/quiz_bloc.dart';
+export 'quiz/quiz_event.dart';
+export 'quiz/quiz_state.dart';
