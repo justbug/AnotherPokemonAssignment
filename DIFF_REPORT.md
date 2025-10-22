@@ -1,29 +1,27 @@
-# Diff Report — 001-sqflite-local-storage vs main
+# Diff Report — 002-pokemon-silhouette-quiz vs main
 
-Date: 2025-10-20
+Date: 2025-10-23
 
 ## Summary
-- Migrated Flutter favorites persistence from SharedPreferences to SQLite.
-- Added `LocalPokemonDatabase` and `LocalPokemonTelemetry` services.
-- Updated repository ordering by `updatedAt` for parity with Swift.
-- Expanded tests: service CRUD, repository logic, FavoriteBloc scenarios.
-- Updated docs and specs under `specs/001-sqflite-local-storage/`.
+- Added Supabase-backed "Who's That Pokémon" quiz with new BLoC, models, repository, and services.
+- Integrated Supabase initialization into `main.dart` with runtime configuration validation.
+- Introduced quiz UI tab, countdown reveal flow, and cached option sampling.
+- Expanded automated coverage with bloc, repository, and widget tests for quiz scenarios.
+- Authored full specification set under `specs/002-pokemon-silhouette-quiz/`.
 
 ## Key File Changes
-- Added: `flutter_another_pokemon_assignment/lib/services/local_pokemon_database.dart`
-- Added: `flutter_another_pokemon_assignment/lib/services/local_pokemon_telemetry.dart`
-- Modified: `flutter_another_pokemon_assignment/lib/services/local_pokemon_service.dart`
-- Modified: `flutter_another_pokemon_assignment/lib/repository/favorite_pokemon_repository.dart`
-- Modified tests under `flutter_another_pokemon_assignment/test/`
-- Updated docs: `CHANGELOG.md`, `AGENTS.md`, `README.md`, `README_POKEMON_FAVORITE.md`
+- Added: `flutter_another_pokemon_assignment/lib/blocs/quiz/` (bloc, events, states)
+- Added: `flutter_another_pokemon_assignment/lib/models/quiz/` (`freezed` models and generated files)
+- Added: `flutter_another_pokemon_assignment/lib/pages/quiz_page.dart` and `lib/widgets/quiz/quiz_option_button.dart`
+- Added: `flutter_another_pokemon_assignment/lib/repository/quiz_repository.dart` and `lib/services/supabase_quiz_service.dart`
+- Modified: `flutter_another_pokemon_assignment/lib/main.dart` and `lib/pages/main_navigation_page.dart` for Supabase setup and navigation tab
+- Added tests under `flutter_another_pokemon_assignment/test/blocs/quiz/`, `test/repository/quiz/`, and `test/widgets/quiz/`
+- Added documentation: `flutter_another_pokemon_assignment/README.md`, `AGENTS.md`, `CHANGELOG.md`, and `specs/002-pokemon-silhouette-quiz/`
 
 ## Dependencies
-- `pubspec.yaml` now includes:
-  - runtime: `sqflite`, `path`, `path_provider`, `synchronized`
-  - dev (tests): `sqflite_common_ffi`
+- `pubspec.yaml` now includes runtime Supabase support via `supabase_flutter` and bumps `json_annotation` for generated quiz models.
+- Dev dependencies gain `mocktail` to simplify bloc/repository mocking alongside existing `mockito` suites.
 
 ## Notes
-- No migration from legacy SharedPreferences; fresh SQLite store only.
-- Telemetry added to support diagnostics for persistence operations.
-
-
+- Supabase credentials are injected at runtime via `--dart-define`; fallback UI surfaces configuration errors.
+- Quiz repository maintains an in-memory list of candidates to avoid redundant Supabase fetches between rounds.
