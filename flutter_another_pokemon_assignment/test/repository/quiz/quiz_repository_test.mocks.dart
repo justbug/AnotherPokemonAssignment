@@ -3,13 +3,14 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i5;
 
 import 'package:flutter_another_pokemon_assignment/models/quiz/quiz_models.dart'
-    as _i2;
-import 'package:flutter_another_pokemon_assignment/services/supabase_quiz_service.dart'
     as _i3;
+import 'package:flutter_another_pokemon_assignment/services/supabase_service.dart'
+    as _i4;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:supabase_flutter/supabase_flutter.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -25,41 +26,71 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakePokemonQuizDetail_0 extends _i1.SmartFake
-    implements _i2.PokemonQuizDetail {
-  _FakePokemonQuizDetail_0(Object parent, Invocation parentInvocation)
+class _FakeSupabaseClient_0 extends _i1.SmartFake
+    implements _i2.SupabaseClient {
+  _FakeSupabaseClient_0(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-/// A class which mocks [SupabaseQuizService].
+class _FakePokemonQuizDetail_1 extends _i1.SmartFake
+    implements _i3.PokemonQuizDetail {
+  _FakePokemonQuizDetail_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+/// A class which mocks [SupabaseService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSupabaseQuizService extends _i1.Mock
-    implements _i3.SupabaseQuizService {
-  MockSupabaseQuizService() {
+class MockSupabaseService extends _i1.Mock implements _i4.SupabaseService {
+  MockSupabaseService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<List<_i2.PokemonQuizEntry>> fetchPokemonList({int? limit = 100}) =>
-      (super.noSuchMethod(
-            Invocation.method(#fetchPokemonList, [], {#limit: limit}),
-            returnValue: _i4.Future<List<_i2.PokemonQuizEntry>>.value(
-              <_i2.PokemonQuizEntry>[],
-            ),
-          )
-          as _i4.Future<List<_i2.PokemonQuizEntry>>);
+  bool get isInitialized =>
+      (super.noSuchMethod(Invocation.getter(#isInitialized), returnValue: false)
+          as bool);
 
   @override
-  _i4.Future<_i2.PokemonQuizDetail> fetchPokemonDetail(int? id) =>
+  _i2.SupabaseClient get client =>
+      (super.noSuchMethod(
+            Invocation.getter(#client),
+            returnValue: _FakeSupabaseClient_0(
+              this,
+              Invocation.getter(#client),
+            ),
+          )
+          as _i2.SupabaseClient);
+
+  @override
+  _i5.Future<void> initialize() =>
+      (super.noSuchMethod(
+            Invocation.method(#initialize, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+
+  @override
+  _i5.Future<List<_i3.PokemonQuizEntry>> fetchPokemonList({int? limit = 100}) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchPokemonList, [], {#limit: limit}),
+            returnValue: _i5.Future<List<_i3.PokemonQuizEntry>>.value(
+              <_i3.PokemonQuizEntry>[],
+            ),
+          )
+          as _i5.Future<List<_i3.PokemonQuizEntry>>);
+
+  @override
+  _i5.Future<_i3.PokemonQuizDetail> fetchPokemonDetail(int? id) =>
       (super.noSuchMethod(
             Invocation.method(#fetchPokemonDetail, [id]),
-            returnValue: _i4.Future<_i2.PokemonQuizDetail>.value(
-              _FakePokemonQuizDetail_0(
+            returnValue: _i5.Future<_i3.PokemonQuizDetail>.value(
+              _FakePokemonQuizDetail_1(
                 this,
                 Invocation.method(#fetchPokemonDetail, [id]),
               ),
             ),
           )
-          as _i4.Future<_i2.PokemonQuizDetail>);
+          as _i5.Future<_i3.PokemonQuizDetail>);
 }

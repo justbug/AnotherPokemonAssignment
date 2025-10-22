@@ -4,13 +4,13 @@ import 'package:mockito/mockito.dart';
 
 import 'package:flutter_another_pokemon_assignment/models/quiz/quiz_models.dart';
 import 'package:flutter_another_pokemon_assignment/repository/quiz_repository.dart';
-import 'package:flutter_another_pokemon_assignment/services/supabase_quiz_service.dart';
+import 'package:flutter_another_pokemon_assignment/services/supabase_service.dart';
 
 import 'quiz_repository_test.mocks.dart';
 
-@GenerateMocks([SupabaseQuizService])
+@GenerateMocks([SupabaseService])
 void main() {
-  late MockSupabaseQuizService service;
+  late MockSupabaseService service;
   late QuizRepository repository;
 
   const list = [
@@ -28,7 +28,7 @@ void main() {
   );
 
   setUp(() {
-    service = MockSupabaseQuizService();
+    service = MockSupabaseService();
     repository = QuizRepository(service: service);
   });
 

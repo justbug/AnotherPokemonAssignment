@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'pokemon_list_page.dart';
 import 'favorites_page.dart';
 import 'quiz_page.dart';
+import '../services/supabase_service.dart';
 
 /// Main navigation page
 /// Uses BottomNavigationBar to switch between Pokemon list and favorites list
 class MainNavigationPage extends StatefulWidget {
-  const MainNavigationPage({super.key});
+  const MainNavigationPage({super.key, required this.supabaseService});
+
+  final SupabaseService supabaseService;
 
   @override
   State<MainNavigationPage> createState() => _MainNavigationPageState();
@@ -15,10 +18,16 @@ class MainNavigationPage extends StatefulWidget {
 class _MainNavigationPageState extends State<MainNavigationPage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = const [
-    PokemonListPage(),
-    FavoritesPage(),
-    QuizPage(),
+  List<Widget> get _pages => [
+    const PokemonListPage(),
+    const FavoritesPage(),
+    // Conditionally show Quiz or error based on Supabase initialization
+    widget.supabaseService.isInitialized 
+      ? const QuizPage()
+      : _QuizSupabaseErrorView(
+          title: 'Quiz Unavailable',
+          message: widget.supabaseService.errorMessage ?? 'Unknown error',
+        ),
   ];
 
   @override
@@ -50,6 +59,42 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
             label: 'Quiz',
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _QuizSupabaseErrorView extends StatelessWidget {
+  const _QuizSupabaseErrorView({
+    required this.title,
+    required this.message,
+  });
+
+  final String title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 12),
+            Text(message),
+            const SizedBox(height: 16),
+            Text(
+              'Please restart the app to retry.',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -23,12 +23,13 @@ class QuizOptionButton extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       textStyle: Theme.of(context).textTheme.titleMedium,
       backgroundColor: _backgroundColorFor(context, option, showFeedback),
+      side: _borderSideFor(option, showFeedback),
     );
 
     if (icon != null) {
       return FilledButton.icon(
         onPressed: isEnabled ? onSelected : null,
-        icon: Icon(icon),
+        icon: Icon(icon, color: _iconColorFor(option, showFeedback)),
         label: Text(option.displayName),
         style: buttonStyle,
       );
@@ -49,6 +50,32 @@ class QuizOptionButton extends StatelessWidget {
         return Icons.check;
       case QuizOptionFeedback.cross:
         return Icons.close;
+      case QuizOptionFeedback.none:
+        return null;
+    }
+  }
+
+  Color? _iconColorFor(PokemonQuizOption option, bool showFeedback) {
+    if (!showFeedback) return null;
+
+    switch (option.feedback) {
+      case QuizOptionFeedback.check:
+        return Colors.green;
+      case QuizOptionFeedback.cross:
+        return Colors.red;
+      case QuizOptionFeedback.none:
+        return null;
+    }
+  }
+
+  BorderSide? _borderSideFor(PokemonQuizOption option, bool showFeedback) {
+    if (!showFeedback) return null;
+
+    switch (option.feedback) {
+      case QuizOptionFeedback.check:
+        return const BorderSide(color: Colors.green, width: 2.0);
+      case QuizOptionFeedback.cross:
+        return const BorderSide(color: Colors.red, width: 2.0);
       case QuizOptionFeedback.none:
         return null;
     }

@@ -39,7 +39,7 @@ void main() {
       'emits QuizReveal with selected option and countdown start',
       build: () {
         when(repository.createRound()).thenAnswer((_) async => round);
-        return QuizBloc(repository: repository, countdownSeconds: 3);
+        return QuizBloc(repository: repository, countdownSeconds: 5);
       },
       act: (bloc) async {
         bloc.add(const QuizStarted());
@@ -51,7 +51,7 @@ void main() {
         const QuizLoading(),
         isA<QuizReady>(),
         isA<QuizReveal>()
-            .having((state) => state.round.countdownRemaining, 'countdown', 3)
+            .having((state) => state.round.countdownRemaining, 'countdown', 5)
             .having(
               (state) => state.round.options
                   .firstWhere((o) => o.id == 7)
