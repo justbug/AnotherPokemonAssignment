@@ -23,7 +23,7 @@ Dart 3.9 (Flutter 3.x), Swift 5.9 (parity verification): Follow standard convent
 
 ## Recent Changes
 - 002-pokemon-silhouette-quiz: Added Dart 3.9.2, Flutter 3.x + `flutter_bloc`, `supabase_flutter`, `cached_network_image`, `freezed`, `http` (existing)
-- 002-pokemon-silhouette-quiz: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
+- 002-pokemon-silhouette-quiz: Added Supabase edge-function integration, quiz BLoC/repository/service layer, quiz UI tab, and comprehensive bloc/repository/widget tests
 - 001-sqflite-local-storage: Migrated Flutter favorites to SQLite with telemetry and ordering by `updatedAt`. Added `LocalPokemonDatabase`, `LocalPokemonTelemetry`, tests, and specs.
 
 <!-- MANUAL ADDITIONS START -->
