@@ -4,3 +4,4 @@
 export 'list_entity.dart';
 export 'detail_entity.dart';
 export 'pokemon.dart';
+export 'quiz/quiz_models.dart';
