@@ -1,16 +1,16 @@
 import 'dart:math';
 
 import '../models/quiz/quiz_models.dart';
-import '../services/supabase_quiz_service.dart';
+import '../services/supabase_service.dart';
 
 class QuizRepository {
   QuizRepository({
-    SupabaseQuizService? service,
+    SupabaseService? service,
     Random? random,
-  })  : _service = service ?? SupabaseQuizService(),
+  })  : _service = service ?? SupabaseService(),
         _random = random ?? Random.secure();
 
-  final SupabaseQuizService _service;
+  final SupabaseService _service;
   final Random _random;
 
   List<PokemonQuizEntry>? _cachedEntries;

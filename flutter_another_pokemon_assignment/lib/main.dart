@@ -1,40 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'blocs/blocs.dart';
-import 'config/supabase_keys.dart';
 import 'pages/main_navigation_page.dart';
+import 'services/supabase_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (!hasSupabaseConfig) {
-    runApp(const _SupabaseErrorApp(
-      title: 'Missing Supabase configuration',
-      message: 'Provide SUPABASE_URL and SUPABASE_ANON_KEY via --dart-define.',
-    ));
-    return;
-  }
+  // Initialize Supabase service
+  final supabaseService = SupabaseService();
+  await supabaseService.initialize();
 
-  try {
-    await Supabase.initialize(
-      url: supabaseUrl,
-      anonKey: supabaseAnonKey,
-    );
-  } catch (error) {
-    runApp(_SupabaseErrorApp(
-      title: 'Failed to connect to Supabase',
-      message: 'Please verify credentials and network connectivity.\n$error',
-    ));
-    return;
-  }
-
-  runApp(const MyApp());
+  // Always run the main app regardless of Supabase status
+  runApp(MyApp(supabaseService: supabaseService));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.supabaseService});
+
+  final SupabaseService supabaseService;
 
   @override
   Widget build(BuildContext context) {
@@ -60,43 +45,9 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true,
         ),
-        home: const MainNavigationPage(),
+        home: MainNavigationPage(supabaseService: supabaseService),
       ),
     );
   }
 }
 
-class _SupabaseErrorApp extends StatelessWidget {
-  const _SupabaseErrorApp({
-    required this.title,
-    required this.message,
-  });
-
-  final String title;
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: title,
-      home: Scaffold(
-        appBar: AppBar(title: Text(title)),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 12),
-              Text(message),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}

@@ -97,6 +97,7 @@ class _QuizErrorView extends StatelessWidget {
   }
 }
 
+
 class _QuizReadyView extends StatelessWidget {
   const _QuizReadyView({required this.round});
 
