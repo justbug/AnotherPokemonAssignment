@@ -164,7 +164,7 @@ blocTest<FavoriteBloc, FavoriteState>(
 - **Repository Specs**: `test/repository/quiz/quiz_repository_test.dart` verifies Supabase list caching, minimum entry checks, and detail fetch delegation.
 - **BLoC Specs**: `test/blocs/quiz/*` cover initial load success/error, reveal transitions with option markers, and countdown-driven automatic round resets.
 - **Widget Specs**: `test/widgets/quiz/*` assert silhouette rendering, reveal iconography (“It’s {Name}”), and countdown UI behavior without performing real network calls.
-- **Countdown Timing**: Timer-based transitions are validated via deterministic controllers, ensuring the UI resets within the 3-second SLA defined in success criteria.
+- **Countdown Timing**: Timer-based transitions are validated via deterministic controllers, ensuring the UI resets within the 5-second SLA defined in success criteria.
 
 ### State Validation
 - Comprehensive state emission testing

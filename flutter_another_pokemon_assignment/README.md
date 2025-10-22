@@ -7,7 +7,7 @@ A Flutter port of the Another Pokémon assignment that implements a simplified P
 - **Pokemon Detail Page**: Comprehensive Pokemon information display with `PokemonDetailBloc`, image caching, type display, and physical attributes.
 - Global `FavoriteBloc` manages all Pokemon favorite states with `FavoriteIconButton` providing per-item interactions and optimistic updates.
 - **Favorites List Page**: Complete favorites management with `FavoritesListBloc`, pull-to-refresh, and error handling.
-- **Who's That Pokémon Quiz**: New Supabase-backed quiz tab with silhouette guessing, reveal state, and automatic round reset driven by `QuizBloc` and cached assets.
+- **Who's That Pokémon Quiz**: New Supabase-backed quiz tab with silhouette guessing, reveal state, and automatic round reset driven by `QuizBloc` and cached assets. Features enhanced UI with layered silhouette/original image display and 5-second countdown timing.
 - **Bottom Navigation**: Seamless switching between Pokemon list and favorites list using `MainNavigationPage`.
 - **Detail Navigation**: Seamless navigation from list to detail page with state preservation.
 - Persistent storage of favorites through `LocalPokemonService` (`SharedPreferences`) using the enhanced `LocalPokemon` model with `imageURL` and `created` timestamp.
@@ -76,6 +76,6 @@ These rules are automatically applied by Cursor to assist with:
 - **Enhanced Data Model**: `LocalPokemon` now includes `imageURL` and `created` timestamp for comprehensive favorite management.
 - **Navigation Architecture**: Added `MainNavigationPage` with bottom navigation between Pokemon list and favorites, plus detail page navigation.
 - **Service Layer**: Introduced service specifications and improved dependency injection patterns.
-- **Supabase Quiz Feature**: Added `QuizBloc`, quiz repository/service, Supabase initialization, and comprehensive widget/bloc tests covering silhouette rounds, reveal feedback, and countdown reset.
+- **Supabase Quiz Feature**: Added `QuizBloc`, quiz repository/service, Supabase initialization, and comprehensive widget/bloc tests covering silhouette rounds, reveal feedback, and countdown reset. Enhanced with layered image display and extended 5-second countdown timing.
 
-Additional deep dives: [`README_POKEMON_LIST.md`](README_POKEMON_LIST.md), [`README_POKEMON_FAVORITE.md`](README_POKEMON_FAVORITE.md), and [`README_POKEMON_DETAIL.md`](README_POKEMON_DETAIL.md).
+Additional deep dives: [`README_POKEMON_LIST.md`](README_POKEMON_LIST.md), [`README_POKEMON_FAVORITE.md`](README_POKEMON_FAVORITE.md), [`README_POKEMON_DETAIL.md`](README_POKEMON_DETAIL.md), and [`README_POKEMON_QUIZ.md`](README_POKEMON_QUIZ.md).

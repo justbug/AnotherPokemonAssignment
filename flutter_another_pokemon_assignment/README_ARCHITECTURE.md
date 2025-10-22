@@ -14,13 +14,14 @@ This document describes the comprehensive architecture of the Flutter Pokemon ap
 - **PokemonDetailBloc**: Handles Pokemon detail loading and state management
 - **FavoriteBloc**: Global bloc managing favorite states across all pages
 - **FavoritesListBloc**: Handles favorites list display and management
+- **QuizBloc**: Manages quiz rounds, countdown timing, and reveal states
 
 ### Domain Layer
-- **Repositories**: `ListRepository`, `FavoritePokemonRepository`, `DetailRepository`
-- **Models**: `Pokemon`, `PokemonDetailData`, `ListEntity`, `DetailEntity`, `LocalPokemon`
+- **Repositories**: `ListRepository`, `FavoritePokemonRepository`, `DetailRepository`, `QuizRepository`
+- **Models**: `Pokemon`, `PokemonDetailData`, `ListEntity`, `DetailEntity`, `LocalPokemon`, quiz domain models
 
 ### Data Layer
-- **Services**: `PokemonService`, `DetailService`, `LocalPokemonService`
+- **Services**: `PokemonService`, `DetailService`, `LocalPokemonService`, `SupabaseQuizService`
 - **Networking**: `APIClient`, `RequestBuilder`
 - **Storage**: `SharedPreferences` via `LocalPokemonService`
 
@@ -72,6 +73,19 @@ This document describes the comprehensive architecture of the Flutter Pokemon ap
 - `PokemonDetailLoading`: Loading state while fetching detail
 - `PokemonDetailSuccess`: Success state with Pokemon data (includes `isFavorite` property and `detail` information)
 - `PokemonDetailError`: Error state with error message
+
+### QuizBloc
+**Purpose**: Manages quiz rounds, countdown timing, and reveal states with enhanced UI
+**Events**:
+- `QuizStarted`: Initialize a new quiz round
+- `QuizOptionSelected`: Handle player's Pokemon selection
+- `QuizCountdownTick`: Internal countdown timer events
+
+**States**:
+- `QuizLoading`: Initial loading state while fetching quiz data
+- `QuizReady`: Ready state with Pokemon options and silhouette image
+- `QuizReveal`: Reveal state showing correct answer with 5-second countdown
+- `QuizError`: Error state with retry functionality
 
 ## Data Flow Architecture
 
