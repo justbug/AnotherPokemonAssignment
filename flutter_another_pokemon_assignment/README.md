@@ -26,18 +26,14 @@ A Flutter port of the Another Pokémon assignment that implements a simplified P
 
 ## Running the App
 1. `flutter pub get`
-2. Provide Supabase credentials via `--dart-define`, for example:
-   ```bash
-   flutter run \
-     --dart-define=SUPABASE_URL=<your-supabase-url> \
-     --dart-define=SUPABASE_ANON_KEY=<your-anon-key>
-   ```
+2. Supabase credentials are defined in `lib/config/supabase_keys.dart`.
+   - The provided anon key is a public credential designed to be safely exposed in client applications. For details, see: https://supabase.com/docs/guides/api/api-keys
 
 Launch flows: the app starts with `MainNavigationPage` providing bottom navigation between Pokemon list, favorites, and the new quiz tab. The Pokemon list dispatches `PokemonListLoadRequested` on start-up, then reacts to pull-to-refresh and infinite scroll gestures. Tapping a Pokemon tile navigates to `PokemonDetailPage` with comprehensive Pokemon information. The favorites page uses `FavoritesListBloc` to display saved favorites with pull-to-refresh support. The quiz tab triggers `QuizBloc` to load silhouettes once Supabase is configured, letting players guess, reveal artwork, and watch the automatic countdown to the next round. Favorite hearts immediately reflect taps while persistence finishes in the background.
 
 ## Supabase Configuration
 
-- `lib/config/supabase_keys.dart` reads `SUPABASE_URL` and `SUPABASE_ANON_KEY` from compile-time environment variables. Provide these values for local runs or CI builds via `--dart-define` flags.
+- `lib/config/supabase_keys.dart` contains your Supabase project URL and anon key. The anon key is explicitly intended to be public and can be included in web, mobile, and client-side apps. You do not need to hide this key. For more, see: https://supabase.com/docs/guides/api/api-keys
 - Supabase functions are accessed through `SupabaseQuizService`, which caches the Pokemon list on first load and fetches silhouettes/offical art via the provided edge function (`/functions/v1/pokemon`).
 - Network or credential failures surface in the quiz tab with a retry button so the rest of the app remains usable.
 
